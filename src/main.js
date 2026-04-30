@@ -11,14 +11,14 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
+renderer.toneMappingExposure = 0.92;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xf8f7f2);
 
 const pmremGenerator = new THREE.PMREMGenerator(renderer);
 scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
-scene.environmentIntensity = 0.6;
+scene.environmentIntensity = 0.5;
 
 const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
 camera.position.set(4.5, 1.4, 5.2);
@@ -58,8 +58,8 @@ const moduleCatalog = {
   doubleTwo: { label: "더블암 2인", width: 1.9, depth: 0.9, height: 0.68, seats: 2, model: "doubleArmTwo", arms: ["left", "right"], openSides: ["left", "right"], price: { fabric: 1500000, leather: 3000000 }, thumbnail: "./assets/thumbnails/doublearm_2.png" },
   singleRightTwo: { label: "싱글암R 2인", width: 1.7, depth: 0.9, height: 0.68, seats: 2, model: "singleArmTwoRight", arms: ["left"], openSides: ["right"], price: { fabric: 1410000, leather: 2727000 }, thumbnail: "./assets/thumbnails/singlearm_R_2.png" },
   singleLeftTwo: { label: "싱글암L 2인", width: 1.7, depth: 0.9, height: 0.68, seats: 2, model: "singleArmTwoRight", mirror: true, arms: ["right"], openSides: ["left"], price: { fabric: 1410000, leather: 2727000 }, thumbnail: "./assets/thumbnails/singlearm_L_2.png" },
-  trayRightOne: { label: "트레이R 1인", width: 1.15, depth: 0.9, height: 0.68, seats: 1, model: "singleArmTrayRight", arms: ["left"], openSides: ["right"], price: { fabric: 818000, leather: 1636000 }, thumbnail: "./assets/thumbnails/trey_R.png" },
-  trayLeftOne: { label: "트레이L 1인", width: 1.15, depth: 0.9, height: 0.68, seats: 1, model: "singleArmTrayRight", mirror: true, arms: ["right"], openSides: ["left"], price: { fabric: 818000, leather: 1636000 }, thumbnail: "./assets/thumbnails/trey_L.png" }
+  trayRightOne: { label: "트레이R 1인", width: 1.15, depth: 0.9, height: 0.68, seats: 1, model: "singleArmTrayRight", arms: [], openSides: ["left", "right"], price: { fabric: 818000, leather: 1636000 }, thumbnail: "./assets/thumbnails/trey_R.png" },
+  trayLeftOne: { label: "트레이L 1인", width: 1.15, depth: 0.9, height: 0.68, seats: 1, model: "singleArmTrayRight", mirror: true, arms: [], openSides: ["left", "right"], price: { fabric: 818000, leather: 1636000 }, thumbnail: "./assets/thumbnails/trey_L.png" }
 };
 
 const modelSources = {
@@ -74,7 +74,7 @@ const sofaColors = [
   { id: "fabricIvory", label: "패브릭 아이보리", color: "#e6dcd1", group: "light" },
   { id: "fabricGray", label: "패브릭 그레이", color: "#918d8b", group: "light" },
   { id: "fabricCharcoal", label: "패브릭 차콜블랙", color: "#3b3a3a", group: "fabricDark" },
-  { id: "leatherBlack", label: "천연가죽 블랙", color: "#050505", group: "leatherBlack" }
+  { id: "leatherBlack", label: "천연가죽 블랙", color: "#1a1a1a", group: "leatherBlack", image: "./assets/thumbnails/texture/Kashi%209.jpg" }
 ];
 
 const fabricSofaColors = sofaColors;
@@ -98,7 +98,7 @@ const baseFrameOptionsByGroup = {
 const baseFrameColors = baseFrameOptionsByGroup.light;
 
 const trayWoodColors = [
-  { label: "월넛", color: "#501704" },
+  { label: "월넛", color: "#3d2f22", image: "./assets/thumbnails/texture/131_Persian%20walnut%20PBR%20texture-seamless.jpg" },
   { label: "블랙", color: "#000000" }
 ];
 
@@ -118,10 +118,18 @@ const state = {
   sofaColor: fabricSofaColors[0],
   baseColor: baseFrameColors[0],
   trayWood: trayWoodColors[0],
-  accentCushion: null,
+  accentCushion: null, // visual selection only, not used anymore for cart
   selectedId: "module-1",
-  modules: []
+  modules: [],
+  // Cart-only options: each is a map { label: quantity }
+  options: {
+    trayWood: {},   // e.g. { "월넛": 1 }
+    cushion: {}     // e.g. { "레드": 3 }
+  }
 };
+
+const TRAY_WOOD_PRICE = 150000;
+const CUSHION_PRICE = 31818;
 
 const els = {
   moduleCatalog: document.querySelector("#moduleCatalog"),
@@ -161,8 +169,11 @@ const els = {
   dimDepthTickA: document.querySelector("#dimDepthTickA"),
   dimDepthTickB: document.querySelector("#dimDepthTickB"),
   dimHeightTickA: document.querySelector("#dimHeightTickA"),
-  dimHeightTickB: document.querySelector("#dimHeightTickB")
+  dimHeightTickB: document.querySelector("#dimHeightTickB"),
+  toggleDimensions: document.querySelector("#toggleDimensions")
 };
+
+let showDimensions = true;
 
 const boxGeometry = new RoundedBoxGeometry(1, 1, 1, 10, 0.06);
 const cushionGeometry = new RoundedBoxGeometry(1, 1, 1, 14, 0.1);
@@ -244,11 +255,11 @@ function updateContactShadow() {
   contactShadow.position.set(center.x, -0.005, center.z);
 }
 
-scene.add(new THREE.HemisphereLight(0xffffff, 0xf2eee6, 0.7));
+scene.add(new THREE.HemisphereLight(0xffffff, 0xf2eee6, 0.55));
 
 const SUN_RADIUS = 0.8;
 const SUN_HEIGHT = 10;
-const keyLight = new THREE.DirectionalLight(0xfff4e0, 2.4);
+const keyLight = new THREE.DirectionalLight(0xfff4e0, 2.0);
 keyLight.castShadow = true;
 keyLight.shadow.mapSize.set(256, 256);
 keyLight.shadow.camera.near = 1;
@@ -270,11 +281,11 @@ function setSunAngle(degrees) {
 }
 setSunAngle(135);
 
-const fillLight = new THREE.DirectionalLight(0xeaf0ff, 0.55);
+const fillLight = new THREE.DirectionalLight(0xeaf0ff, 0.45);
 fillLight.position.set(5, 3.5, 2);
 scene.add(fillLight);
 
-const rimLight = new THREE.DirectionalLight(0xffe9c8, 0.45);
+const rimLight = new THREE.DirectionalLight(0xffe9c8, 0.36);
 rimLight.position.set(-3, 4, -5);
 scene.add(rimLight);
 
@@ -290,14 +301,17 @@ function createUpholsteryMaterial() {
   const isLeather = state.material === "naturalLeather";
   return new THREE.MeshPhysicalMaterial({
     color: new THREE.Color(currentSofaColor().color),
-    roughness: isLeather ? 0.42 : 0.95,
+    roughness: isLeather ? 0.45 : 0.95,
     metalness: 0,
-    sheen: isLeather ? 0.2 : 0.35,
-    sheenRoughness: isLeather ? 0.6 : 0.85,
-    sheenColor: new THREE.Color(currentSofaColor().color).multiplyScalar(1.08),
-    map: isLeather ? null : fabricTexture,
-    clearcoat: isLeather ? 0.4 : 0,
-    clearcoatRoughness: 0.42
+    sheen: isLeather ? 1.0 : 0.35,
+    sheenRoughness: isLeather ? 0.4 : 0.85,
+    sheenColor: isLeather
+      ? new THREE.Color(0xdddddd)
+      : new THREE.Color(currentSofaColor().color).multiplyScalar(1.08),
+    map: isLeather ? leatherTexture : fabricTexture,
+    clearcoat: 0,
+    clearcoatRoughness: 0.42,
+    envMapIntensity: isLeather ? 0.85 : 1.0
   });
 }
 
@@ -305,21 +319,53 @@ function createBaseMaterial() {
   const isLeather = state.material === "naturalLeather";
   return new THREE.MeshPhysicalMaterial({
     color: new THREE.Color(currentBaseColor().color),
-    roughness: isLeather ? 0.4 : 0.6,
+    roughness: isLeather ? 0.45 : 0.6,
     metalness: 0,
-    sheen: 0.12,
-    clearcoat: 0.18,
-    clearcoatRoughness: 0.6
+    sheen: isLeather ? 0.9 : 0.12,
+    sheenRoughness: isLeather ? 0.4 : undefined,
+    sheenColor: isLeather ? new THREE.Color(0xdddddd) : undefined,
+    clearcoat: isLeather ? 0 : 0.18,
+    clearcoatRoughness: 0.6,
+    map: isLeather ? leatherTexture : null,
+    envMapIntensity: isLeather ? 0.85 : 1.0
   });
 }
 
 function createMetalMaterial() {
-  return new THREE.MeshStandardMaterial({ color: 0x9a948b, roughness: 0.32, metalness: 0.85 });
+  return new THREE.MeshStandardMaterial({ color: 0xc8c8c8, roughness: 0.55, metalness: 0.9 });
 }
 
+const _textureLoader = new THREE.TextureLoader();
+const walnutTexture = _textureLoader.load(
+  "./assets/thumbnails/texture/131_Persian%20walnut%20PBR%20texture-seamless.jpg"
+);
+walnutTexture.colorSpace = THREE.SRGBColorSpace;
+walnutTexture.wrapS = THREE.RepeatWrapping;
+walnutTexture.wrapT = THREE.RepeatWrapping;
+walnutTexture.repeat.set(1.5, 1.5);
+walnutTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+const leatherTexture = _textureLoader.load("./assets/thumbnails/texture/Kashi%209.jpg");
+leatherTexture.colorSpace = THREE.SRGBColorSpace;
+leatherTexture.wrapS = THREE.RepeatWrapping;
+leatherTexture.wrapT = THREE.RepeatWrapping;
+leatherTexture.repeat.set(1.5, 1.5);
+leatherTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
 function createTrayWoodMaterial() {
+  const isWalnut = state.trayWood?.label === "월넛";
+  if (isWalnut) {
+    return new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color(0x6a6258), // lighter neutral cool brown
+      map: walnutTexture,
+      roughness: 0.55,
+      metalness: 0,
+      clearcoat: 0.35,
+      clearcoatRoughness: 0.45
+    });
+  }
   return new THREE.MeshPhysicalMaterial({
-    color: new THREE.Color(state.trayWood?.color || "#501704"),
+    color: new THREE.Color(state.trayWood?.color || "#000000"),
     roughness: 0.55,
     metalness: 0,
     clearcoat: 0.35,
@@ -404,11 +450,6 @@ function createImportedModule(module, upholsteryMaterial, baseMaterial, metalMat
 
   const model = sourceModel.clone(true);
   const trayWoodMaterial = createTrayWoodMaterial();
-  // Find overall bbox to identify which meshes are at the top (= back cushions)
-  const overallBox = new THREE.Box3().setFromObject(model);
-  const overallMinY = overallBox.min.y;
-  const overallHeight = Math.max(0.001, overallBox.max.y - overallBox.min.y);
-  const accentMaterial = state.accentCushion ? createAccentCushionMaterial(state.accentCushion.color) : null;
 
   model.traverse((child) => {
     if (!child.isMesh) return;
@@ -428,17 +469,7 @@ function createImportedModule(module, upholsteryMaterial, baseMaterial, metalMat
       child.material = trayWoodMaterial.clone();
       return;
     }
-    // Decide: back cushion (top of sofa, small Z depth) vs main upholstery
-    const childBox = new THREE.Box3().setFromObject(child);
-    const childCy = (childBox.min.y + childBox.max.y) / 2;
-    const heightPct = (childCy - overallMinY) / overallHeight;
-    const childSize = childBox.getSize(new THREE.Vector3());
-    const isBackCushion = heightPct > 0.7 && childSize.x > 0.2 && childSize.z < 0.5;
-    if (isBackCushion && accentMaterial) {
-      child.material = accentMaterial.clone();
-    } else {
-      child.material = upholsteryMaterial.clone();
-    }
+    child.material = upholsteryMaterial.clone();
   });
 
   const initialBounds = new THREE.Box3().setFromObject(model);
@@ -638,12 +669,18 @@ function updateUi() {
   updateModuleToolbarPosition();
 }
 
+function sumQty(map) {
+  return Object.values(map).reduce((s, q) => s + q, 0);
+}
+
 function calculateTotalPrice() {
   const tier = state.material === "naturalLeather" ? "leather" : "fabric";
-  return state.modules.reduce((sum, mod) => {
+  const modulesTotal = state.modules.reduce((sum, mod) => {
     const spec = moduleCatalog[mod.type];
     return sum + (spec?.price?.[tier] || 0);
   }, 0);
+  const cushionTotal = sumQty(state.options.cushion) * CUSHION_PRICE;
+  return modulesTotal + cushionTotal;
 }
 
 function formatKrw(value) {
@@ -653,8 +690,39 @@ function formatKrw(value) {
 function updatePriceSummary() {
   if (!els.totalPrice) return;
   els.totalPrice.textContent = formatKrw(calculateTotalPrice());
-  if (els.cartToggleCount) els.cartToggleCount.textContent = state.modules.length;
+  if (els.cartToggleCount) {
+    const total = state.modules.length + sumQty(state.options.cushion);
+    els.cartToggleCount.textContent = total;
+  }
   renderCartList();
+}
+
+function makeCartItem({ name, qty, unitPrice, onMinus, onPlus, onRemove, allowQty = true }) {
+  const item = document.createElement("div");
+  item.className = "cart-item";
+  const totalPrice = qty * unitPrice;
+  item.innerHTML = `
+    <div class="cart-item-info">
+      <p class="cart-item-name">${name}</p>
+      ${allowQty
+        ? `<div class="cart-qty-control">
+             <button class="cart-qty-btn" data-act="minus" type="button" aria-label="수량 감소">−</button>
+             <span class="cart-qty-num">${qty}</span>
+             <button class="cart-qty-btn" data-act="plus" type="button" aria-label="수량 증가">+</button>
+           </div>`
+        : `<span class="cart-item-qty">${qty}</span>`}
+    </div>
+    <div class="cart-item-side">
+      <button class="cart-item-remove" type="button" aria-label="삭제">×</button>
+      <span class="cart-item-price">${formatKrw(totalPrice)}</span>
+    </div>
+  `;
+  if (allowQty) {
+    item.querySelector('[data-act="minus"]').addEventListener("click", onMinus);
+    item.querySelector('[data-act="plus"]').addEventListener("click", onPlus);
+  }
+  item.querySelector(".cart-item-remove").addEventListener("click", onRemove);
+  return item;
 }
 
 function renderCartList() {
@@ -663,26 +731,59 @@ function renderCartList() {
   const sofaLabel = state.sofaColor.label;
   const baseLabel = state.baseColor.label;
   els.cartList.innerHTML = "";
+
+  // Modules
   state.modules.forEach((mod) => {
     const spec = moduleCatalog[mod.type];
     if (!spec) return;
     const price = spec.price?.[tier] || 0;
-    const item = document.createElement("div");
-    item.className = "cart-item";
-    item.innerHTML = `
-      <div class="cart-item-info">
-        <p class="cart-item-name">${sofaLabel}/${baseLabel}/${spec.label}</p>
-        <span class="cart-item-qty">1</span>
-      </div>
-      <div class="cart-item-side">
-        <button class="cart-item-remove" type="button" aria-label="모듈 삭제">×</button>
-        <span class="cart-item-price">${formatKrw(price)}</span>
-      </div>
-    `;
-    item.querySelector(".cart-item-remove").addEventListener("click", () => {
-      removeModuleById(mod.id);
-    });
-    els.cartList.append(item);
+    els.cartList.append(makeCartItem({
+      name: `${sofaLabel}/${baseLabel}/${spec.label}`,
+      qty: 1,
+      unitPrice: price,
+      allowQty: false,
+      onRemove: () => removeModuleById(mod.id)
+    }));
+  });
+
+  // Cushion options
+  Object.entries(state.options.cushion).forEach(([label, qty]) => {
+    if (qty <= 0) return;
+    els.cartList.append(makeCartItem({
+      name: `소파 쿠션 - ${label}`,
+      qty,
+      unitPrice: CUSHION_PRICE,
+      onMinus: () => updateOptionQty("cushion", label, qty - 1),
+      onPlus: () => updateOptionQty("cushion", label, qty + 1),
+      onRemove: () => updateOptionQty("cushion", label, 0)
+    }));
+  });
+}
+
+function updateOptionQty(group, label, newQty) {
+  if (newQty <= 0) {
+    delete state.options[group][label];
+  } else {
+    state.options[group][label] = newQty;
+  }
+  updatePriceSummary();
+}
+
+function addOption(group, label) {
+  const current = state.options[group][label] || 0;
+  state.options[group][label] = current + 1;
+  updatePriceSummary();
+}
+
+function compactModulesAlongX() {
+  if (state.modules.length <= 1) return;
+  const sorted = [...state.modules].sort((a, b) => a.x - b.x);
+  let cursor = sorted[0].x - moduleDimensions(sorted[0]).w / 2;
+  sorted.forEach((mod) => {
+    const { w } = moduleDimensions(mod);
+    mod.x = cursor + w / 2;
+    mod.z = 0;
+    cursor += w;
   });
 }
 
@@ -694,6 +795,7 @@ function removeModuleById(id) {
   if (state.selectedId === id) {
     state.selectedId = state.modules[Math.max(0, idx - 1)]?.id;
   }
+  compactModulesAlongX();
   toolbarModuleId = null;
   rebuildSofa({ recenterCamera: true, animateCamera: true });
 }
@@ -919,6 +1021,7 @@ function removeSelected() {
   if (index < 0) return;
   state.modules.splice(index, 1);
   state.selectedId = state.modules[Math.max(0, index - 1)]?.id;
+  compactModulesAlongX();
   toolbarModuleId = null;
   rebuildSofa({ recenterCamera: true, animateCamera: true });
 }
@@ -959,6 +1062,7 @@ function updateDimensionLabels() {
     if (els.dimSvg) els.dimSvg.classList.add("is-hidden");
   };
 
+  if (!showDimensions) return hideAll();
   if (!state.modules.length) return hideAll();
   const bounds = new THREE.Box3().setFromObject(sofaRoot);
   if (bounds.isEmpty()) return hideAll();
@@ -978,13 +1082,17 @@ function updateDimensionLabels() {
   const widthCornerLeft = new THREE.Vector3(bounds.min.x, bounds.min.y, bounds.max.z);
   const widthCornerRight = new THREE.Vector3(bounds.max.x, bounds.min.y, bounds.max.z);
 
-  // Depth: left edge (min X), label at center
+  // Depth: side edge facing the camera (left if camera is on -X side, right if on +X side)
   const dOffset = 0.22;
-  const depthFront3D = new THREE.Vector3(bounds.min.x - dOffset, bounds.min.y, bounds.max.z);
-  const depthBack3D = new THREE.Vector3(bounds.min.x - dOffset, bounds.min.y, bounds.min.z);
-  const depthMid3D = new THREE.Vector3(bounds.min.x - dOffset, bounds.min.y, (bounds.min.z + bounds.max.z) / 2);
-  const depthCornerFront = new THREE.Vector3(bounds.min.x, bounds.min.y, bounds.max.z);
-  const depthCornerBack = new THREE.Vector3(bounds.min.x, bounds.min.y, bounds.min.z);
+  const sofaCenterX = (bounds.min.x + bounds.max.x) / 2;
+  const depthOnRight = camera.position.x >= sofaCenterX;
+  const depthEdgeX = depthOnRight ? bounds.max.x : bounds.min.x;
+  const depthAnchorX = depthOnRight ? bounds.max.x + dOffset : bounds.min.x - dOffset;
+  const depthFront3D = new THREE.Vector3(depthAnchorX, bounds.min.y, bounds.max.z);
+  const depthBack3D = new THREE.Vector3(depthAnchorX, bounds.min.y, bounds.min.z);
+  const depthMid3D = new THREE.Vector3(depthAnchorX, bounds.min.y, (bounds.min.z + bounds.max.z) / 2);
+  const depthCornerFront = new THREE.Vector3(depthEdgeX, bounds.min.y, bounds.max.z);
+  const depthCornerBack = new THREE.Vector3(depthEdgeX, bounds.min.y, bounds.min.z);
 
   // Height: shown on the BACK edge — uses the catalog backrest height (e.g. 680mm)
   const hOffset = 0.22;
@@ -1019,7 +1127,7 @@ function updateDimensionLabels() {
 
   // Cheap occlusion via dot product
   const widthOutward = new THREE.Vector3(0, 0, 1);
-  const depthOutward = new THREE.Vector3(-1, 0, 0);
+  const depthOutward = new THREE.Vector3(depthOnRight ? 1 : -1, 0, 0);
   const heightOutward = new THREE.Vector3(0, 0, -1);
   const widthVisible = isFacingCamera(widthCornerLeft, widthOutward);
   const depthVisible = isFacingCamera(depthCornerFront, depthOutward);
@@ -1263,6 +1371,7 @@ function initSwatches(container, items, activeItem, onSelect) {
     const button = document.createElement("button");
     button.className = `swatch${item === activeItem ? " active" : ""}`;
     button.style.setProperty("--swatch", item.color);
+    if (item.image) button.style.setProperty("--swatch-image", `url("${item.image}")`);
     button.dataset.label = item.label;
     button.title = item.label;
     button.ariaLabel = item.label;
@@ -1322,6 +1431,11 @@ document.querySelector("#zoomIn").addEventListener("click", () => zoom(-0.8));
 document.querySelector("#zoomOut").addEventListener("click", () => zoom(0.8));
 document.querySelector("#rotateLeft").addEventListener("click", () => rotateScene(-1));
 document.querySelector("#rotateRight").addEventListener("click", () => rotateScene(1));
+els.toggleDimensions?.addEventListener("click", () => {
+  showDimensions = !showDimensions;
+  els.toggleDimensions.classList.toggle("is-active", showDimensions);
+  els.toggleDimensions.setAttribute("aria-pressed", showDimensions ? "true" : "false");
+});
 document.querySelector("#closeHotspot").addEventListener("click", closeHotspotPopover);
 document.querySelector("#toolbarRotateLeft").addEventListener("click", () => rotateSelected(-1));
 document.querySelector("#toolbarRotateRight").addEventListener("click", () => rotateSelected(1));
@@ -1368,32 +1482,45 @@ initSwatches(els.sofaSwatches, fabricSofaColors, state.sofaColor, (item) => {
 });
 renderBaseSwatches();
 
-initSwatches(els.trayWoodSwatches, trayWoodColors, state.trayWood, (item) => {
-  state.trayWood = item;
-  els.trayWoodLabel.textContent = item.label;
-});
-
-function renderAccentSwatches() {
-  els.accentCushionSwatches.innerHTML = "";
-  // "없음" option first
-  const noneBtn = document.createElement("button");
-  noneBtn.className = `swatch swatch-none${state.accentCushion === null ? " active" : ""}`;
-  noneBtn.dataset.label = "없음";
-  noneBtn.title = "없음";
-  noneBtn.addEventListener("click", () => {
-    state.accentCushion = null;
-    els.accentCushionLabel.textContent = "없음";
-    els.accentCushionSwatches.querySelectorAll(".swatch").forEach((s) => s.classList.remove("active"));
-    noneBtn.classList.add("active");
-    rebuildSofa();
-  });
-  els.accentCushionSwatches.append(noneBtn);
-  initSwatches(els.accentCushionSwatches, accentCushionColors, state.accentCushion, (item) => {
-    state.accentCushion = item;
-    els.accentCushionLabel.textContent = item.label;
+// Tray wood: clicking a color adds it as a cart line item
+function renderTrayWoodSwatches() {
+  els.trayWoodSwatches.innerHTML = "";
+  trayWoodColors.forEach((item) => {
+    const button = document.createElement("button");
+    button.className = `swatch${item === state.trayWood ? " active" : ""}`;
+    button.style.setProperty("--swatch", item.color);
+    if (item.image) button.style.setProperty("--swatch-image", `url("${item.image}")`);
+    button.dataset.label = item.label;
+    button.title = item.label;
+    button.addEventListener("click", () => {
+      state.trayWood = item;
+      els.trayWoodLabel.textContent = item.label;
+      els.trayWoodSwatches.querySelectorAll(".swatch").forEach((s) => s.classList.remove("active"));
+      button.classList.add("active");
+      rebuildSofa();
+    });
+    els.trayWoodSwatches.append(button);
   });
 }
-renderAccentSwatches();
+renderTrayWoodSwatches();
+
+// Cushion: clicking a color adds it as a cart line item
+function renderCushionSwatches() {
+  els.accentCushionSwatches.innerHTML = "";
+  accentCushionColors.forEach((item) => {
+    const button = document.createElement("button");
+    button.className = "swatch";
+    button.style.setProperty("--swatch", item.color);
+    button.dataset.label = item.label;
+    button.title = item.label;
+    button.addEventListener("click", () => {
+      addOption("cushion", item.label);
+      els.accentCushionLabel.textContent = item.label;
+    });
+    els.accentCushionSwatches.append(button);
+  });
+}
+renderCushionSwatches();
 
 resize();
 setLayout("armlessRight");
