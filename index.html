@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>INSHOW SOFA #1 Configurator</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="viewer" aria-label="3D sofa viewer">
+        <canvas id="scene"></canvas>
+        <div class="brand-bar">
+          <div>
+            <p class="eyebrow">3D Configurator</p>
+            <h1>INSHOW SOFA #1</h1>
+          </div>
+          <div class="sun-control" aria-label="햇빛 각도">
+            <span class="sun-icon" aria-hidden="true">☀</span>
+            <input type="range" id="sunAngle" min="0" max="360" value="135" step="1" />
+            <span id="sunAngleValue">135°</span>
+          </div>
+          <div class="metrics">
+            <span id="widthMetric">Width 0 cm</span>
+            <span id="depthMetric">Depth 0 cm</span>
+          </div>
+        </div>
+        <div class="tool-rail" aria-label="View controls">
+          <button class="icon-btn" id="viewHome" title="Reset view" aria-label="Reset view">⌂</button>
+          <button class="icon-btn" id="zoomIn" title="Zoom in" aria-label="Zoom in">+</button>
+          <button class="icon-btn" id="zoomOut" title="Zoom out" aria-label="Zoom out">−</button>
+          <button class="icon-btn" id="rotateLeft" title="Rotate left" aria-label="Rotate left">↺</button>
+          <button class="icon-btn" id="rotateRight" title="Rotate right" aria-label="Rotate right">↻</button>
+        </div>
+        <div class="hotspot-popover" id="hotspotPopover" aria-hidden="true">
+          <div class="popover-head">
+            <span>추가할 모듈</span>
+            <button id="closeHotspot" aria-label="Close module picker">×</button>
+          </div>
+          <div class="thumbnail-grid" id="hotspotThumbnails"></div>
+        </div>
+        <div class="module-toolbar" id="moduleToolbar" aria-hidden="true">
+          <button id="toolbarRotateLeft" aria-label="왼쪽으로 회전">↺</button>
+          <button id="toolbarRotateRight" aria-label="오른쪽으로 회전">↻</button>
+          <button id="toolbarDelete" aria-label="선택 모듈 삭제">×</button>
+        </div>
+        <button class="side-hotspot" id="leftHotspot" data-side="left" aria-label="왼쪽에 모듈 추가">
+          <svg viewBox="0 0 512 512" aria-hidden="true">
+            <path
+              d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"
+            />
+          </svg>
+        </button>
+        <button class="side-hotspot" id="rightHotspot" data-side="right" aria-label="오른쪽에 모듈 추가">
+          <svg viewBox="0 0 512 512" aria-hidden="true">
+            <path
+              d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"
+            />
+          </svg>
+        </button>
+        <div class="scene-help">드래그 회전 · 휠 줌 · 소파 클릭 선택</div>
+        <svg class="dim-svg" id="dimSvg" aria-hidden="true">
+          <line id="dimWidthLine" class="dim-line" x1="0" y1="0" x2="0" y2="0" />
+          <line id="dimDepthLine" class="dim-line" x1="0" y1="0" x2="0" y2="0" />
+          <line id="dimHeightLine" class="dim-line" x1="0" y1="0" x2="0" y2="0" />
+          <line id="dimWidthTickA" class="dim-tick" x1="0" y1="0" x2="0" y2="0" />
+          <line id="dimWidthTickB" class="dim-tick" x1="0" y1="0" x2="0" y2="0" />
+          <line id="dimDepthTickA" class="dim-tick" x1="0" y1="0" x2="0" y2="0" />
+          <line id="dimDepthTickB" class="dim-tick" x1="0" y1="0" x2="0" y2="0" />
+          <line id="dimHeightTickA" class="dim-tick" x1="0" y1="0" x2="0" y2="0" />
+          <line id="dimHeightTickB" class="dim-tick" x1="0" y1="0" x2="0" y2="0" />
+        </svg>
+        <div class="dim-label" id="dimWidth" aria-hidden="true">0 cm</div>
+        <div class="dim-label" id="dimDepth" aria-hidden="true">0 cm</div>
+        <div class="dim-label" id="dimHeight" aria-hidden="true">0 cm</div>
+      </section>
+
+      <aside class="panel" aria-label="Configurator options">
+        <section class="control-group">
+          <div class="group-title">
+            <h3>소파 모듈</h3>
+            <span id="moduleCount">0개 모듈</span>
+          </div>
+          <div class="module-grid" id="moduleCatalog"></div>
+        </section>
+
+        <section class="control-group" id="sofaColorGroup">
+          <div class="group-title">
+            <h3>소파 색상</h3>
+            <span id="sofaColorLabel">아이보리</span>
+          </div>
+          <div class="swatches two-col" id="sofaSwatches"></div>
+        </section>
+
+        <section class="control-group" id="baseColorGroup">
+          <div class="group-title">
+            <h3>하부 프레임 색상</h3>
+            <span id="baseColorLabel">비건가죽 그레이</span>
+          </div>
+          <div class="swatches two-col" id="baseSwatches"></div>
+        </section>
+
+        <section class="control-group" id="trayWoodGroup">
+          <div class="group-title">
+            <h3>소파 원목 선반</h3>
+            <span id="trayWoodLabel">월넛</span>
+          </div>
+          <div class="swatches two-col" id="trayWoodSwatches"></div>
+        </section>
+
+        <section class="control-group" id="accentCushionGroup">
+          <div class="group-title">
+            <h3>소파 쿠션</h3>
+            <span id="accentCushionLabel">없음</span>
+          </div>
+          <div class="swatches accent-grid" id="accentCushionSwatches"></div>
+        </section>
+
+        <section class="checkout">
+          <button class="cart-toggle" id="cartToggle" aria-expanded="false">
+            <span>구성 모듈 <span class="cart-toggle-count" id="cartToggleCount">0</span>개</span>
+            <span class="cart-toggle-icon">▾</span>
+          </button>
+          <div class="cart-list" id="cartList" hidden></div>
+          <div class="checkout-row">
+            <a href="#" class="checkout-info">주문시 안내사항 ›</a>
+            <div class="checkout-total">
+              <div class="total-row">
+                <span class="total-label">총 금액</span>
+                <strong id="totalPrice">0원</strong>
+              </div>
+              <div class="total-tax">ⓘ 부가세 미포함가</div>
+            </div>
+          </div>
+          <button class="checkout-btn" id="addToCart">장바구니 담기</button>
+        </section>
+      </aside>
+    </main>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
