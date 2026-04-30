@@ -1385,31 +1385,34 @@ function initSwatches(container, items, activeItem, onSelect) {
   });
 }
 
-function loadModuleModels() {
+function loadModuleModels(onProgress) {
   const loader = new GLTFLoader();
   const entries = Object.entries(modelSources);
-  let remaining = entries.length;
-
-  entries.forEach(([key, url]) => {
-    loader.load(
-      url,
-      (gltf) => {
-        importedModels[key] = gltf.scene;
-        remaining -= 1;
-        rebuildSofa({ recenterCamera: true });
-        renderModuleThumbnails();
-      },
-      undefined,
-      (error) => {
-        remaining -= 1;
-        console.warn(`Failed to load ${url}; using fallback if needed.`, error);
-        if (remaining === 0) {
-          rebuildSofa({ recenterCamera: true });
-          renderModuleThumbnails();
-        }
-      }
-    );
-  });
+  const total = entries.length;
+  let done = 0;
+  return Promise.all(
+    entries.map(
+      ([key, url]) =>
+        new Promise((resolve) => {
+          loader.load(
+            url,
+            (gltf) => {
+              importedModels[key] = gltf.scene;
+              done += 1;
+              if (onProgress) onProgress(done / total, done, total);
+              resolve();
+            },
+            undefined,
+            (error) => {
+              console.warn(`Failed to load ${url}`, error);
+              done += 1;
+              if (onProgress) onProgress(done / total, done, total);
+              resolve();
+            }
+          );
+        })
+    )
+  );
 }
 
 function renderModuleThumbnails() {
@@ -1427,6 +1430,14 @@ document.querySelectorAll(".preset").forEach((button) => {
 });
 
 document.querySelector("#viewHome").addEventListener("click", resetCamera);
+
+window.addEventListener("keydown", (e) => {
+  if (e.code !== "Space") return;
+  const tag = (e.target?.tagName || "").toLowerCase();
+  if (tag === "input" || tag === "textarea" || e.target?.isContentEditable) return;
+  e.preventDefault();
+  resetCamera();
+});
 document.querySelector("#zoomIn").addEventListener("click", () => zoom(-0.8));
 document.querySelector("#zoomOut").addEventListener("click", () => zoom(0.8));
 document.querySelector("#rotateLeft").addEventListener("click", () => rotateScene(-1));
@@ -1523,6 +1534,123 @@ function renderCushionSwatches() {
 renderCushionSwatches();
 
 resize();
-setLayout("armlessRight");
-loadModuleModels();
-animate();
+state.layout = "armlessRight";
+state.modules = [makeModule("module-1", "armlessRight", 0, 0)];
+state.selectedId = state.modules[0]?.id;
+
+const loadingScreen = document.querySelector("#loadingScreen");
+const loadingBarFill = document.querySelector("#loadingBarFill");
+const loadingStatus = document.querySelector("#loadingStatus");
+const appShell = document.querySelector("#appShell");
+
+loadModuleModels((ratio, done, total) => {
+  if (loadingBarFill) loadingBarFill.style.width = `${Math.round(ratio * 100)}%`;
+  if (loadingStatus) loadingStatus.textContent = `Loading ${done} / ${total}`;
+}).then(() => {
+  if (loadingStatus) loadingStatus.textContent = "Ready";
+  if (loadingBarFill) loadingBarFill.style.width = "100%";
+  // Reveal the app, then start the render loop on the next frame
+  appShell.hidden = false;
+  // Force a resize so the renderer picks up the now-visible canvas dimensions
+  resize();
+  rebuildSofa({ recenterCamera: true });
+  renderModuleThumbnails();
+  animate();
+  // Fade out the loading screen
+  requestAnimationFrame(() => {
+    loadingScreen.classList.add("is-fading");
+    setTimeout(() => {
+      loadingScreen.hidden = true;
+    }, 450);
+  });
+});
+
+// ----- Mobile bottom-sheet behavior -----
+(() => {
+  const panel = document.querySelector("#optionsPanel");
+  const handle = document.querySelector("#sheetHandle");
+  if (!panel || !handle) return;
+
+  const PEEK = 220; // collapsed visible height (px)
+  panel.style.setProperty("--sheet-peek", `${PEEK}px`);
+
+  const isMobile = () => window.matchMedia("(max-width: 900px)").matches;
+
+  let dragging = false;
+  let startY = 0;
+  let startTranslate = 0;
+  let currentTranslate = 0;
+  let panelHeight = 0;
+
+  const getCollapsedTranslate = () => Math.max(0, panelHeight - PEEK);
+
+  const setTranslate = (px) => {
+    currentTranslate = px;
+    panel.style.transform = `translateY(${px}px)`;
+  };
+
+  const expand = () => {
+    panel.classList.add("is-expanded");
+    panel.style.transform = "";
+  };
+
+  const collapse = () => {
+    panel.classList.remove("is-expanded");
+    panel.style.transform = "";
+  };
+
+  const onPointerDown = (e) => {
+    if (!isMobile()) return;
+    panelHeight = panel.getBoundingClientRect().height;
+    const expanded = panel.classList.contains("is-expanded");
+    startTranslate = expanded ? 0 : getCollapsedTranslate();
+    startY = e.touches ? e.touches[0].clientY : e.clientY;
+    dragging = true;
+    panel.classList.add("is-dragging");
+    handle.setPointerCapture?.(e.pointerId);
+  };
+
+  const onPointerMove = (e) => {
+    if (!dragging) return;
+    const y = e.touches ? e.touches[0].clientY : e.clientY;
+    const delta = y - startY;
+    const next = Math.max(0, Math.min(getCollapsedTranslate(), startTranslate + delta));
+    setTranslate(next);
+    e.preventDefault?.();
+  };
+
+  const onPointerUp = () => {
+    if (!dragging) return;
+    dragging = false;
+    panel.classList.remove("is-dragging");
+    const collapsed = getCollapsedTranslate();
+    if (currentTranslate < collapsed * 0.5) expand();
+    else collapse();
+  };
+
+  // Pointer events cover both mouse and touch on modern browsers
+  handle.addEventListener("pointerdown", onPointerDown);
+  window.addEventListener("pointermove", onPointerMove, { passive: false });
+  window.addEventListener("pointerup", onPointerUp);
+  window.addEventListener("pointercancel", onPointerUp);
+
+  // Tap (no drag) toggles
+  let tapStartY = 0;
+  handle.addEventListener("pointerdown", (e) => {
+    tapStartY = e.clientY;
+  });
+  handle.addEventListener("pointerup", (e) => {
+    if (Math.abs(e.clientY - tapStartY) < 6) {
+      panel.classList.toggle("is-expanded");
+      panel.style.transform = "";
+    }
+  });
+
+  // When viewport changes (rotate/resize), reset inline transform
+  window.addEventListener("resize", () => {
+    if (!isMobile()) {
+      panel.style.transform = "";
+      panel.classList.remove("is-expanded");
+    }
+  });
+})();

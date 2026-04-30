@@ -15,7 +15,17 @@
     </script>
   </head>
   <body>
-    <main class="app-shell">
+    <div class="loading-screen" id="loadingScreen" aria-live="polite">
+      <div class="loading-inner">
+        <p class="loading-eyebrow">3D CONFIGURATOR</p>
+        <h1 class="loading-title">INSHOW SOFA #1</h1>
+        <div class="loading-bar">
+          <div class="loading-bar-fill" id="loadingBarFill"></div>
+        </div>
+        <p class="loading-status" id="loadingStatus">Loading…</p>
+      </div>
+    </div>
+    <main class="app-shell" id="appShell" hidden>
       <section class="viewer" aria-label="3D sofa viewer">
         <canvas id="scene"></canvas>
         <div class="brand-bar">
@@ -102,7 +112,8 @@
         <div class="dim-label" id="dimHeight" aria-hidden="true">0 cm</div>
       </section>
 
-      <aside class="panel" aria-label="Configurator options">
+      <aside class="panel" id="optionsPanel" aria-label="Configurator options">
+        <button class="sheet-handle" id="sheetHandle" type="button" aria-label="옵션 패널 펼치기/접기"></button>
         <div class="panel-scroll">
           <section class="control-group">
             <div class="group-title">
