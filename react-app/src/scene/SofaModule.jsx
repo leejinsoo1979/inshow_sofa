@@ -80,8 +80,19 @@ export default function SofaModule({ module: m }) {
       if ("envMapIntensity" in mat) mat.envMapIntensity = Math.max(mat.envMapIntensity || 0, 1.15);
     };
 
+    // 기존 outline 제거
+    const oldOutlines = [];
     clone.traverse((child) => {
-      if (!child.isMesh) return;
+      if (child.userData.isOutline) oldOutlines.push(child);
+    });
+    oldOutlines.forEach((o) => {
+      o.parent?.remove(o);
+      o.geometry?.dispose?.();
+      o.material?.dispose?.();
+    });
+
+    clone.traverse((child) => {
+      if (!child.isMesh || child.userData.isOutline) return;
       child.castShadow = true;
       child.receiveShadow = true;
       child.userData.isModuleMesh = true;
@@ -95,6 +106,26 @@ export default function SofaModule({ module: m }) {
       }
       child.material = newMat;
     });
+
+    // 선택된 모듈에 outline 추가 (BackSide 약간 큰 mesh)
+    if (isSelected) {
+      const outlineMat = new THREE.MeshBasicMaterial({
+        color: 0xff4a3d,
+        side: THREE.BackSide,
+        transparent: true,
+        opacity: 0.8
+      });
+      const outlines = [];
+      clone.traverse((child) => {
+        if (child.isMesh && !child.userData.isOutline) {
+          const om = new THREE.Mesh(child.geometry, outlineMat);
+          om.scale.multiplyScalar(1.04);
+          om.userData.isOutline = true;
+          outlines.push({ parent: child, mesh: om });
+        }
+      });
+      outlines.forEach(({ parent, mesh }) => parent.add(mesh));
+    }
   }, [clone, sofaColor, baseColor, trayWood, material, spec, selectedId, m.id]);
 
   // group에 clone 직접 add (vanilla 방식, r3f reconciler 우회)
