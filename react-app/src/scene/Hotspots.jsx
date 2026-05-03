@@ -58,7 +58,7 @@ export default function Hotspots() {
   return (
     <>
       {leftEnabled && (
-        <Html position={[leftX, 0.34, z]} center zIndexRange={[10, 0]}>
+        <Html position={[leftX, 0.04, z]} center zIndexRange={[10, 0]}>
           <button
             className="side-hotspot"
             style={{ position: "static", animation: "hotspot-breathe 2.2s ease-in-out infinite" }}
@@ -70,7 +70,7 @@ export default function Hotspots() {
         </Html>
       )}
       {rightEnabled && (
-        <Html position={[rightX, 0.34, z]} center zIndexRange={[10, 0]}>
+        <Html position={[rightX, 0.04, z]} center zIndexRange={[10, 0]}>
           <button
             className="side-hotspot"
             style={{ position: "static", animation: "hotspot-breathe 2.2s ease-in-out infinite" }}

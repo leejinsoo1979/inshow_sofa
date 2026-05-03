@@ -80,6 +80,16 @@ export default function SofaModule({ module: m }) {
     });
   }, [clone, sofaColor, baseColor, trayWood, material, spec]);
 
+  // group에 clone 직접 add (vanilla 방식, r3f reconciler 우회)
+  useEffect(() => {
+    const g = groupRef.current;
+    if (!g) return;
+    g.add(clone);
+    return () => {
+      g.remove(clone);
+    };
+  }, [clone]);
+
   return (
     <group
       ref={groupRef}
@@ -89,8 +99,6 @@ export default function SofaModule({ module: m }) {
         e.stopPropagation();
         setSelectedId(m.id);
       }}
-    >
-      <primitive object={clone} />
-    </group>
+    />
   );
 }
