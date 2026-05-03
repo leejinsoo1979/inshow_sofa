@@ -44,19 +44,28 @@ export const useConfigurator = create((set, get) => ({
 
   addModuleAtSide: (type, side = "right") => {
     const { modules } = get();
-    const newId = `module-${Date.now()}`;
-    const baseSpec = moduleCatalog[type];
-    if (!baseSpec) return;
-    // 단순 배치: 가장 우측/좌측 모듈 옆에 인접
-    let x = 0;
+    const spec = moduleCatalog[type];
+    if (!spec) return;
+    const newId = `module-${Date.now().toString().slice(-5)}`;
+    const SEAM = 0.02;
+    let x = 0, z = 0;
     if (modules.length > 0) {
-      const sorted = [...modules].sort((a, b) => a.x - b.x);
-      const ref = side === "right" ? sorted[sorted.length - 1] : sorted[0];
-      const refSpec = moduleCatalog[ref.type];
-      const offset = (refSpec.width + baseSpec.width) / 2;
-      x = side === "right" ? ref.x + offset : ref.x - offset;
+      // bounds 계산 (vanilla configuredBounds와 동일)
+      let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity;
+      for (const m of modules) {
+        const ms = moduleCatalog[m.type];
+        const hw = ms.width / 2, hd = ms.depth / 2;
+        minX = Math.min(minX, m.x - hw);
+        maxX = Math.max(maxX, m.x + hw);
+        minZ = Math.min(minZ, m.z - hd);
+        maxZ = Math.max(maxZ, m.z + hd);
+      }
+      x = side === "left"
+        ? minX - spec.width / 2 + SEAM
+        : maxX + spec.width / 2 - SEAM;
+      z = (minZ + maxZ) / 2;
     }
-    const m = { id: newId, type, x, z: 0, rotation: 0 };
+    const m = { id: newId, type, x, z, rotation: 0 };
     set({ modules: [...modules, m], selectedId: newId });
   },
 
