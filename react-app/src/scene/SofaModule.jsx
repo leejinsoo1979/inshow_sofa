@@ -57,20 +57,23 @@ export default function SofaModule({ module: m }) {
         : remap(child.material);
     });
 
-    // 스케일/센터링: bounds 측정 후 catalog dimensions으로 정규화
-    const bounds = new THREE.Box3().setFromObject(clone);
-    const size = bounds.getSize(new THREE.Vector3());
-    const scaleX = spec.width / Math.max(size.x, 1e-6);
-    const scaleY = spec.height / Math.max(size.y, 1e-6);
-    const scaleZ = spec.depth / Math.max(size.z, 1e-6);
-    const mirrorSign = spec.mirror ? -1 : 1;
-    clone.scale.set(scaleX * mirrorSign, scaleY, scaleZ);
+    // vanilla 동일: scale 적용 → group에 add는 r3f가 알아서 → bounds → 위치 보정
+    const initialBounds = new THREE.Box3().setFromObject(clone);
+    const initialSize = initialBounds.getSize(new THREE.Vector3());
+    const mirror = spec.mirror ? -1 : 1;
+    const scaleX = Number.isFinite(spec.width / initialSize.x) ? spec.width / initialSize.x : 1;
+    const scaleY = Number.isFinite(spec.height / initialSize.y) ? spec.height / initialSize.y : 1;
+    const scaleZ = Number.isFinite(spec.depth / initialSize.z) ? spec.depth / initialSize.z : 1;
+    clone.scale.set(scaleX * mirror, scaleY, scaleZ);
 
-    const newBounds = new THREE.Box3().setFromObject(clone);
-    const center = newBounds.getCenter(new THREE.Vector3());
-    clone.position.x = -center.x;
-    clone.position.z = -center.z;
-    clone.position.y = -newBounds.min.y;
+    // 위치 reset 후 다시 측정 (vanilla와 동일하게 -= 사용)
+    clone.position.set(0, 0, 0);
+    clone.updateMatrixWorld(true);
+    const bounds = new THREE.Box3().setFromObject(clone);
+    const center = bounds.getCenter(new THREE.Vector3());
+    clone.position.x -= center.x;
+    clone.position.z -= center.z;
+    clone.position.y -= bounds.min.y;
   }, [clone, sofaColor, baseColor, trayWood, material, spec]);
 
   return (
