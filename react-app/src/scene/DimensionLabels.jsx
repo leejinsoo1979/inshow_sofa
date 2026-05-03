@@ -32,18 +32,18 @@ export default function DimensionLabels() {
   const cx = (minX + maxX) / 2;
   const cz = (minZ + maxZ) / 2;
   const yLine = 0.01;
-  const padZ = 0.18;
-  const padX = 0.18;
+  const padZ = 0.45;
+  const padX = 0.45;
 
   return (
     <group>
       <Line points={[[minX, yLine, maxZ + padZ], [maxX, yLine, maxZ + padZ]]} color="#3d3d3a" dashed dashSize={0.05} gapSize={0.04} lineWidth={1} />
       <Line points={[[maxX + padX, yLine, minZ], [maxX + padX, yLine, maxZ]]} color="#3d3d3a" dashed dashSize={0.05} gapSize={0.04} lineWidth={1} />
-      <Html position={[cx, yLine, maxZ + padZ]} center distanceFactor={6} zIndexRange={[5, 0]}>
-        <div className="dim-label" style={{ position: "static", transform: "none" }}>{w} cm</div>
+      <Html position={[cx, yLine, maxZ + padZ]} center zIndexRange={[5, 0]}>
+        <div className="dim-label" style={{ position: "static", transform: "translate(-50%, -50%)" }}>{w} cm</div>
       </Html>
-      <Html position={[maxX + padX, yLine, cz]} center distanceFactor={6} zIndexRange={[5, 0]}>
-        <div className="dim-label" style={{ position: "static", transform: "none" }}>{d} cm</div>
+      <Html position={[maxX + padX, yLine, cz]} center zIndexRange={[5, 0]}>
+        <div className="dim-label" style={{ position: "static", transform: "translate(-50%, -50%)" }}>{d} cm</div>
       </Html>
     </group>
   );

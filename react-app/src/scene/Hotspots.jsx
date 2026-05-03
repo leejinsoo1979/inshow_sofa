@@ -20,12 +20,12 @@ export default function Hotspots() {
       if (lx < minX) minX = lx;
       if (rx > maxX) maxX = rx;
     }
-    return { leftX: minX - 0.25, rightX: maxX + 0.25 };
+    return { leftX: minX - 0.45, rightX: maxX + 0.45 };
   }, [modules]);
 
   return (
     <>
-      <Html position={[leftX, 0.4, 0]} center transform={false} zIndexRange={[10, 0]}>
+      <Html position={[leftX, 0.35, 0]} center zIndexRange={[10, 0]}>
         <button
           className="side-hotspot"
           onClick={() => setOpenSide(openSide === "left" ? null : "left")}
@@ -36,7 +36,7 @@ export default function Hotspots() {
           </svg>
         </button>
       </Html>
-      <Html position={[rightX, 0.4, 0]} center transform={false} zIndexRange={[10, 0]}>
+      <Html position={[rightX, 0.35, 0]} center zIndexRange={[10, 0]}>
         <button
           className="side-hotspot"
           onClick={() => setOpenSide(openSide === "right" ? null : "right")}
