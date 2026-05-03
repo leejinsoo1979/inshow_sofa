@@ -11,7 +11,7 @@ export const useConfigurator = create((set, get) => ({
   baseColor: baseFrameOptionsByGroup.light[0],
   trayWood: trayWoodColors[0],
   accentCushion: null,
-  selectedId: "module-1",
+  selectedId: null,
   modules: [initialModule],
   options: { trayWood: {}, cushion: {} },
   showDimensions: true,
@@ -62,8 +62,9 @@ export const useConfigurator = create((set, get) => ({
 
   replaceSelectedModule: (type) => {
     const { modules, selectedId } = get();
+    const targetId = selectedId || modules[0]?.id;
     set({
-      modules: modules.map((m) => (m.id === selectedId ? { ...m, type } : m))
+      modules: modules.map((m) => (m.id === targetId ? { ...m, type } : m))
     });
   },
 

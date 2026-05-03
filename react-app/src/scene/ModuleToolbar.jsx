@@ -14,7 +14,15 @@ export default function ModuleToolbar() {
 
   return (
     <Html position={[sel.x, spec.height + 0.25, sel.z]} center>
-      <div className="module-toolbar is-open" style={{ position: "static", display: "flex" }}>
+      <div
+        className="module-toolbar is-open"
+        style={{
+          position: "static",
+          display: "flex",
+          transform: "none",
+          pointerEvents: "auto"
+        }}
+      >
         <button onClick={() => rotateSelected(-1)} aria-label="왼쪽으로 회전">↺</button>
         <button onClick={() => rotateSelected(1)} aria-label="오른쪽으로 회전">↻</button>
         <button onClick={() => removeSelected()} aria-label="삭제">

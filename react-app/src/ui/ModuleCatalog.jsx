@@ -5,7 +5,7 @@ export default function ModuleCatalog() {
   const replaceSelectedModule = useConfigurator((s) => s.replaceSelectedModule);
   const modules = useConfigurator((s) => s.modules);
   const selectedId = useConfigurator((s) => s.selectedId);
-  const selected = modules.find((m) => m.id === selectedId);
+  const selected = modules.find((m) => m.id === selectedId) || modules[0];
   const activeType = selected?.type;
 
   return (
