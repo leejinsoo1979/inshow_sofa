@@ -43,11 +43,19 @@ export default function CameraRig({ controlsRef, resetCameraRef }) {
     const sx = maxX - minX;
     const sz = maxZ - minZ;
 
-    const target = new THREE.Vector3(cx, 0.35, cz);
+    // vanilla computeCameraTarget 동일 공식
+    const sy = 0.68; // module height
+    const target = new THREE.Vector3(cx, sy * 0.5 + sy * 0.05, cz);
 
-    // 모듈 반경 + 일정 padding
-    const radius = Math.sqrt(sx * sx + sz * sz) * 0.5;
-    const distance = Math.max(4.5, Math.min(12, radius * 3.6 + 3.2));
+    const fovV = (camera.fov * Math.PI) / 180;
+    const aspect = camera.aspect || 1.6;
+    const fovH = 2 * Math.atan(Math.tan(fovV / 2) * aspect);
+    const horizontalPad = 2.6;
+    const verticalPad = 3.0;
+    const distH = (sx * horizontalPad) / (2 * Math.tan(fovH / 2));
+    const distV = (sy * verticalPad) / (2 * Math.tan(fovV / 2));
+    const distZ = (sz * horizontalPad) / (2 * Math.tan(fovH / 2));
+    const distance = Math.max(6, Math.min(20, Math.max(distH, distV, distZ) + 1.8));
 
     const newPos = target.clone().addScaledVector(DEFAULT_DIRECTION, distance);
 

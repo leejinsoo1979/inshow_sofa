@@ -8,16 +8,45 @@ export default function Hotspots() {
   const addModuleAtSide = useConfigurator((s) => s.addModuleAtSide);
   const [openSide, setOpenSide] = useState(null);
 
-  const { leftX, rightX } = useMemo(() => {
-    if (!modules.length) return { leftX: -0.6, rightX: 0.6 };
-    let minX = Infinity, maxX = -Infinity;
+  const { leftX, rightX, z, leftEnabled, rightEnabled } = useMemo(() => {
+    if (!modules.length) return { leftX: -0.6, rightX: 0.6, z: 0, leftEnabled: false, rightEnabled: false };
+    let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity;
     for (const m of modules) {
       const spec = moduleCatalog[m.type];
-      const halfW = spec.width / 2;
+      const halfW = spec.width / 2, halfD = spec.depth / 2;
       minX = Math.min(minX, m.x - halfW);
       maxX = Math.max(maxX, m.x + halfW);
+      minZ = Math.min(minZ, m.z - halfD);
+      maxZ = Math.max(maxZ, m.z + halfD);
     }
-    return { leftX: minX - 0.3, rightX: maxX + 0.3 };
+    const sorted = [...modules].sort((a, b) => a.x - b.x);
+    const leftMod = sorted[0];
+    const rightMod = sorted[sorted.length - 1];
+    const leftSpec = moduleCatalog[leftMod.type];
+    const rightSpec = moduleCatalog[rightMod.type];
+    // 회전 고려한 world openSides
+    const worldOpen = (mod, spec) => {
+      const step = ((Math.round((mod.rotation || 0) / (Math.PI / 2)) % 4) + 4) % 4;
+      const map = {
+        0: { left: "left", right: "right" },
+        1: { left: "back", right: "front" },
+        2: { left: "right", right: "left" },
+        3: { left: "front", right: "back" }
+      }[step];
+      const set = new Set();
+      (spec.openSides || []).forEach((s) => set.add(map[s]));
+      return set;
+    };
+    const leftOpens = worldOpen(leftMod, leftSpec).has("left");
+    const rightOpens = worldOpen(rightMod, rightSpec).has("right");
+    const ghost = 1.15;
+    return {
+      leftX: minX - ghost / 2,
+      rightX: maxX + ghost / 2,
+      z: (minZ + maxZ) / 2,
+      leftEnabled: leftOpens,
+      rightEnabled: rightOpens
+    };
   }, [modules]);
 
   const SvgPlus = () => (
@@ -28,26 +57,30 @@ export default function Hotspots() {
 
   return (
     <>
-      <Html position={[leftX, 0.34, 0.4]} center zIndexRange={[10, 0]}>
-        <button
-          className="side-hotspot"
-          style={{ position: "static", animation: "hotspot-breathe 2.2s ease-in-out infinite" }}
-          onClick={() => setOpenSide(openSide === "left" ? null : "left")}
-          aria-label="왼쪽에 모듈 추가"
-        >
-          <SvgPlus />
-        </button>
-      </Html>
-      <Html position={[rightX, 0.34, -0.4]} center zIndexRange={[10, 0]}>
-        <button
-          className="side-hotspot"
-          style={{ position: "static", animation: "hotspot-breathe 2.2s ease-in-out infinite" }}
-          onClick={() => setOpenSide(openSide === "right" ? null : "right")}
-          aria-label="오른쪽에 모듈 추가"
-        >
-          <SvgPlus />
-        </button>
-      </Html>
+      {leftEnabled && (
+        <Html position={[leftX, 0.04, z]} center zIndexRange={[10, 0]}>
+          <button
+            className="side-hotspot"
+            style={{ position: "static", animation: "hotspot-breathe 2.2s ease-in-out infinite" }}
+            onClick={() => setOpenSide(openSide === "left" ? null : "left")}
+            aria-label="왼쪽에 모듈 추가"
+          >
+            <SvgPlus />
+          </button>
+        </Html>
+      )}
+      {rightEnabled && (
+        <Html position={[rightX, 0.04, z]} center zIndexRange={[10, 0]}>
+          <button
+            className="side-hotspot"
+            style={{ position: "static", animation: "hotspot-breathe 2.2s ease-in-out infinite" }}
+            onClick={() => setOpenSide(openSide === "right" ? null : "right")}
+            aria-label="오른쪽에 모듈 추가"
+          >
+            <SvgPlus />
+          </button>
+        </Html>
+      )}
       {openSide && (
         <Html fullscreen zIndexRange={[20, 0]}>
           <div className="hotspot-popover is-open" style={{ pointerEvents: "auto" }}>
