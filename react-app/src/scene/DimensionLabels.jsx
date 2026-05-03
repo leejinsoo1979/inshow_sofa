@@ -1,11 +1,14 @@
 import { Html, Line } from "@react-three/drei";
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useFrame } from "@react-three/fiber";
 import { useConfigurator } from "../state/configurator";
 import { moduleCatalog } from "../data/catalog";
 
 export default function DimensionLabels() {
   const modules = useConfigurator((s) => s.modules);
   const showDimensions = useConfigurator((s) => s.showDimensions);
+  const [behind, setBehind] = useState(false);
+  const lastRef = useRef(false);
 
   const bounds = useMemo(() => {
     if (!modules.length) return null;
@@ -23,12 +26,22 @@ export default function DimensionLabels() {
       minX, maxX, minZ, maxZ, maxH,
       w: Math.round((maxX - minX) * 100),
       d: Math.round((maxZ - minZ) * 100),
-      h: Math.round(maxH * 1000)
+      h: Math.round(maxH * 100)
     };
   }, [modules]);
 
+  // 카메라가 모듈 뒤(z<minZ)에 있는지 체크 → 뒤쪽 보일 때만 H 표시
+  useFrame(({ camera }) => {
+    if (!bounds) return;
+    const isBehind = camera.position.z < (bounds.minZ + bounds.maxZ) / 2;
+    if (isBehind !== lastRef.current) {
+      lastRef.current = isBehind;
+      setBehind(isBehind);
+    }
+  });
+
   if (!showDimensions || !bounds) return null;
-  const { minX, maxX, minZ, maxZ, w, d } = bounds;
+  const { minX, maxX, minZ, maxZ, maxH, w, d, h } = bounds;
   const cx = (minX + maxX) / 2;
   const cz = (minZ + maxZ) / 2;
   const yLine = 0.01;
@@ -45,6 +58,14 @@ export default function DimensionLabels() {
       <Html position={[maxX + padX, yLine, cz]} center zIndexRange={[5, 0]}>
         <div className="dim-label" style={{ position: "static", transform: "none" }}>{d} cm</div>
       </Html>
+      {behind && (
+        <>
+          <Line points={[[minX, 0, minZ - padZ], [minX, maxH, minZ - padZ]]} color="#3d3d3a" dashed dashSize={0.05} gapSize={0.04} lineWidth={1} />
+          <Html position={[minX, maxH / 2, minZ - padZ]} center zIndexRange={[5, 0]}>
+            <div className="dim-label" style={{ position: "static", transform: "none" }}>{h} cm</div>
+          </Html>
+        </>
+      )}
     </group>
   );
 }
