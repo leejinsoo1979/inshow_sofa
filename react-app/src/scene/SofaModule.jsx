@@ -21,6 +21,7 @@ export default function SofaModule({ module: m }) {
   const trayWood = useConfigurator((s) => s.trayWood);
   const material = useConfigurator((s) => s.material);
   const setSelectedId = useConfigurator((s) => s.setSelectedId);
+  const selectedId = useConfigurator((s) => s.selectedId);
 
   const spec = moduleCatalog[m.type];
   const url = modelSources[spec.model];
@@ -68,17 +69,33 @@ export default function SofaModule({ module: m }) {
       return ups.clone();
     };
 
+    const isSelected = selectedId === m.id;
+    const glowColor = new THREE.Color(0xff4a3d);
+    const applyGlow = (mat) => {
+      if ("emissive" in mat) {
+        mat.emissive = glowColor.clone();
+        mat.emissiveIntensity = 0.3;
+      }
+      if ("clearcoat" in mat) mat.clearcoat = Math.max(mat.clearcoat || 0, 0.25);
+      if ("envMapIntensity" in mat) mat.envMapIntensity = Math.max(mat.envMapIntensity || 0, 1.15);
+    };
+
     clone.traverse((child) => {
       if (!child.isMesh) return;
       child.castShadow = true;
       child.receiveShadow = true;
       child.userData.isModuleMesh = true;
       if (child.geometry?.attributes?.color) child.geometry.deleteAttribute("color");
-      child.material = Array.isArray(child.material)
+      const newMat = Array.isArray(child.material)
         ? child.material.map(remap)
         : remap(child.material);
+      if (isSelected) {
+        if (Array.isArray(newMat)) newMat.forEach(applyGlow);
+        else applyGlow(newMat);
+      }
+      child.material = newMat;
     });
-  }, [clone, sofaColor, baseColor, trayWood, material, spec]);
+  }, [clone, sofaColor, baseColor, trayWood, material, spec, selectedId, m.id]);
 
   // group에 clone 직접 add (vanilla 방식, r3f reconciler 우회)
   useEffect(() => {
