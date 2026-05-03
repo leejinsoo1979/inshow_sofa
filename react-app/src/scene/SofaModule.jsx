@@ -50,6 +50,7 @@ export default function SofaModule({ module: m }) {
       if (!child.isMesh) return;
       child.castShadow = true;
       child.receiveShadow = true;
+      child.userData.isModuleMesh = true;
       if (child.geometry?.attributes?.color) child.geometry.deleteAttribute("color");
       child.material = Array.isArray(child.material)
         ? child.material.map(remap)

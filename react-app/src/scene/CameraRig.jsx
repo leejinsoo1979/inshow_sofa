@@ -29,7 +29,7 @@ export default function CameraRig({ controlsRef, resetCameraRef }) {
 
   useEffect(() => {
     if (!modules.length) return;
-    let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity, maxH = 0;
+    let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity;
     for (const m of modules) {
       const spec = moduleCatalog[m.type];
       const hw = spec.width / 2, hd = spec.depth / 2;
@@ -37,25 +37,17 @@ export default function CameraRig({ controlsRef, resetCameraRef }) {
       maxX = Math.max(maxX, m.x + hw);
       minZ = Math.min(minZ, m.z - hd);
       maxZ = Math.max(maxZ, m.z + hd);
-      maxH = Math.max(maxH, spec.height);
     }
     const cx = (minX + maxX) / 2;
     const cz = (minZ + maxZ) / 2;
     const sx = maxX - minX;
-    const sy = maxH;
     const sz = maxZ - minZ;
 
     const target = new THREE.Vector3(cx, 0.35, cz);
 
-    const fovV = (camera.fov * Math.PI) / 180;
-    const aspect = camera.aspect || 1.6;
-    const fovH = 2 * Math.atan(Math.tan(fovV / 2) * aspect);
-    const horizontalPad = 1.6;
-    const verticalPad = 2.2;
-    const distH = (sx * horizontalPad) / (2 * Math.tan(fovH / 2));
-    const distV = (sy * verticalPad) / (2 * Math.tan(fovV / 2));
-    const distZ = (sz * horizontalPad) / (2 * Math.tan(fovH / 2));
-    const distance = Math.max(4.5, Math.min(15, Math.max(distH, distV, distZ) + 1.2));
+    // 모듈 반경 + 일정 padding
+    const radius = Math.sqrt(sx * sx + sz * sz) * 0.5;
+    const distance = Math.max(4.5, Math.min(12, radius * 3.6 + 3.2));
 
     const newPos = target.clone().addScaledVector(DEFAULT_DIRECTION, distance);
 
