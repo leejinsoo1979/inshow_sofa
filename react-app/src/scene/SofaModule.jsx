@@ -38,10 +38,10 @@ export default function SofaModule({ module: m }) {
     const initialBounds = new THREE.Box3().setFromObject(clone);
     const initialSize = initialBounds.getSize(new THREE.Vector3());
     const mirror = spec.mirror ? -1 : 1;
-    // X/Z는 width/depth로 정규화, Y는 X와 같은 비율로 (가로세로 비례 유지 → 납작 안 됨)
+    // vanilla 공식: 각 축을 spec dimensions로 정규화
     const scaleX = Number.isFinite(spec.width / initialSize.x) ? spec.width / initialSize.x : 1;
+    const scaleY = Number.isFinite(spec.height / initialSize.y) ? spec.height / initialSize.y : 1;
     const scaleZ = Number.isFinite(spec.depth / initialSize.z) ? spec.depth / initialSize.z : 1;
-    const scaleY = scaleX; // Y를 X 비율로 묶음 — GLB 원본 비례 유지
     clone.scale.set(scaleX * mirror, scaleY, scaleZ);
 
     clone.position.set(0, 0, 0);
