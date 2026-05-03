@@ -18,7 +18,7 @@ TARGETS = [
     "/Users/jinsoolee/Documents/New project/models/sofa_module_v2/newdoublearm1.glb",
     "/Users/jinsoolee/Documents/New project/models/sofa_module_v2/newdoublearm2.glb",
 ]
-BASE_RATIO = 0.12  # 하위 12%만 fabric, 나머지 base
+BASE_RATIO = 0.22  # 하위 22% = 하부 프레임(base), 그 외 본체(fabric)
 
 
 def get_buffer_bytes(g):

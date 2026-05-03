@@ -11,8 +11,8 @@ export const moduleCatalog = {
 
 export const modelSources = {
   singleArmLeftOne: "/models/sofa_module/single_arm(L)1.glb?v=10",
-  doubleArmOne: "/models/sofa_module_v2/newdoublearm1.glb?v=split3",
-  doubleArmTwo: "/models/sofa_module_v2/newdoublearm2.glb?v=split3",
+  doubleArmOne: "/models/sofa_module_v2/newdoublearm1.glb?v=split4",
+  doubleArmTwo: "/models/sofa_module_v2/newdoublearm2.glb?v=split4",
   singleArmRightTwo: "/models/sofa_module/__singlearm2_R.glb?v=10",
   trayLeftOne: "/models/sofa_module/single_tray(L).glb?v=10"
 };

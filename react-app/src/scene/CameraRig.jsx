@@ -41,15 +41,15 @@ export default function CameraRig({ controlsRef, resetCameraRef }) {
     const cz = (minZ + maxZ) / 2;
     const w = Math.max(maxX - minX, 1.2);
     const d = Math.max(maxZ - minZ, 0.9);
-    const radius = Math.sqrt(w * w + d * d) * 1.4;
+    const radius = Math.sqrt(w * w + d * d) * 1.9;
 
     const target = new THREE.Vector3(cx, 0.35, cz);
 
     // 첫 렌더에는 즉시 세팅, 이후엔 부드럽게 보간
     const newPos = new THREE.Vector3(
-      cx + radius * 0.7,
-      Math.max(1.4, radius * 0.45),
-      cz + radius * 0.85
+      cx + radius * 0.85,
+      Math.max(1.8, radius * 0.55),
+      cz + radius * 1.0
     );
 
     lastPosRef.current = newPos.clone();

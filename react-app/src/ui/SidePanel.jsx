@@ -62,7 +62,7 @@ export default function SidePanel() {
           />
         </section>
       </div>
-      <div className="panel-sticky">
+      <div className="checkout">
         <Cart />
       </div>
     </aside>
