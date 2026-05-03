@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
+import { clone as cloneSkinned } from "three/examples/jsm/utils/SkeletonUtils.js";
 import * as THREE from "three";
 import { moduleCatalog, modelSources, modelMaterialRoles } from "../data/catalog";
 import {
@@ -27,7 +28,7 @@ export default function SofaModule({ module: m }) {
   const groupRef = useRef();
 
   // 클론은 한 번만 (모듈 인스턴스별로 고유)
-  const clone = useMemo(() => scene.clone(true), [scene]);
+  const clone = useMemo(() => cloneSkinned(scene), [scene]);
 
   // 1) 스케일/위치는 clone/spec 변경 시 한 번만 (vanilla 공식)
   useEffect(() => {
