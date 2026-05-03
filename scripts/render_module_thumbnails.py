@@ -11,14 +11,13 @@ OUT = ROOT / "assets" / "thumbnails"
 OUT.mkdir(parents=True, exist_ok=True)
 
 MODULES = {
-    "double_arm_1.png": ("models/double_arm_1.glb", False),
-    "double_arm_2.png": ("models/sa1.glb", False),
-    "single_arm_r_1.png": ("models/double_arm_1.glb", False),
-    "single_arm_l_1.png": ("models/double_arm_1.glb", True),
-    "single_arm_r_2.png": ("models/single_arm_2_R.glb", False),
-    "single_arm_l_2.png": ("models/single_arm_2_R.glb", True),
-    "tray_r_1.png": ("models/single_arm_t1_R.glb", False),
-    "tray_l_1.png": ("models/single_arm_t1_R.glb", True),
+    "doublearm_1.png": ("models/sofa_module/doublwarm1.glb", False),
+    "doublearm_2.png": ("models/sofa_module/doublwarm2.glb", False),
+    "singlearm_L_1.png": ("models/sofa_module/single_arm(L)1.glb", False),
+    "singlearm_L_2.png": ("models/sofa_module/__singlearm2_R.glb", False),
+    "singlearm_R_2.png": ("models/sofa_module/__singlearm2_R.glb", True),
+    "trey_L.png": ("models/sofa_module/single_tray(L).glb", True),
+    "trey_R.png": ("models/sofa_module/single_tray(L).glb", False),
 }
 
 
@@ -75,9 +74,12 @@ def style_materials():
             bsdf.inputs["Base Color"].default_value = (0.18, 0.16, 0.13, 1)
             bsdf.inputs["Roughness"].default_value = 0.48
             bsdf.inputs["Metallic"].default_value = 0.5
-        elif "가죽" in name or "leather" in name:
+        elif "가죽1" in name and "가죽1_0" not in name and "가죽1_1" not in name:
             bsdf.inputs["Base Color"].default_value = (0.55, 0.49, 0.39, 1)
             bsdf.inputs["Roughness"].default_value = 0.56
+        elif "material_89" in name or "wood" in name:
+            bsdf.inputs["Base Color"].default_value = (0.24, 0.16, 0.09, 1)
+            bsdf.inputs["Roughness"].default_value = 0.5
         else:
             bsdf.inputs["Base Color"].default_value = (0.72, 0.68, 0.6, 1)
             bsdf.inputs["Roughness"].default_value = 0.74

@@ -374,7 +374,7 @@ h1 {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.92);
   content: "";
-  transform: scale(1);
+  transform: scale(0.3);
   animation: hotspot-halo 2.2s ease-out infinite;
 }
 
@@ -509,14 +509,17 @@ h1 {
 
 .thumbnail-card {
   display: grid;
-  gap: 6px;
+  align-items: center;
+  grid-template-rows: minmax(88px, 1fr) auto;
+  gap: 4px;
   min-width: 0;
-  padding: 6px;
+  min-height: 112px;
+  padding: 8px;
   overflow: hidden;
-  border: 1px solid #c8c5bd;
-  border-radius: 10px;
+  border: 1px solid #d8d6d0;
+  border-radius: 8px;
   background: #fff;
-  color: #27241f;
+  color: #1a1a1a;
   font-size: 12px;
   font-weight: 700;
   line-height: 1.2;
@@ -532,6 +535,13 @@ h1 {
   transform: translateY(0);
 }
 
+.thumbnail-card span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .hotspot-popover.is-open .thumbnail-card:nth-child(1)  { transition-delay: 0.02s; }
 .hotspot-popover.is-open .thumbnail-card:nth-child(2)  { transition-delay: 0.06s; }
 .hotspot-popover.is-open .thumbnail-card:nth-child(3)  { transition-delay: 0.10s; }
@@ -544,35 +554,56 @@ h1 {
 .module-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px 14px;
+  gap: 10px;
 }
 
 .module-option {
-  display: flex;
+  display: grid;
   align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  padding: 0 16px;
-  border: 1.5px solid #d8d6d0;
-  border-radius: 999px;
+  grid-template-rows: minmax(88px, 1fr) auto;
+  gap: 4px;
+  min-height: 112px;
+  padding: 8px;
+  overflow: hidden;
+  border: 1px solid #d8d6d0;
+  border-radius: 8px;
   background: #fff;
   color: #1a1a1a;
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 1;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
   text-align: center;
-  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.module-option img {
+  display: block;
+  width: 100%;
+  height: 92px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #fff;
+  transform: scale(0.8);
+  transform-origin: center;
+}
+
+.module-option span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .module-option:hover {
   border-color: #9aa0a8;
+  box-shadow: 0 8px 18px rgba(30, 28, 24, 0.08);
 }
 
 .module-option.is-active {
   border-color: #2563eb;
-  border-width: 2px;
   color: #2563eb;
   background: #fff;
+  box-shadow: inset 0 0 0 1px #2563eb;
 }
 
 .thumbnail-card:hover {
@@ -582,12 +613,11 @@ h1 {
 .thumbnail-card img {
   display: block;
   width: 100%;
-  aspect-ratio: 1 / 1;
-  height: auto;
-  object-fit: contain;
+  height: 92px;
+  object-fit: cover;
   border-radius: 6px;
   background: #fff;
-  transform: scale(1.25);
+  transform: scale(0.8);
   transform-origin: center;
 }
 
@@ -1232,9 +1262,14 @@ h3 {
   }
 
   .module-option {
-    min-height: 44px;
-    padding: 0 12px;
-    font-size: 13px;
+    grid-template-rows: minmax(68px, 1fr) auto;
+    min-height: 100px;
+    padding: 7px;
+    font-size: 11px;
+  }
+
+  .module-option img {
+    height: 70px;
   }
 
   .swatches {
