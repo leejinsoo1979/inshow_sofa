@@ -11,8 +11,8 @@ export const moduleCatalog = {
 
 export const modelSources = {
   singleArmLeftOne: "/models/sofa_module/single_arm(L)1.glb?v=10",
-  doubleArmOne: "/models/sofa_module_v2/Double_Arm_1.glb?v=unified1",
-  doubleArmTwo: "/models/sofa_module_v2/Double_Arm_2.glb?v=unified1",
+  doubleArmOne: "/models/sofa_module_v2/Double_Arm_1.glb?v=presmooth1",
+  doubleArmTwo: "/models/sofa_module_v2/Double_Arm_2.glb?v=presmooth1",
   singleArmRightTwo: "/models/sofa_module/__singlearm2_R.glb?v=10",
   trayLeftOne: "/models/sofa_module/single_tray(L).glb?v=10"
 };
@@ -35,13 +35,13 @@ export const modelMaterialRoles = {
     metal: ["metal", "__metal*"]
   },
   doubleArmOne: {
-    upholstery: ["fabric"],
-    base: [],
-    metal: ["metal"]
+    upholstery: ["fabric", "가죽1", "가죽1_0", "가죽1_1", "material_1", "material_73"],
+    base: ["base"],
+    metal: ["metal", "__metal*"]
   },
   doubleArmTwo: {
-    upholstery: ["fabric"],
-    base: [],
-    metal: ["metal"]
+    upholstery: ["fabric", "가죽1", "가죽1_0", "가죽1_1", "material_73"],
+    base: ["base"],
+    metal: ["metal", "__metal*"]
   }
 };
