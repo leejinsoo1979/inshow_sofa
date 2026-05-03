@@ -40,8 +40,8 @@ export default function SofaModule({ module: m }) {
     const mirror = spec.mirror ? -1 : 1;
     // vanilla 공식: 각 축을 spec dimensions로 정규화
     const scaleX = Number.isFinite(spec.width / initialSize.x) ? spec.width / initialSize.x : 1;
-    const scaleY = Number.isFinite(spec.height / initialSize.y) ? spec.height / initialSize.y : 1;
     const scaleZ = Number.isFinite(spec.depth / initialSize.z) ? spec.depth / initialSize.z : 1;
+    const scaleY = scaleX; // GLB 원본 Y/X 비율 유지 (납작 방지)
     clone.scale.set(scaleX * mirror, scaleY, scaleZ);
 
     clone.position.set(0, 0, 0);
