@@ -61,7 +61,7 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
       <OrbitControls
         ref={controlsRef}
         enableDamping
-        target={[0, 0.35, 0]}
+        makeDefault
         maxPolarAngle={Math.PI * 0.48}
         minDistance={2.1}
         maxDistance={15}

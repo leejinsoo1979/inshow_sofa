@@ -46,6 +46,8 @@ export default function CameraRig({ controlsRef, resetCameraRef }) {
     // vanilla computeCameraTarget 동일 공식
     const sy = 0.68; // module height
     const target = new THREE.Vector3(cx, sy * 0.5 + sy * 0.05, cz);
+    // OrbitControls target은 모듈 center에 둔다.
+    // 모듈 center를 화면 가운데에 두기 위해 카메라 위치만 보정 (X 약간 좌측에서 보면 화면상 모듈이 중앙에 옴)
 
     const fovV = (camera.fov * Math.PI) / 180;
     const aspect = camera.aspect || 1.6;
@@ -63,8 +65,16 @@ export default function CameraRig({ controlsRef, resetCameraRef }) {
     lastTargetRef.current = target.clone();
 
     if (!initRef.current) {
-      camera.position.copy(newPos);
-      if (controlsRef?.current) controlsRef.current.target.copy(target);
+      const apply = () => {
+        camera.position.copy(newPos);
+        if (controlsRef?.current) {
+          controlsRef.current.target.copy(target);
+          controlsRef.current.update();
+        } else {
+          requestAnimationFrame(apply);
+        }
+      };
+      apply();
       initRef.current = true;
       return;
     }
