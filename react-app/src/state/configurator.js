@@ -37,7 +37,7 @@ export const useConfigurator = create((set, get) => ({
   toggleDimensions: () => set((s) => ({ showDimensions: !s.showDimensions })),
 
   setLayout: (layout) => {
-    const initialType = moduleCatalog[layout] ? layout : "doubleOne";
+    const initialType = moduleCatalog[layout] ? layout : "armlessLeft";
     const m = { id: "module-1", type: initialType, x: 0, z: 0, rotation: 0 };
     set({ layout, modules: [m], selectedId: m.id });
   },
