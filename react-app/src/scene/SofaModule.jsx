@@ -99,6 +99,15 @@ export default function SofaModule({ module: m }) {
       const newMat = Array.isArray(child.material)
         ? child.material.map(remap)
         : remap(child.material);
+      // 강제 통일: vertexColors off, map(GLB 잔여 텍스처) 제거
+      const enforceUniform = (mat) => {
+        if (!mat) return;
+        if ("vertexColors" in mat) mat.vertexColors = false;
+        if ("map" in mat && mat.map && material !== "naturalLeather") mat.map = null;
+        mat.needsUpdate = true;
+      };
+      if (Array.isArray(newMat)) newMat.forEach(enforceUniform);
+      else enforceUniform(newMat);
       if (isSelected) {
         if (Array.isArray(newMat)) newMat.forEach(applyGlow);
         else applyGlow(newMat);
