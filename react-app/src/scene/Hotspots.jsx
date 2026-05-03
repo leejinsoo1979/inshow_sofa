@@ -20,14 +20,15 @@ export default function Hotspots() {
       if (lx < minX) minX = lx;
       if (rx > maxX) maxX = rx;
     }
-    return { leftX: minX - 0.18, rightX: maxX + 0.18 };
+    return { leftX: minX, rightX: maxX };
   }, [modules]);
 
   return (
     <>
-      <Html position={[leftX, 0.35, 0]} center zIndexRange={[10, 0]}>
+      <Html position={[leftX, 0.35, 0]} center zIndexRange={[10, 0]} style={{ transform: "translate(-50%, -50%) translateX(-30px)" }}>
         <button
           className="side-hotspot"
+          style={{ position: "static", transform: "none" }}
           onClick={() => setOpenSide(openSide === "left" ? null : "left")}
           aria-label="왼쪽에 모듈 추가"
         >
@@ -36,9 +37,10 @@ export default function Hotspots() {
           </svg>
         </button>
       </Html>
-      <Html position={[rightX, 0.35, 0]} center zIndexRange={[10, 0]}>
+      <Html position={[rightX, 0.35, 0]} center zIndexRange={[10, 0]} style={{ transform: "translate(-50%, -50%) translateX(30px)" }}>
         <button
           className="side-hotspot"
+          style={{ position: "static", transform: "none" }}
           onClick={() => setOpenSide(openSide === "right" ? null : "right")}
           aria-label="오른쪽에 모듈 추가"
         >
