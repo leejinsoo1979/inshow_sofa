@@ -71,7 +71,7 @@ export default function SofaModule({ module: m }) {
     };
 
     const isSelected = selectedId === m.id;
-    const glowColor = new THREE.Color(0xff4a3d);
+    const glowColor = new THREE.Color(0x3b82f6);
     const applyGlow = (mat) => {
       if ("emissive" in mat) {
         mat.emissive = glowColor.clone();

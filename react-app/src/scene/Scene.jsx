@@ -58,8 +58,8 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
             <Outline
               blur
               kernelSize={4}
-              visibleEdgeColor={0xff5b67}
-              hiddenEdgeColor={0xff5b67}
+              visibleEdgeColor={0x3b82f6}
+              hiddenEdgeColor={0x3b82f6}
               edgeStrength={15}
               pulseSpeed={0}
               width={2000}
