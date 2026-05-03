@@ -48,19 +48,41 @@ export default function DimensionLabels() {
   const padZ = 0.22;
   const padX = 0.22;
 
+  const dashSize = 0.02;
+  const gapSize = 0.018;
+  const tick = 0.05; // 끝점 마크 길이
+
   return (
     <group>
-      <Line points={[[minX, yLine, maxZ + padZ], [maxX, yLine, maxZ + padZ]]} color="#3d3d3a" dashed dashSize={0.05} gapSize={0.04} lineWidth={1} />
-      <Line points={[[maxX + padX, yLine, minZ], [maxX + padX, yLine, maxZ]]} color="#3d3d3a" dashed dashSize={0.05} gapSize={0.04} lineWidth={1} />
+      {/* W 점선 + 양끝 tick (모듈에 수직) */}
+      <Line points={[[minX, yLine, maxZ + padZ], [maxX, yLine, maxZ + padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+      <Line points={[[minX, yLine, maxZ + padZ - tick], [minX, yLine, maxZ + padZ + tick]]} color="#3d3d3a" lineWidth={1.5} />
+      <Line points={[[maxX, yLine, maxZ + padZ - tick], [maxX, yLine, maxZ + padZ + tick]]} color="#3d3d3a" lineWidth={1.5} />
+      {/* 모듈 가장자리 → tick 연결선 */}
+      <Line points={[[minX, yLine, maxZ], [minX, yLine, maxZ + padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+      <Line points={[[maxX, yLine, maxZ], [maxX, yLine, maxZ + padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+
+      {/* D 점선 + 양끝 tick */}
+      <Line points={[[maxX + padX, yLine, minZ], [maxX + padX, yLine, maxZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+      <Line points={[[maxX + padX - tick, yLine, minZ], [maxX + padX + tick, yLine, minZ]]} color="#3d3d3a" lineWidth={1.5} />
+      <Line points={[[maxX + padX - tick, yLine, maxZ], [maxX + padX + tick, yLine, maxZ]]} color="#3d3d3a" lineWidth={1.5} />
+      <Line points={[[maxX, yLine, minZ], [maxX + padX, yLine, minZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+      <Line points={[[maxX, yLine, maxZ], [maxX + padX, yLine, maxZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+
       <Html position={[cx, yLine, maxZ + padZ]} center zIndexRange={[5, 0]}>
         <div className="dim-label" style={{ position: "static", transform: "none" }}>{w} cm</div>
       </Html>
       <Html position={[maxX + padX, yLine, cz]} center zIndexRange={[5, 0]}>
         <div className="dim-label" style={{ position: "static", transform: "none" }}>{d} cm</div>
       </Html>
+
       {behind && (
         <>
-          <Line points={[[minX, 0, minZ - padZ], [minX, maxH, minZ - padZ]]} color="#3d3d3a" dashed dashSize={0.05} gapSize={0.04} lineWidth={1} />
+          <Line points={[[minX, 0, minZ - padZ], [minX, maxH, minZ - padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+          <Line points={[[minX - tick, 0, minZ - padZ], [minX + tick, 0, minZ - padZ]]} color="#3d3d3a" lineWidth={1.5} />
+          <Line points={[[minX - tick, maxH, minZ - padZ], [minX + tick, maxH, minZ - padZ]]} color="#3d3d3a" lineWidth={1.5} />
+          <Line points={[[minX, 0, minZ], [minX, 0, minZ - padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+          <Line points={[[minX, maxH, minZ], [minX, maxH, minZ - padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
           <Html position={[minX, maxH / 2, minZ - padZ]} center zIndexRange={[5, 0]}>
             <div className="dim-label" style={{ position: "static", transform: "none" }}>{h} cm</div>
           </Html>
