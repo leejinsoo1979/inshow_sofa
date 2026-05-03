@@ -75,7 +75,7 @@ export default function SofaModule({ module: m }) {
     const applyGlow = (mat) => {
       if ("emissive" in mat) {
         mat.emissive = glowColor.clone();
-        mat.emissiveIntensity = 0.3;
+        mat.emissiveIntensity = 0.08;
       }
       if ("clearcoat" in mat) mat.clearcoat = Math.max(mat.clearcoat || 0, 0.25);
       if ("envMapIntensity" in mat) mat.envMapIntensity = Math.max(mat.envMapIntensity || 0, 1.15);
