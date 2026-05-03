@@ -64,7 +64,31 @@ export function createMetalMaterial() {
   });
 }
 
+// walnut texture 한 번만 로드
+let _walnutTex = null;
+function getWalnutTexture() {
+  if (_walnutTex) return _walnutTex;
+  const loader = new THREE.TextureLoader();
+  _walnutTex = loader.load("/assets/thumbnails/texture/131_Persian%20walnut%20PBR%20texture-seamless.jpg");
+  _walnutTex.colorSpace = THREE.SRGBColorSpace;
+  _walnutTex.wrapS = THREE.RepeatWrapping;
+  _walnutTex.wrapT = THREE.RepeatWrapping;
+  _walnutTex.repeat.set(1.5, 1.5);
+  return _walnutTex;
+}
+
 export function createTrayWoodMaterial(trayWood) {
+  const isWalnut = trayWood?.label === "월넛";
+  if (isWalnut) {
+    return new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color(0x6a6258),
+      map: getWalnutTexture(),
+      roughness: 0.55,
+      metalness: 0,
+      clearcoat: 0.35,
+      clearcoatRoughness: 0.45
+    });
+  }
   return new THREE.MeshPhysicalMaterial({
     color: new THREE.Color(trayWood?.color || "#000000"),
     roughness: 0.55,
