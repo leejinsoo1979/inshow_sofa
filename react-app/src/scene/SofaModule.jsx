@@ -96,9 +96,22 @@ export default function SofaModule({ module: m }) {
       child.receiveShadow = true;
       child.userData.isModuleMesh = true;
       if (child.geometry?.attributes?.color) child.geometry.deleteAttribute("color");
+      // baked-in baseColorTexture 제거를 위해 강제로 newMat 적용 + map null
       const newMat = Array.isArray(child.material)
         ? child.material.map(remap)
         : remap(child.material);
+      const stripMap = (mat) => {
+        if (!mat) return;
+        mat.map = null;
+        mat.normalMap = null;
+        mat.aoMap = null;
+        mat.metalnessMap = null;
+        mat.roughnessMap = null;
+        mat.emissiveMap = null;
+        mat.needsUpdate = true;
+      };
+      if (Array.isArray(newMat)) newMat.forEach(stripMap);
+      else stripMap(newMat);
       // 강제 통일: vertexColors off, map(GLB 잔여 텍스처) 제거
       const enforceUniform = (mat) => {
         if (!mat) return;
