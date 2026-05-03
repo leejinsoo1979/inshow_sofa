@@ -47,10 +47,8 @@ export const useConfigurator = create((set, get) => ({
     const spec = moduleCatalog[type];
     if (!spec) return;
     const newId = `module-${Date.now().toString().slice(-5)}`;
-    const SEAM = 0.02;
     let x = 0, z = 0;
     if (modules.length > 0) {
-      // bounds 계산 (vanilla configuredBounds와 동일)
       let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity;
       for (const m of modules) {
         const ms = moduleCatalog[m.type];
@@ -60,6 +58,13 @@ export const useConfigurator = create((set, get) => ({
         minZ = Math.min(minZ, m.z - hd);
         maxZ = Math.max(maxZ, m.z + hd);
       }
+      // 트레이 모듈은 SEAM 없이 정확히 인접 (본체-선반 일체형이라 겹치면 박힘)
+      const isTray = type.startsWith("tray");
+      const adjType = side === "left"
+        ? [...modules].sort((a, b) => a.x - b.x)[0].type
+        : [...modules].sort((a, b) => b.x - a.x)[0].type;
+      const isAdjTray = adjType.startsWith("tray");
+      const SEAM = (isTray || isAdjTray) ? 0 : 0.02;
       x = side === "left"
         ? minX - spec.width / 2 + SEAM
         : maxX + spec.width / 2 - SEAM;
