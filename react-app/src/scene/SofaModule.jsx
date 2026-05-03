@@ -96,10 +96,19 @@ export default function SofaModule({ module: m }) {
       child.receiveShadow = true;
       child.userData.isModuleMesh = true;
       if (child.geometry?.attributes?.color) child.geometry.deleteAttribute("color");
-      // baked-in baseColorTexture 제거를 위해 강제로 newMat 적용 + map null
-      const newMat = Array.isArray(child.material)
-        ? child.material.map(remap)
-        : remap(child.material);
+
+      let newMat;
+      if (Array.isArray(child.material)) {
+        const roleCache = {};
+        newMat = child.material.map((m) => {
+          const role = importedMaterialRole(m?.name, roles);
+          if (!roleCache[role]) roleCache[role] = remap(m);
+          return roleCache[role];
+        });
+      } else {
+        newMat = remap(child.material);
+      }
+
       const stripMap = (mat) => {
         if (!mat) return;
         mat.map = null;
