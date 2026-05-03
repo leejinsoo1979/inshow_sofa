@@ -11,8 +11,8 @@ export const moduleCatalog = {
 
 export const modelSources = {
   singleArmLeftOne: "/models/sofa_module/single_arm(L)1.glb?v=10",
-  doubleArmOne: "/models/sofa_module_v2/newdoublearm1.glb?v=clean1",
-  doubleArmTwo: "/models/sofa_module_v2/newdoublearm2.glb?v=clean1",
+  doubleArmOne: "/models/sofa_module_v2/newdoublearm1.glb?v=blender1",
+  doubleArmTwo: "/models/sofa_module_v2/newdoublearm2.glb?v=blender1",
   singleArmRightTwo: "/models/sofa_module/__singlearm2_R.glb?v=10",
   trayLeftOne: "/models/sofa_module/single_tray(L).glb?v=10"
 };
@@ -35,13 +35,13 @@ export const modelMaterialRoles = {
     metal: ["metal", "__metal*"]
   },
   doubleArmOne: {
-    upholstery: ["fabric", "base"],
-    base: [],
+    upholstery: ["fabric"],
+    base: ["base"],
     metal: ["metal", "__metal*"]
   },
   doubleArmTwo: {
-    upholstery: ["fabric", "base"],
-    base: [],
+    upholstery: ["fabric"],
+    base: ["base"],
     metal: ["metal", "__metal*"]
   }
 };
