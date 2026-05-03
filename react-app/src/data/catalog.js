@@ -35,13 +35,13 @@ export const modelMaterialRoles = {
     metal: ["metal", "__metal*"]
   },
   doubleArmOne: {
-    upholstery: ["fabric", "가죽1"],
-    base: ["base", "가죽1_0", "가죽1_1", "material_1", "material_73"],
+    upholstery: ["fabric", "가죽1", "가죽1_0", "가죽1_1", "material_1", "material_73"],
+    base: ["base"],
     metal: ["metal", "__metal*"]
   },
   doubleArmTwo: {
-    upholstery: ["fabric", "가죽1"],
-    base: ["base", "가죽1_0", "가죽1_1", "material_73"],
+    upholstery: ["fabric", "가죽1", "가죽1_0", "가죽1_1", "material_73"],
+    base: ["base"],
     metal: ["metal", "__metal*"]
   }
 };
