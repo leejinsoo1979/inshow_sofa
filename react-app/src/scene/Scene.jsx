@@ -38,6 +38,7 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
       shadows={{ type: THREE.PCFSoftShadowMap }}
       dpr={[1, 2]}
       camera={{ position: [4.5, 1.4, 5.2], fov: 32, near: 0.1, far: 100 }}
+      onPointerMissed={() => useConfigurator.getState().setSelectedId(null)}
       gl={{
         antialias: true,
         alpha: true,
