@@ -111,21 +111,15 @@ export default function SofaModule({ module: m }) {
 
       const stripMap = (mat) => {
         if (!mat) return;
-        mat.map = null;
-        mat.normalMap = null;
-        mat.aoMap = null;
-        mat.metalnessMap = null;
-        mat.roughnessMap = null;
-        mat.emissiveMap = null;
+        // trayWood/base 머티리얼이 의도적으로 가지는 텍스처는 보존
         mat.needsUpdate = true;
       };
       if (Array.isArray(newMat)) newMat.forEach(stripMap);
       else stripMap(newMat);
-      // 강제 통일: vertexColors off, map(GLB 잔여 텍스처) 제거
+      // vertexColors만 off (의도된 텍스처는 보존)
       const enforceUniform = (mat) => {
         if (!mat) return;
         if ("vertexColors" in mat) mat.vertexColors = false;
-        if ("map" in mat && mat.map && material !== "naturalLeather") mat.map = null;
         mat.needsUpdate = true;
       };
       if (Array.isArray(newMat)) newMat.forEach(enforceUniform);
