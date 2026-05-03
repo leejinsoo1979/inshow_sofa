@@ -1,5 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment } from "@react-three/drei";
+import { EffectComposer, Outline, Selection } from "@react-three/postprocessing";
 import { Suspense, useRef } from "react";
 import * as THREE from "three";
 import Lights from "./Lights";
@@ -52,7 +53,12 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
         <Environment preset="city" environmentIntensity={0.5} />
         <Lights />
         <Floor />
-        <Modules />
+        <Selection>
+          <EffectComposer multisampling={8} autoClear={false}>
+            <Outline blur visibleEdgeColor={0xff4a3d} hiddenEdgeColor={0x551a14} edgeStrength={6} width={1000} />
+          </EffectComposer>
+          <Modules />
+        </Selection>
         <Hotspots />
         <ModuleToolbar />
         <DimensionLabels />

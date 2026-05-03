@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
+import { Select } from "@react-three/postprocessing";
 import { clone as cloneSkinned } from "three/examples/jsm/utils/SkeletonUtils.js";
 import * as THREE from "three";
 import { moduleCatalog, modelSources, modelMaterialRoles } from "../data/catalog";
@@ -107,25 +108,6 @@ export default function SofaModule({ module: m }) {
       child.material = newMat;
     });
 
-    // 선택된 모듈에 outline 추가 (BackSide 약간 큰 mesh)
-    if (isSelected) {
-      const outlineMat = new THREE.MeshBasicMaterial({
-        color: 0xff4a3d,
-        side: THREE.BackSide,
-        transparent: true,
-        opacity: 0.8
-      });
-      const outlines = [];
-      clone.traverse((child) => {
-        if (child.isMesh && !child.userData.isOutline) {
-          const om = new THREE.Mesh(child.geometry, outlineMat);
-          om.scale.multiplyScalar(1.04);
-          om.userData.isOutline = true;
-          outlines.push({ parent: child, mesh: om });
-        }
-      });
-      outlines.forEach(({ parent, mesh }) => parent.add(mesh));
-    }
   }, [clone, sofaColor, baseColor, trayWood, material, spec, selectedId, m.id]);
 
   // group에 clone 직접 add (vanilla 방식, r3f reconciler 우회)
@@ -138,15 +120,18 @@ export default function SofaModule({ module: m }) {
     };
   }, [clone]);
 
+  const isSelected = selectedId === m.id;
   return (
-    <group
-      ref={groupRef}
-      position={[m.x, 0, m.z]}
-      rotation={[0, m.rotation, 0]}
-      onClick={(e) => {
-        e.stopPropagation();
-        setSelectedId(m.id);
-      }}
-    />
+    <Select enabled={isSelected}>
+      <group
+        ref={groupRef}
+        position={[m.x, 0, m.z]}
+        rotation={[0, m.rotation, 0]}
+        onClick={(e) => {
+          e.stopPropagation();
+          setSelectedId(m.id);
+        }}
+      />
+    </Select>
   );
 }
