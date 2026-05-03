@@ -29,7 +29,26 @@ export default function SofaModule({ module: m }) {
   // 클론은 한 번만 (모듈 인스턴스별로 고유)
   const clone = useMemo(() => scene.clone(true), [scene]);
 
-  // 머티리얼 갱신 (sofaColor/baseColor/trayWood 변경 시마다)
+  // 1) 스케일/위치는 clone/spec 변경 시 한 번만 (vanilla 공식)
+  useEffect(() => {
+    const initialBounds = new THREE.Box3().setFromObject(clone);
+    const initialSize = initialBounds.getSize(new THREE.Vector3());
+    const mirror = spec.mirror ? -1 : 1;
+    const scaleX = Number.isFinite(spec.width / initialSize.x) ? spec.width / initialSize.x : 1;
+    const scaleY = Number.isFinite(spec.height / initialSize.y) ? spec.height / initialSize.y : 1;
+    const scaleZ = Number.isFinite(spec.depth / initialSize.z) ? spec.depth / initialSize.z : 1;
+    clone.scale.set(scaleX * mirror, scaleY, scaleZ);
+
+    clone.position.set(0, 0, 0);
+    clone.updateMatrixWorld(true);
+    const bounds = new THREE.Box3().setFromObject(clone);
+    const center = bounds.getCenter(new THREE.Vector3());
+    clone.position.x -= center.x;
+    clone.position.z -= center.z;
+    clone.position.y -= bounds.min.y;
+  }, [clone, spec]);
+
+  // 2) 머티리얼만 갱신 (위치/스케일 안 건드림)
   useEffect(() => {
     const isLeather = material === "naturalLeather";
     const ups = createUpholsteryMaterial(sofaColor, isLeather);
@@ -56,24 +75,6 @@ export default function SofaModule({ module: m }) {
         ? child.material.map(remap)
         : remap(child.material);
     });
-
-    // vanilla 동일: scale 적용 → group에 add는 r3f가 알아서 → bounds → 위치 보정
-    const initialBounds = new THREE.Box3().setFromObject(clone);
-    const initialSize = initialBounds.getSize(new THREE.Vector3());
-    const mirror = spec.mirror ? -1 : 1;
-    const scaleX = Number.isFinite(spec.width / initialSize.x) ? spec.width / initialSize.x : 1;
-    const scaleY = Number.isFinite(spec.height / initialSize.y) ? spec.height / initialSize.y : 1;
-    const scaleZ = Number.isFinite(spec.depth / initialSize.z) ? spec.depth / initialSize.z : 1;
-    clone.scale.set(scaleX * mirror, scaleY, scaleZ);
-
-    // 위치 reset 후 다시 측정 (vanilla와 동일하게 -= 사용)
-    clone.position.set(0, 0, 0);
-    clone.updateMatrixWorld(true);
-    const bounds = new THREE.Box3().setFromObject(clone);
-    const center = bounds.getCenter(new THREE.Vector3());
-    clone.position.x -= center.x;
-    clone.position.z -= center.z;
-    clone.position.y -= bounds.min.y;
   }, [clone, sofaColor, baseColor, trayWood, material, spec]);
 
   return (
