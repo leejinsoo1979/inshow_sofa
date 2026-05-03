@@ -75,10 +75,8 @@ export default function SofaModule({ module: m }) {
     const applyGlow = (mat) => {
       if ("emissive" in mat) {
         mat.emissive = glowColor.clone();
-        mat.emissiveIntensity = 0.35;
+        mat.emissiveIntensity = 0.18;
       }
-      if ("clearcoat" in mat) mat.clearcoat = Math.max(mat.clearcoat || 0, 0.45);
-      if ("envMapIntensity" in mat) mat.envMapIntensity = Math.max(mat.envMapIntensity || 0, 1.5);
     };
 
     // 기존 outline 제거
