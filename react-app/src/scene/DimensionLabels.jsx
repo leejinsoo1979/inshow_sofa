@@ -24,11 +24,30 @@ export default function DimensionLabels() {
       maxZ = Math.max(maxZ, m.z + hd);
       maxH = Math.max(maxH, spec.height);
     }
+    // 핫스팟 위치 (어느 쪽에 있는지) 계산 — H는 핫스팟 반대쪽
+    const sorted = [...modules].sort((a, b) => a.x - b.x);
+    const leftSpec = moduleCatalog[sorted[0].type];
+    const rightSpec = moduleCatalog[sorted[sorted.length - 1].type];
+    const worldOpen = (mod, spec) => {
+      const step = ((Math.round((mod.rotation || 0) / (Math.PI / 2)) % 4) + 4) % 4;
+      const map = {
+        0: { left: "left", right: "right" },
+        1: { left: "back", right: "front" },
+        2: { left: "right", right: "left" },
+        3: { left: "front", right: "back" }
+      }[step];
+      const set = new Set();
+      (spec.openSides || []).forEach((s) => set.add(map[s]));
+      return set;
+    };
+    const leftHasHotspot = worldOpen(sorted[0], leftSpec).has("left");
+    const rightHasHotspot = worldOpen(sorted[sorted.length - 1], rightSpec).has("right");
     return {
       minX, maxX, minZ, maxZ, maxH,
       w: Math.round((maxX - minX) * 100),
       d: Math.round((maxZ - minZ) * 100),
-      h: Math.round(maxH * 100)
+      h: Math.round(maxH * 100),
+      leftHasHotspot, rightHasHotspot
     };
   }, [modules]);
 
@@ -49,7 +68,7 @@ export default function DimensionLabels() {
   });
 
   if (!showDimensions || !bounds) return null;
-  const { minX, maxX, minZ, maxZ, maxH, w, d, h } = bounds;
+  const { minX, maxX, minZ, maxZ, maxH, w, d, h, leftHasHotspot, rightHasHotspot } = bounds;
   const cx = (minX + maxX) / 2;
   const cz = (minZ + maxZ) / 2;
   const yLine = 0.01;
@@ -91,8 +110,11 @@ export default function DimensionLabels() {
       </Html>
 
       {behind && (() => {
-        // H는 핫스팟 반대쪽: 카메라 X >= 모듈 center → H를 maxX에, 아니면 minX
-        const hx = rightSide ? maxX : minX;
+        // H는 핫스팟 반대쪽
+        let hx;
+        if (leftHasHotspot && !rightHasHotspot) hx = maxX; // 핫스팟 좌측만 → H 우측
+        else if (rightHasHotspot && !leftHasHotspot) hx = minX; // 핫스팟 우측만 → H 좌측
+        else hx = rightSide ? maxX : minX; // 양쪽 또는 없음 → 카메라 가까운 쪽
         return (
           <>
             <Line points={[[hx, 0, minZ - padZ], [hx, maxH, minZ - padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />

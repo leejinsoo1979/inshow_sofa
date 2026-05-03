@@ -29,22 +29,7 @@ export default function SofaModule({ module: m }) {
 
   // 클론은 한 번만 (모듈 인스턴스별로 고유)
   // 매번 deep clone — useGLTF가 모든 인스턴스에 같은 scene 반환하므로 인스턴스마다 독립 복사 필요
-  const clone = useMemo(() => {
-    const c = cloneSkinned(scene);
-    // 모든 mesh의 geometry + material을 명시적으로 새로 생성 (인스턴스 공유 끊기)
-    c.traverse((child) => {
-      if (child.isMesh) {
-        child.geometry = child.geometry.clone();
-        if (Array.isArray(child.material)) {
-          child.material = child.material.map((mt) => mt.clone());
-        } else if (child.material) {
-          child.material = child.material.clone();
-        }
-      }
-    });
-    return c;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scene, m.id]);
+  const clone = useMemo(() => cloneSkinned(scene), [scene, m.id]);
 
   // 1) 스케일/위치는 clone/spec 변경 시 한 번만 (vanilla 공식)
   useEffect(() => {
