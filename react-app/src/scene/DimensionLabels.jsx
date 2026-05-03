@@ -8,7 +8,9 @@ export default function DimensionLabels() {
   const modules = useConfigurator((s) => s.modules);
   const showDimensions = useConfigurator((s) => s.showDimensions);
   const [behind, setBehind] = useState(false);
-  const lastRef = useRef(false);
+  const [rightSide, setRightSide] = useState(true);
+  const lastBehindRef = useRef(false);
+  const lastSideRef = useRef(true);
 
   const bounds = useMemo(() => {
     if (!modules.length) return null;
@@ -30,13 +32,19 @@ export default function DimensionLabels() {
     };
   }, [modules]);
 
-  // 카메라가 모듈 뒤(z<minZ)에 있는지 체크 → 뒤쪽 보일 때만 H 표시
   useFrame(({ camera }) => {
     if (!bounds) return;
-    const isBehind = camera.position.z < (bounds.minZ + bounds.maxZ) / 2;
-    if (isBehind !== lastRef.current) {
-      lastRef.current = isBehind;
+    const cz0 = (bounds.minZ + bounds.maxZ) / 2;
+    const cx0 = (bounds.minX + bounds.maxX) / 2;
+    const isBehind = camera.position.z < cz0;
+    const isRight = camera.position.x >= cx0;
+    if (isBehind !== lastBehindRef.current) {
+      lastBehindRef.current = isBehind;
       setBehind(isBehind);
+    }
+    if (isRight !== lastSideRef.current) {
+      lastSideRef.current = isRight;
+      setRightSide(isRight);
     }
   });
 
@@ -82,18 +90,22 @@ export default function DimensionLabels() {
         <div className="dim-label" style={{ position: "static", transform: "none" }}>{d} cm</div>
       </Html>
 
-      {behind && (
-        <>
-          <Line points={[[minX, 0, minZ - padZ], [minX, maxH, minZ - padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
-          <Line points={[[minX, 0, minZ], [minX, 0, minZ - padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
-          <Line points={[[minX, maxH, minZ], [minX, maxH, minZ - padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
-          <Dot position={[minX, 0, minZ - padZ]} />
-          <Dot position={[minX, maxH, minZ - padZ]} />
-          <Html position={[minX, maxH / 2, minZ - padZ]} center zIndexRange={[5, 0]}>
-            <div className="dim-label" style={{ position: "static", transform: "none" }}>{h} cm</div>
-          </Html>
-        </>
-      )}
+      {behind && (() => {
+        // H는 핫스팟 반대쪽: 카메라 X >= 모듈 center → H를 maxX에, 아니면 minX
+        const hx = rightSide ? maxX : minX;
+        return (
+          <>
+            <Line points={[[hx, 0, minZ - padZ], [hx, maxH, minZ - padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+            <Line points={[[hx, 0, minZ], [hx, 0, minZ - padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+            <Line points={[[hx, maxH, minZ], [hx, maxH, minZ - padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+            <Dot position={[hx, 0, minZ - padZ]} />
+            <Dot position={[hx, maxH, minZ - padZ]} />
+            <Html position={[hx, maxH / 2, minZ - padZ]} center zIndexRange={[5, 0]}>
+              <div className="dim-label" style={{ position: "static", transform: "none" }}>{h} cm</div>
+            </Html>
+          </>
+        );
+      })()}
     </group>
   );
 }
