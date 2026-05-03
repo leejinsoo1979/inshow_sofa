@@ -6,6 +6,7 @@ import SunSlider from "./ui/SunSlider";
 import { useConfigurator } from "./state/configurator";
 import { moduleCatalog } from "./data/catalog";
 import { useKeyboardShortcuts } from "./ui/useKeyboardShortcuts";
+import LoadingScreen from "./ui/LoadingScreen";
 
 function useFootprintCm() {
   const modules = useConfigurator((s) => s.modules);
@@ -33,6 +34,8 @@ export default function App() {
   useKeyboardShortcuts(() => resetCameraRef.current?.());
 
   return (
+    <>
+    <LoadingScreen />
     <main className="app-shell">
       <section className="viewer" aria-label="3D sofa viewer">
         <Scene resetCameraRef={resetCameraRef} />
@@ -52,5 +55,6 @@ export default function App() {
       </section>
       <SidePanel />
     </main>
+    </>
   );
 }

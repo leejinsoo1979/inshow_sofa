@@ -7,6 +7,7 @@ import SofaModule from "./SofaModule";
 import Hotspots from "./Hotspots";
 import ModuleToolbar from "./ModuleToolbar";
 import CameraRig from "./CameraRig";
+import DimensionLabels from "./DimensionLabels";
 import { useConfigurator } from "../state/configurator";
 
 function Floor() {
@@ -52,6 +53,7 @@ export default function Scene({ resetCameraRef }) {
         <Modules />
         <Hotspots />
         <ModuleToolbar />
+        <DimensionLabels />
         <CameraRig controlsRef={controlsRef} resetCameraRef={resetCameraRef} />
       </Suspense>
       <OrbitControls

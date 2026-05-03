@@ -87,9 +87,9 @@ export default function SofaModule({ module: m }) {
     >
       <primitive object={clone} />
       {isSelected && (
-        <mesh position={[0, 0.001, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[Math.max(spec.width, spec.depth) * 0.55, Math.max(spec.width, spec.depth) * 0.6, 48]} />
-          <meshBasicMaterial color={0x2563eb} transparent opacity={0.7} />
+        <mesh position={[0, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[Math.max(spec.width, spec.depth) * 0.42, Math.max(spec.width, spec.depth) * 0.45, 64]} />
+          <meshBasicMaterial color={0x2563eb} transparent opacity={0.55} />
         </mesh>
       )}
     </group>
