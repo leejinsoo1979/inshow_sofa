@@ -39,17 +39,16 @@ export default function CameraRig({ controlsRef, resetCameraRef }) {
     }
     const cx = (minX + maxX) / 2;
     const cz = (minZ + maxZ) / 2;
-    const w = Math.max(maxX - minX, 1.2);
-    const d = Math.max(maxZ - minZ, 0.9);
-    const radius = Math.sqrt(w * w + d * d) * 1.9;
+    const w = maxX - minX;
+    // 가구 너비에 따라 부드럽게 비례하는 거리 (최소 보장)
+    const radius = Math.max(3.5, w * 1.15 + 2.5);
 
     const target = new THREE.Vector3(cx, 0.35, cz);
 
-    // 첫 렌더에는 즉시 세팅, 이후엔 부드럽게 보간
     const newPos = new THREE.Vector3(
-      cx + radius * 0.85,
-      Math.max(1.8, radius * 0.55),
-      cz + radius * 1.0
+      cx + radius * 0.55,
+      Math.max(1.6, radius * 0.4),
+      cz + radius * 0.9
     );
 
     lastPosRef.current = newPos.clone();
@@ -80,7 +79,8 @@ export default function CameraRig({ controlsRef, resetCameraRef }) {
     };
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
-  }, [modules, camera, controlsRef]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [modules]);
 
   return null;
 }

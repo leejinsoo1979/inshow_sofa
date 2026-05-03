@@ -22,8 +22,8 @@ function useFootprintCm() {
       maxZ = Math.max(maxZ, m.z + hd);
     }
     return {
-      w: Math.round((maxX - minX) * 100),
-      d: Math.round((maxZ - minZ) * 100)
+      w: Math.round((maxX - minX) * 1000),
+      d: Math.round((maxZ - minZ) * 1000)
     };
   }, [modules]);
 }

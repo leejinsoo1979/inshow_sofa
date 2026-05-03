@@ -20,7 +20,7 @@ export default function Hotspots() {
       if (lx < minX) minX = lx;
       if (rx > maxX) maxX = rx;
     }
-    return { leftX: minX - 0.45, rightX: maxX + 0.45 };
+    return { leftX: minX - 0.18, rightX: maxX + 0.18 };
   }, [modules]);
 
   return (
