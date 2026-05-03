@@ -52,54 +52,83 @@ const catalogCards = {};
 const toolbarWorldPosition = new THREE.Vector3();
 
 const moduleCatalog = {
-  armlessRight: { label: "싱글암R 1인", width: 0.95, depth: 0.9, height: 0.68, seats: 1, model: "armless", arms: ["left"], openSides: ["right"], price: { fabric: 960000, leather: 1818000 }, thumbnail: "./assets/thumbnails/singlearm_R_1.png" },
-  armlessLeft: { label: "싱글암L 1인", width: 0.95, depth: 0.9, height: 0.68, seats: 1, model: "armless", mirror: true, arms: ["right"], openSides: ["left"], price: { fabric: 960000, leather: 1818000 }, thumbnail: "./assets/thumbnails/singlearm_L_1.png" },
+  armlessLeft: { label: "싱글암(좌)", width: 0.95, depth: 0.9, height: 0.68, seats: 1, model: "singleArmLeftOne", arms: ["right"], openSides: ["left"], price: { fabric: 960000, leather: 1818000 }, thumbnail: "./assets/thumbnails/singlearm_L_1.png" },
+  armlessRight: { label: "싱글암(우)", width: 0.95, depth: 0.9, height: 0.68, seats: 1, model: "singleArmLeftOne", mirror: true, arms: ["left"], openSides: ["right"], price: { fabric: 960000, leather: 1818000 }, thumbnail: "./assets/thumbnails/singlearm_R_1.png" },
   doubleOne: { label: "더블암 1인", width: 1.15, depth: 0.9, height: 0.68, seats: 1, model: "doubleArmOne", arms: ["left", "right"], openSides: ["left", "right"], price: { fabric: 1090000, leather: 2090000 }, thumbnail: "./assets/thumbnails/doublearm_1.png" },
   doubleTwo: { label: "더블암 2인", width: 1.9, depth: 0.9, height: 0.68, seats: 2, model: "doubleArmTwo", arms: ["left", "right"], openSides: ["left", "right"], price: { fabric: 1500000, leather: 3000000 }, thumbnail: "./assets/thumbnails/doublearm_2.png" },
-  singleRightTwo: { label: "싱글암R 2인", width: 1.7, depth: 0.9, height: 0.68, seats: 2, model: "singleArmTwoRight", arms: ["left"], openSides: ["right"], price: { fabric: 1410000, leather: 2727000 }, thumbnail: "./assets/thumbnails/singlearm_R_2.png" },
-  singleLeftTwo: { label: "싱글암L 2인", width: 1.7, depth: 0.9, height: 0.68, seats: 2, model: "singleArmTwoRight", mirror: true, arms: ["right"], openSides: ["left"], price: { fabric: 1410000, leather: 2727000 }, thumbnail: "./assets/thumbnails/singlearm_L_2.png" },
-  trayRightOne: { label: "트레이R 1인", width: 1.15, depth: 0.9, height: 0.68, seats: 1, model: "singleArmTrayRight", arms: [], openSides: ["left", "right"], price: { fabric: 818000, leather: 1636000 }, thumbnail: "./assets/thumbnails/trey_R.png" },
-  trayLeftOne: { label: "트레이L 1인", width: 1.15, depth: 0.9, height: 0.68, seats: 1, model: "singleArmTrayRight", mirror: true, arms: [], openSides: ["left", "right"], price: { fabric: 818000, leather: 1636000 }, thumbnail: "./assets/thumbnails/trey_L.png" }
+  singleLeftTwo: { label: "싱글암2인(좌)", width: 1.7, depth: 0.9, height: 0.68, seats: 2, model: "singleArmRightTwo", arms: ["right"], openSides: ["left"], price: { fabric: 1410000, leather: 2727000 }, thumbnail: "./assets/thumbnails/singlearm_L_2.png" },
+  singleRightTwo: { label: "싱글암2인(우)", width: 1.7, depth: 0.9, height: 0.68, seats: 2, model: "singleArmRightTwo", mirror: true, arms: ["left"], openSides: ["right"], price: { fabric: 1410000, leather: 2727000 }, thumbnail: "./assets/thumbnails/singlearm_R_2.png" },
+  trayLeftOne: { label: "트레이(좌)", width: 1.15, depth: 0.9, height: 0.68, seats: 1, model: "trayLeftOne", mirror: true, arms: [], openSides: ["right"], price: { fabric: 818000, leather: 1636000 }, thumbnail: "./assets/thumbnails/trey_L.png" },
+  trayRightOne: { label: "트레이(우)", width: 1.15, depth: 0.9, height: 0.68, seats: 1, model: "trayLeftOne", arms: [], openSides: ["left"], price: { fabric: 818000, leather: 1636000 }, thumbnail: "./assets/thumbnails/trey_R.png" }
 };
 
 const modelSources = {
-  armless: "./models/sa1.glb",
-  doubleArmOne: "./models/double_arm_1.glb",
-  doubleArmTwo: "./models/double_arm_2.glb",
-  singleArmTwoRight: "./models/single_arm_2_R.glb",
-  singleArmTrayRight: "./models/single_arm_t1_R.glb"
+  singleArmLeftOne: "./models/sofa_module/single_arm(L)1.glb?v=10",
+  doubleArmOne: "./models/sofa_module_v2/newdoublearm1.glb?v=28",
+  doubleArmTwo: "./models/sofa_module_v2/newdoublearm2.glb?v=12",
+  singleArmRightTwo: "./models/sofa_module/__singlearm2_R.glb?v=10",
+  trayLeftOne: "./models/sofa_module/single_tray(L).glb?v=10"
+};
+
+const modelMaterialRoles = {
+  singleArmLeftOne: {
+    upholstery: ["fabric", "가죽1"],
+    base: ["base", "가죽1_0", "가죽1_1", "가죽1_base_strip"],
+    metal: ["metal", "__metal*"]
+  },
+  singleArmRightTwo: {
+    upholstery: ["fabric", "가죽1"],
+    base: ["base", "가죽1_0", "가죽1_1", "material_73", "가죽1_base_strip"],
+    metal: ["metal", "__metal*"]
+  },
+  trayLeftOne: {
+    upholstery: ["fabric", "가죽1"],
+    base: ["base", "가죽1_0", "가죽1_1", "material_73", "가죽1_base_strip"],
+    trayWood: ["trayWood", "material_89"],
+    metal: ["metal", "__metal*"]
+  },
+  doubleArmOne: {
+    upholstery: ["fabric"],
+    base: ["base"],
+    metal: ["metal", "__metal*"]
+  },
+  doubleArmTwo: {
+    upholstery: ["fabric"],
+    base: ["base"],
+    metal: ["metal", "__metal*"]
+  }
 };
 
 const sofaColors = [
-  { id: "fabricIvory", label: "패브릭 아이보리", color: "#e6dcd1", group: "light" },
-  { id: "fabricGray", label: "패브릭 그레이", color: "#918d8b", group: "light" },
-  { id: "fabricCharcoal", label: "패브릭 차콜블랙", color: "#3b3a3a", group: "fabricDark" },
-  { id: "leatherBlack", label: "천연가죽 블랙", color: "#1a1a1a", group: "leatherBlack", image: "./assets/thumbnails/texture/Kashi%209.jpg" }
+  { id: "fabricIvory", label: "패브릭 아이보리", color: "#e6dcd1", group: "light", textureFolder: "./materials/sofa/fabric_ivory" },
+  { id: "fabricGray", label: "패브릭 그레이", color: "#918d8b", group: "light", textureFolder: "./materials/sofa/fabric_gray" },
+  { id: "fabricCharcoal", label: "패브릭 차콜블랙", color: "#3b3a3a", group: "fabricDark", textureFolder: "./materials/sofa/fabric_charcoal" },
+  { id: "leatherBlack", label: "천연가죽 블랙", color: "#1a1a1a", group: "leatherBlack", image: "./assets/thumbnails/texture/Kashi%209.jpg", textureFolder: "./materials/sofa/leather_black" }
 ];
 
 const fabricSofaColors = sofaColors;
 
 const baseFrameOptionsByGroup = {
   light: [
-    { label: "비건가죽 그레이", color: "#b7aa9e" },
-    { label: "비건가죽 헤이즐", color: "#716253" },
-    { label: "비건가죽 올리브", color: "#595b45" },
-    { label: "비건가죽 그린", color: "#2c4128" },
-    { label: "천연가죽 썬더", color: "#4d4843" }
+    { label: "비건가죽 그레이", color: "#b7aa9e", textureFolder: "./materials/frame/default" },
+    { label: "비건가죽 헤이즐", color: "#716253", textureFolder: "./materials/frame/default" },
+    { label: "비건가죽 올리브", color: "#595b45", textureFolder: "./materials/frame/default" },
+    { label: "비건가죽 그린", color: "#2c4128", textureFolder: "./materials/frame/default" },
+    { label: "천연가죽 썬더", color: "#4d4843", textureFolder: "./materials/frame/default" }
   ],
   fabricDark: [
-    { label: "패브릭 차콜블랙", color: "#3b3a3a" }
+    sofaColors[2]
   ],
   leatherBlack: [
-    { label: "천연가죽 블랙", color: "#050505" }
+    sofaColors[3]
   ]
 };
 
 const baseFrameColors = baseFrameOptionsByGroup.light;
 
 const trayWoodColors = [
-  { label: "월넛", color: "#3d2f22", image: "./assets/thumbnails/texture/131_Persian%20walnut%20PBR%20texture-seamless.jpg" },
-  { label: "블랙", color: "#000000" }
+  { label: "월넛", color: "#3d2f22", image: "./assets/thumbnails/texture/131_Persian%20walnut%20PBR%20texture-seamless.jpg", textureFolder: "./materials/tray_wood/walnut" },
+  { label: "블랙", color: "#000000", textureFolder: "./materials/tray_wood/black" }
 ];
 
 const accentCushionColors = [
@@ -113,7 +142,7 @@ const accentCushionColors = [
 ];
 
 const state = {
-  layout: "armlessRight",
+  layout: "armlessLeft",
   material: "fabric",
   sofaColor: fabricSofaColors[0],
   baseColor: baseFrameColors[0],
@@ -185,7 +214,7 @@ fabricTexture.wrapT = THREE.RepeatWrapping;
 fabricTexture.repeat.set(14, 14);
 fabricTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
-const shadowMaterial = new THREE.ShadowMaterial({ color: 0x1a160f, opacity: 0.25 });
+const shadowMaterial = new THREE.ShadowMaterial({ color: 0x1a160f, opacity: 0.55 });
 const floor = new THREE.Mesh(new THREE.PlaneGeometry(18, 14), shadowMaterial);
 floor.rotation.x = -Math.PI / 2;
 floor.position.y = 0;
@@ -294,30 +323,45 @@ function currentSofaColor() {
 }
 
 function currentBaseColor() {
+  if (baseFollowsSofaMaterial()) {
+    return state.sofaColor;
+  }
   return state.baseColor;
+}
+
+function baseFollowsSofaMaterial() {
+  // 모든 패브릭/가죽 옵션에서 base를 sofa와 동일하게 통일
+  // (사용자가 base 색을 별도로 선택해도 무시하고 sofa 따라감)
+  return true;
 }
 
 function createUpholsteryMaterial() {
   const isLeather = state.material === "naturalLeather";
-  return new THREE.MeshPhysicalMaterial({
-    color: new THREE.Color(currentSofaColor().color),
-    roughness: isLeather ? 0.45 : 0.95,
+  const sofaColor = new THREE.Color(currentSofaColor().color);
+  const mat = new THREE.MeshPhysicalMaterial({
+    color: sofaColor,
+    roughness: isLeather ? 0.42 : 0.88,
     metalness: 0,
-    sheen: isLeather ? 1.0 : 0.35,
-    sheenRoughness: isLeather ? 0.4 : 0.85,
+    sheen: isLeather ? 0.75 : 0.12,
+    sheenRoughness: isLeather ? 0.42 : 0.95,
     sheenColor: isLeather
       ? new THREE.Color(0xdddddd)
-      : new THREE.Color(currentSofaColor().color).multiplyScalar(1.08),
-    map: isLeather ? leatherTexture : fabricTexture,
+      : sofaColor.clone().multiplyScalar(1.02),
+    map: isLeather ? leatherTexture : null,
     clearcoat: 0,
     clearcoatRoughness: 0.42,
-    envMapIntensity: isLeather ? 0.85 : 1.0
+    emissive: new THREE.Color(0x000000),
+    emissiveIntensity: 0,
+    envMapIntensity: isLeather ? 0.95 : 0.85
   });
+  // PBR 텍스처 폴더가 지정된 색상이면 자동 적용
+  applyPBRToMaterial(mat, currentSofaColor().textureFolder);
+  return mat;
 }
 
 function createBaseMaterial() {
   const isLeather = state.material === "naturalLeather";
-  return new THREE.MeshPhysicalMaterial({
+  const mat = new THREE.MeshPhysicalMaterial({
     color: new THREE.Color(currentBaseColor().color),
     roughness: isLeather ? 0.45 : 0.6,
     metalness: 0,
@@ -329,10 +373,18 @@ function createBaseMaterial() {
     map: isLeather ? leatherTexture : null,
     envMapIntensity: isLeather ? 0.85 : 1.0
   });
+  applyPBRToMaterial(mat, currentBaseColor().textureFolder);
+  return mat;
 }
 
 function createMetalMaterial() {
-  return new THREE.MeshStandardMaterial({ color: 0xc8c8c8, roughness: 0.55, metalness: 0.9 });
+  return new THREE.MeshPhongMaterial({
+    color: 0xd9d9d9,
+    specular: 0xffffff,
+    shininess: 140,
+    emissive: 0x303030,
+    reflectivity: 0.55
+  });
 }
 
 const _textureLoader = new THREE.TextureLoader();
@@ -352,19 +404,102 @@ leatherTexture.wrapT = THREE.RepeatWrapping;
 leatherTexture.repeat.set(1.5, 1.5);
 leatherTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
+// PBR 재질 폴더 자동 로드 (manifest.json 기반)
+// 사용법: materials/<카테고리>/<이름>/ 안에 manifest.json + 텍스처 파일을 넣으면
+//        sofaColors / baseFrameColors / trayWoodColors 의 textureFolder 필드에 경로 지정
+// manifest.json 형식:
+// {
+//   "albedo": "fabric_albedo.jpg",
+//   "normal": "fabric_normal.jpg",
+//   "roughness": "fabric_roughness.jpg",
+//   "metalness": "fabric_metallic.jpg",
+//   "ao": "fabric_ao.jpg",
+//   "repeat": [4, 4]
+// }
+const _pbrCache = new Map();
+async function loadPBRSet(folderPath) {
+  if (_pbrCache.has(folderPath)) return _pbrCache.get(folderPath);
+  try {
+    const res = await fetch(`${folderPath}/manifest.json`);
+    if (!res.ok) {
+      _pbrCache.set(folderPath, null);
+      return null;
+    }
+    const manifest = await res.json();
+    const repeat = manifest.repeat || [1, 1];
+    const loadOne = (filename, sRGB = false) => {
+      if (!filename) return null;
+      const tex = _textureLoader.load(`${folderPath}/${filename}`);
+      if (sRGB) tex.colorSpace = THREE.SRGBColorSpace;
+      tex.wrapS = THREE.RepeatWrapping;
+      tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(repeat[0], repeat[1]);
+      tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+      return tex;
+    };
+    const set = {
+      map: loadOne(manifest.albedo, true),
+      normalMap: loadOne(manifest.normal),
+      roughnessMap: loadOne(manifest.roughness),
+      metalnessMap: loadOne(manifest.metalness),
+      aoMap: loadOne(manifest.ao),
+      displacementMap: loadOne(manifest.displacement),
+      emissiveMap: loadOne(manifest.emissive, true)
+    };
+    _pbrCache.set(folderPath, set);
+    return set;
+  } catch (e) {
+    console.warn(`PBR set load failed for ${folderPath}:`, e);
+    _pbrCache.set(folderPath, null);
+    return null;
+  }
+}
+
+// 동기 적용 (이미 캐시된 경우만): 머티리얼에 텍스처 슬롯 적용
+function applyPBRToMaterial(material, folderPath) {
+  if (!folderPath) return;
+  const set = _pbrCache.get(folderPath);
+  if (!set) return;
+  for (const key of ["map","normalMap","roughnessMap","metalnessMap","aoMap","displacementMap","emissiveMap"]) {
+    if (set[key]) material[key] = set[key];
+  }
+  material.needsUpdate = true;
+}
+
+// 모든 sofaColors / baseFrameColors / trayWoodColors의 textureFolder를 미리 캐시
+async function preloadAllPBRSets() {
+  const folders = new Set();
+  const collect = (arr) => {
+    if (!arr) return;
+    for (const item of arr) {
+      if (item.textureFolder) folders.add(item.textureFolder);
+    }
+  };
+  collect(typeof sofaColors !== "undefined" ? sofaColors : []);
+  for (const k in (typeof baseFrameOptionsByGroup !== "undefined" ? baseFrameOptionsByGroup : {})) {
+    collect(baseFrameOptionsByGroup[k]);
+  }
+  collect(typeof trayWoodColors !== "undefined" ? trayWoodColors : []);
+  await Promise.all([...folders].map(loadPBRSet));
+}
+// 페이지 로드 시 자동 프리로드
+preloadAllPBRSets();
+
 function createTrayWoodMaterial() {
   const isWalnut = state.trayWood?.label === "월넛";
   if (isWalnut) {
-    return new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color(0x6a6258), // lighter neutral cool brown
+    const mat = new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color(0x6a6258),
       map: walnutTexture,
       roughness: 0.55,
       metalness: 0,
       clearcoat: 0.35,
       clearcoatRoughness: 0.45
     });
+    applyPBRToMaterial(mat, state.trayWood?.textureFolder);
+    return mat;
   }
-  return new THREE.MeshPhysicalMaterial({
+  const mat = new THREE.MeshPhysicalMaterial({
     color: new THREE.Color(state.trayWood?.color || "#000000"),
     roughness: 0.55,
     metalness: 0,
@@ -372,6 +507,8 @@ function createTrayWoodMaterial() {
     clearcoatRoughness: 0.45,
     sheen: 0.1
   });
+  applyPBRToMaterial(mat, state.trayWood?.textureFolder);
+  return mat;
 }
 
 function createAccentCushionMaterial(colorHex) {
@@ -439,45 +576,139 @@ function moduleLabel(type) {
   return moduleCatalog[type]?.label || "모듈";
 }
 
+function normalizeMaterialName(materialName) {
+  return (materialName || "").toLowerCase().replace(/\.\d+$/, "");
+}
+
+function materialNameMatches(name, patterns = []) {
+  return patterns.some((pattern) => {
+    const matcher = pattern.toLowerCase();
+    if (matcher.endsWith("*")) return name.startsWith(matcher.slice(0, -1));
+    return name === matcher;
+  });
+}
+
+function importedMaterialRole(materialName, modelKey) {
+  const name = normalizeMaterialName(materialName);
+  const roles = modelMaterialRoles[modelKey];
+  if (roles) {
+    if (materialNameMatches(name, roles.metal)) return "metal";
+    if (materialNameMatches(name, roles.trayWood)) return "trayWood";
+    if (materialNameMatches(name, roles.upholstery)) return "upholstery";
+    if (materialNameMatches(name, roles.base)) return "base";
+    console.warn(`Unmapped material "${materialName}" in ${modelKey}; using upholstery`);
+    return "upholstery";
+  }
+
+  if (name.includes("metal") || name.includes("__metal")) return "metal";
+  if (name.includes("material_89") || name.includes("wood")) return "trayWood";
+  if (name.includes("가죽1_0") || name.includes("가죽1_1")) return "base";
+  if (
+    name.includes("base") ||
+    name.includes("leather") ||
+    name.includes("가죽2")
+  ) {
+    return "base";
+  }
+  return "upholstery";
+}
+
+function materialForImportedRole(role, upholsteryMaterial, baseMaterial, metalMaterial, trayWoodMaterial) {
+  if (role === "metal") return metalMaterial.clone();
+  if (role === "base") return baseMaterial.clone();
+  if (role === "trayWood") return trayWoodMaterial.clone();
+  return upholsteryMaterial.clone();
+}
+
+function materialForImportedRoleWithSofaFollow(role, upholsteryMaterial, baseMaterial, metalMaterial, trayWoodMaterial) {
+  if (role === "metal") return metalMaterial.clone();
+  if (role === "trayWood") return trayWoodMaterial.clone();
+  if (baseFollowsSofaMaterial()) return upholsteryMaterial.clone();
+  if (role === "base") return baseMaterial.clone();
+  return upholsteryMaterial.clone();
+}
+
+function remapImportedMaterial(sourceMaterial, modelKey, upholsteryMaterial, baseMaterial, metalMaterial, trayWoodMaterial) {
+  if (Array.isArray(sourceMaterial)) {
+    return sourceMaterial.map((material) =>
+      materialForImportedRoleWithSofaFollow(
+        importedMaterialRole(material?.name, modelKey),
+        upholsteryMaterial,
+        baseMaterial,
+        metalMaterial,
+        trayWoodMaterial
+      )
+    );
+  }
+  return materialForImportedRoleWithSofaFollow(
+    importedMaterialRole(sourceMaterial?.name, modelKey),
+    upholsteryMaterial,
+    baseMaterial,
+    metalMaterial,
+    trayWoodMaterial
+  );
+}
+
+function isDoubleArmModel(modelKey) {
+  return modelKey === "doubleArmOne" || modelKey === "doubleArmTwo";
+}
+
+function remapDoubleArmMaterial(sourceMaterial, upholsteryMaterial, metalMaterial) {
+  const mapOne = (material) =>
+    importedMaterialRole(material?.name, "doubleArmOne") === "metal"
+      ? metalMaterial.clone()
+      : upholsteryMaterial.clone();
+  return Array.isArray(sourceMaterial) ? sourceMaterial.map(mapOne) : mapOne(sourceMaterial);
+}
+
 function createImportedModule(module, upholsteryMaterial, baseMaterial, metalMaterial) {
   const group = new THREE.Group();
   group.name = module.id;
   group.userData.moduleId = module.id;
   const { w, d, h } = moduleDimensions(module);
   const spec = moduleCatalog[module.type] || moduleCatalog.doubleOne;
-  const sourceModel = importedModels[spec.model] || importedModels.armless;
-  if (!sourceModel) return createProceduralModule(module, upholsteryMaterial, baseMaterial, metalMaterial);
+  const sourceModel = importedModels[spec.model];
+  if (!sourceModel) {
+    console.warn(`Missing model for ${module.type}: ${spec.model}`);
+    return createProceduralModule(module, upholsteryMaterial, baseMaterial, metalMaterial);
+  }
 
   const model = sourceModel.clone(true);
   const trayWoodMaterial = createTrayWoodMaterial();
 
   model.traverse((child) => {
     if (!child.isMesh) return;
-    const matName = child.material?.name || "";
-    const name = matName.toLowerCase();
     child.castShadow = true;
     child.receiveShadow = true;
-    if (name.includes("metal")) {
-      child.material = metalMaterial.clone();
-      return;
+    if (child.geometry && child.geometry.attributes) {
+      if (child.geometry.attributes.color) child.geometry.deleteAttribute("color");
     }
-    if (name.includes("가죽") || name.includes("leather") || name.includes("base")) {
-      child.material = baseMaterial.clone();
-      return;
-    }
-    if (name.includes("material_89") || name.includes("wood")) {
-      child.material = trayWoodMaterial.clone();
-      return;
-    }
-    child.material = upholsteryMaterial.clone();
+    child.material = remapImportedMaterial(
+      child.material,
+      spec.model,
+      upholsteryMaterial,
+      baseMaterial,
+      metalMaterial,
+      trayWoodMaterial
+    );
+    // 머티리얼 통일성 보장: vertex color 변조와 GLB 잔여 텍스처 제거
+    const enforceUniform = (mat) => {
+      if (!mat) return;
+      if ("vertexColors" in mat) mat.vertexColors = false;
+      if ("map" in mat && mat.map && state.material !== "naturalLeather") mat.map = null;
+      mat.needsUpdate = true;
+    };
+    if (Array.isArray(child.material)) child.material.forEach(enforceUniform);
+    else enforceUniform(child.material);
   });
 
   const initialBounds = new THREE.Box3().setFromObject(model);
   const initialSize = initialBounds.getSize(new THREE.Vector3());
-  const scale = Math.min(w / initialSize.x, d / initialSize.z);
   const mirror = spec.mirror ? -1 : 1;
-  const safeScale = Number.isFinite(scale) ? scale : 1;
-  model.scale.set(safeScale * mirror, safeScale, safeScale);
+  const scaleX = Number.isFinite(w / initialSize.x) ? w / initialSize.x : 1;
+  const scaleY = Number.isFinite(h / initialSize.y) ? h / initialSize.y : 1;
+  const scaleZ = Number.isFinite(d / initialSize.z) ? d / initialSize.z : 1;
+  model.scale.set(scaleX * mirror, scaleY, scaleZ);
   group.add(model);
 
   const bounds = new THREE.Box3().setFromObject(model);
@@ -488,7 +719,7 @@ function createImportedModule(module, upholsteryMaterial, baseMaterial, metalMat
 
   group.position.set(module.x, 0, module.z);
   group.rotation.y = module.rotation;
-  if (module.id === toolbarModuleId) applyGhostAppearance(group);
+  if (module.id === toolbarModuleId) applyGlowHighlight(group);
   registerSelectable(group, module.id);
   return group;
 }
@@ -540,23 +771,27 @@ function createProceduralModule(module, upholsteryMaterial, baseMaterial, metalM
 
   group.position.set(module.x, 0, module.z);
   group.rotation.y = module.rotation;
-  if (module.id === toolbarModuleId) applyGhostAppearance(group);
+  if (module.id === toolbarModuleId) applyGlowHighlight(group);
   registerSelectable(group, module.id);
   return group;
 }
 
-const GHOST_COLOR = new THREE.Color(0xb8554d);
-
-function applyGhostAppearance(group) {
+function applyGlowHighlight(group) {
+  const glowColor = new THREE.Color(0xff4a3d);
   group.traverse((child) => {
     if (!child.isMesh || !child.material) return;
-    child.material = child.material.clone();
-    child.material.transparent = true;
-    child.material.opacity = 0.32;
-    child.material.depthWrite = false;
-    if ("color" in child.material) child.material.color.copy(GHOST_COLOR);
-    if ("sheenColor" in child.material) child.material.sheenColor.copy(GHOST_COLOR);
-    if (child.material.map) child.material.map = null;
+    const sourceMaterials = Array.isArray(child.material) ? child.material : [child.material];
+    const highlighted = sourceMaterials.map((material) => {
+      const clone = material.clone();
+      if ("emissive" in clone) {
+        clone.emissive = glowColor.clone();
+        clone.emissiveIntensity = 0.3;
+      }
+      if ("clearcoat" in clone) clone.clearcoat = Math.max(clone.clearcoat || 0, 0.25);
+      if ("envMapIntensity" in clone) clone.envMapIntensity = Math.max(clone.envMapIntensity || 0, 1.15);
+      return clone;
+    });
+    child.material = Array.isArray(child.material) ? highlighted : highlighted[0];
   });
 }
 
@@ -617,7 +852,7 @@ function rebuildSofa({ recenterCamera = false, animateCamera = false } = {}) {
   while (expansionRoot.children.length) expansionRoot.remove(expansionRoot.children[0]);
   selectable.length = 0;
   const upholsteryMaterial = createUpholsteryMaterial();
-  const baseMaterial = createBaseMaterial();
+  const baseMaterial = baseFollowsSofaMaterial() ? upholsteryMaterial.clone() : createBaseMaterial();
   const metalMaterial = createMetalMaterial();
   state.modules.forEach((module) => sofaRoot.add(createModule(module, upholsteryMaterial, baseMaterial, metalMaterial)));
   updateGuides();
@@ -655,8 +890,7 @@ function updateUi() {
   if (els.selectedLabel) els.selectedLabel.textContent = selected ? moduleLabel(selected.type) : "없음";
 
   sofaRoot.children.forEach((group) => {
-    const isSelected = group.userData.moduleId === state.selectedId;
-    group.scale.setScalar(isSelected ? 1.01 : 1);
+    group.scale.setScalar(1);
   });
 
   const selectedType = selected?.type;
@@ -993,7 +1227,11 @@ function addModuleAtSide(type, side = "right") {
   const spec = moduleCatalog[type];
   const bounds = configuredBounds();
   const id = `module-${Date.now().toString().slice(-5)}`;
-  const x = side === "left" ? bounds.minX - spec.width / 2 : bounds.maxX + spec.width / 2;
+  // Tiny overlap to hide the seam between adjacent modules
+  const SEAM = 0.02;
+  const x = side === "left"
+    ? bounds.minX - spec.width / 2 + SEAM
+    : bounds.maxX + spec.width / 2 - SEAM;
   const z = (bounds.minZ + bounds.maxZ) / 2;
   state.modules.push(makeModule(id, type, x, z));
   state.selectedId = id;
@@ -1284,7 +1522,9 @@ function initModuleCatalog() {
     const button = document.createElement("button");
     button.className = "module-option";
     button.dataset.type = type;
-    button.textContent = spec.label;
+    button.innerHTML = `<img src="${spec.thumbnail}" alt="" /><span>${spec.label}</span>`;
+    button.setAttribute("aria-label", spec.label);
+    button.title = spec.label;
     button.addEventListener("click", () => replaceSelectedModule(type));
     catalogCards[type] = button;
     els.moduleCatalog.append(button);
@@ -1432,11 +1672,16 @@ document.querySelectorAll(".preset").forEach((button) => {
 document.querySelector("#viewHome").addEventListener("click", resetCamera);
 
 window.addEventListener("keydown", (e) => {
-  if (e.code !== "Space") return;
   const tag = (e.target?.tagName || "").toLowerCase();
   if (tag === "input" || tag === "textarea" || e.target?.isContentEditable) return;
-  e.preventDefault();
-  resetCamera();
+  if (e.code === "Space") {
+    e.preventDefault();
+    resetCamera();
+  } else if (e.code === "Backspace" || e.code === "Delete") {
+    if (!state.selectedId) return;
+    e.preventDefault();
+    removeSelected();
+  }
 });
 document.querySelector("#zoomIn").addEventListener("click", () => zoom(-0.8));
 document.querySelector("#zoomOut").addEventListener("click", () => zoom(0.8));
@@ -1478,6 +1723,9 @@ function renderBaseSwatches() {
   els.baseSwatches.innerHTML = "";
   const group = state.sofaColor.group || "light";
   const options = baseFrameOptionsByGroup[group] || baseFrameOptionsByGroup.light;
+  if (group === "fabricDark" || group === "leatherBlack") {
+    state.baseColor = state.sofaColor;
+  }
   if (!options.some((opt) => opt.color === state.baseColor.color)) {
     state.baseColor = options[0];
   }
@@ -1534,8 +1782,8 @@ function renderCushionSwatches() {
 renderCushionSwatches();
 
 resize();
-state.layout = "armlessRight";
-state.modules = [makeModule("module-1", "armlessRight", 0, 0)];
+state.layout = "armlessLeft";
+state.modules = [makeModule("module-1", "armlessLeft", 0, 0)];
 state.selectedId = state.modules[0]?.id;
 
 const loadingScreen = document.querySelector("#loadingScreen");
