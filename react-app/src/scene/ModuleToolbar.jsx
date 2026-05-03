@@ -13,7 +13,7 @@ export default function ModuleToolbar() {
   const spec = moduleCatalog[sel.type];
 
   return (
-    <Html position={[sel.x, spec.height + 0.25, sel.z]} center>
+    <Html position={[sel.x, spec.height + 0.55, sel.z]} center>
       <div
         className="module-toolbar is-open"
         style={{

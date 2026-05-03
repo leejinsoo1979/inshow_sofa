@@ -4,6 +4,8 @@ import * as THREE from "three";
 import { useConfigurator } from "../state/configurator";
 import { moduleCatalog } from "../data/catalog";
 
+const DEFAULT_DIRECTION = new THREE.Vector3(0.45, 0.42, 0.78).normalize();
+
 export default function CameraRig({ controlsRef, resetCameraRef }) {
   const camera = useThree((s) => s.camera);
   const modules = useConfigurator((s) => s.modules);
@@ -27,8 +29,7 @@ export default function CameraRig({ controlsRef, resetCameraRef }) {
 
   useEffect(() => {
     if (!modules.length) return;
-    // 전체 footprint 계산
-    let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity;
+    let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity, maxH = 0;
     for (const m of modules) {
       const spec = moduleCatalog[m.type];
       const hw = spec.width / 2, hd = spec.depth / 2;
@@ -36,20 +37,27 @@ export default function CameraRig({ controlsRef, resetCameraRef }) {
       maxX = Math.max(maxX, m.x + hw);
       minZ = Math.min(minZ, m.z - hd);
       maxZ = Math.max(maxZ, m.z + hd);
+      maxH = Math.max(maxH, spec.height);
     }
     const cx = (minX + maxX) / 2;
     const cz = (minZ + maxZ) / 2;
-    const w = maxX - minX;
-    // 가구 너비에 따라 부드럽게 비례하는 거리 (최소 보장)
-    const radius = Math.max(3.5, w * 1.15 + 2.5);
+    const sx = maxX - minX;
+    const sy = maxH;
+    const sz = maxZ - minZ;
 
     const target = new THREE.Vector3(cx, 0.35, cz);
 
-    const newPos = new THREE.Vector3(
-      cx + radius * 0.55,
-      Math.max(1.6, radius * 0.4),
-      cz + radius * 0.9
-    );
+    const fovV = (camera.fov * Math.PI) / 180;
+    const aspect = camera.aspect || 1.6;
+    const fovH = 2 * Math.atan(Math.tan(fovV / 2) * aspect);
+    const horizontalPad = 1.6;
+    const verticalPad = 2.2;
+    const distH = (sx * horizontalPad) / (2 * Math.tan(fovH / 2));
+    const distV = (sy * verticalPad) / (2 * Math.tan(fovV / 2));
+    const distZ = (sz * horizontalPad) / (2 * Math.tan(fovH / 2));
+    const distance = Math.max(4.5, Math.min(15, Math.max(distH, distV, distZ) + 1.2));
+
+    const newPos = target.clone().addScaledVector(DEFAULT_DIRECTION, distance);
 
     lastPosRef.current = newPos.clone();
     lastTargetRef.current = target.clone();
@@ -61,7 +69,6 @@ export default function CameraRig({ controlsRef, resetCameraRef }) {
       return;
     }
 
-    // tween
     const startPos = camera.position.clone();
     const startTarget = controlsRef?.current?.target.clone() || new THREE.Vector3();
     const start = performance.now();

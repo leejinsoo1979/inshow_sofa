@@ -20,7 +20,6 @@ export default function SofaModule({ module: m }) {
   const trayWood = useConfigurator((s) => s.trayWood);
   const material = useConfigurator((s) => s.material);
   const setSelectedId = useConfigurator((s) => s.setSelectedId);
-  const selectedId = useConfigurator((s) => s.selectedId);
 
   const spec = moduleCatalog[m.type];
   const url = modelSources[spec.model];
@@ -73,8 +72,6 @@ export default function SofaModule({ module: m }) {
     clone.position.y = -newBounds.min.y;
   }, [clone, sofaColor, baseColor, trayWood, material, spec]);
 
-  const isSelected = selectedId === m.id;
-
   return (
     <group
       ref={groupRef}
@@ -86,12 +83,6 @@ export default function SofaModule({ module: m }) {
       }}
     >
       <primitive object={clone} />
-      {isSelected && (
-        <mesh position={[0, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[Math.max(spec.width, spec.depth) * 0.42, Math.max(spec.width, spec.depth) * 0.45, 64]} />
-          <meshBasicMaterial color={0x2563eb} transparent opacity={0.55} />
-        </mesh>
-      )}
     </group>
   );
 }

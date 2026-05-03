@@ -31,6 +31,8 @@ function useFootprintCm() {
 export default function App() {
   const { w, d } = useFootprintCm();
   const resetCameraRef = useRef(() => {});
+  const zoomRef = useRef(() => {});
+  const rotateRef = useRef(() => {});
   useKeyboardShortcuts(() => resetCameraRef.current?.());
 
   return (
@@ -38,7 +40,7 @@ export default function App() {
     <LoadingScreen />
     <main className="app-shell">
       <section className="viewer" aria-label="3D sofa viewer">
-        <Scene resetCameraRef={resetCameraRef} />
+        <Scene resetCameraRef={resetCameraRef} zoomRef={zoomRef} rotateRef={rotateRef} />
         <div className="brand-bar">
           <div>
             <p className="eyebrow">3D Configurator</p>
@@ -50,7 +52,11 @@ export default function App() {
             <span>D {d} mm</span>
           </div>
         </div>
-        <ToolRail onResetCamera={() => resetCameraRef.current?.()} />
+        <ToolRail
+          onResetCamera={() => resetCameraRef.current?.()}
+          onZoom={(dir) => zoomRef.current?.(dir)}
+          onRotate={(dir) => rotateRef.current?.(dir)}
+        />
         <div className="scene-help">드래그 회전 · 휠 줌 · 소파 클릭 선택</div>
       </section>
       <SidePanel />

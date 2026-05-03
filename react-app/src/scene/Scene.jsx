@@ -7,6 +7,7 @@ import SofaModule from "./SofaModule";
 import Hotspots from "./Hotspots";
 import ModuleToolbar from "./ModuleToolbar";
 import CameraRig from "./CameraRig";
+import CameraControls from "./CameraControls";
 import DimensionLabels from "./DimensionLabels";
 import { useConfigurator } from "../state/configurator";
 
@@ -14,7 +15,7 @@ function Floor() {
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
       <planeGeometry args={[18, 14]} />
-      <shadowMaterial color={0x1a160f} opacity={0.55} />
+      <shadowMaterial color={0x1a160f} opacity={0.7} />
     </mesh>
   );
 }
@@ -30,11 +31,11 @@ function Modules() {
   );
 }
 
-export default function Scene({ resetCameraRef }) {
+export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
   const controlsRef = useRef();
   return (
     <Canvas
-      shadows
+      shadows={{ type: THREE.PCFSoftShadowMap }}
       dpr={[1, 2]}
       camera={{ position: [4.5, 1.4, 5.2], fov: 32, near: 0.1, far: 100 }}
       gl={{
@@ -55,6 +56,7 @@ export default function Scene({ resetCameraRef }) {
         <ModuleToolbar />
         <DimensionLabels />
         <CameraRig controlsRef={controlsRef} resetCameraRef={resetCameraRef} />
+        <CameraControls controlsRef={controlsRef} zoomRef={zoomRef} rotateRef={rotateRef} />
       </Suspense>
       <OrbitControls
         ref={controlsRef}

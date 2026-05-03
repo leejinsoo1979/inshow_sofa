@@ -32,8 +32,8 @@ export default function DimensionLabels() {
   const cx = (minX + maxX) / 2;
   const cz = (minZ + maxZ) / 2;
   const yLine = 0.01;
-  const padZ = 0.18;
-  const padX = 0.18;
+  const padZ = 0.22;
+  const padX = 0.22;
 
   return (
     <group>
