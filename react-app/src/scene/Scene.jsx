@@ -60,9 +60,9 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
               kernelSize={4}
               visibleEdgeColor={0x3b82f6}
               hiddenEdgeColor={0x3b82f6}
-              edgeStrength={15}
+              edgeStrength={10}
               pulseSpeed={0}
-              width={2000}
+              width={1500}
             />
           </EffectComposer>
           <Modules />
