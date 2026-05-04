@@ -89,7 +89,6 @@ export default function Cart() {
           </span>
         </div>
         <div className="checkout-mobile-row2">
-          <button className="checkout-mobile-save" type="button">저장</button>
           <button className="checkout-mobile-buy" type="button">장바구니 담기</button>
         </div>
       </div>
