@@ -1485,10 +1485,15 @@ h3 {
     padding: 10px 14px;
     font-size: 13px;
   }
-  /* 모바일에선 데스크탑 row/btn 숨김 → 컴팩트한 인라인 푸터로 대체 */
+  /* 모바일에선 데스크탑 row/btn/cart-toggle 숨김 → 인라인 푸터로 대체 */
   .panel .checkout-row,
-  .panel .checkout-btn {
-    display: none;
+  .panel .checkout-btn,
+  .panel .cart-toggle {
+    display: none !important;
+  }
+  /* .checkout 자체는 보이되, contents만 깔리는 컨테이너로 (안의 .checkout-mobile만 fixed) */
+  .panel .checkout {
+    display: contents;
   }
   .checkout-mobile {
     display: flex;
