@@ -2,7 +2,6 @@ import { useMemo, useRef } from "react";
 import SidePanel from "./ui/SidePanel";
 import Scene from "./scene/Scene";
 import ToolRail from "./ui/ToolRail";
-import SunSlider from "./ui/SunSlider";
 import { useConfigurator } from "./state/configurator";
 import { moduleCatalog } from "./data/catalog";
 import { useKeyboardShortcuts } from "./ui/useKeyboardShortcuts";
@@ -47,7 +46,6 @@ export default function App() {
             <p className="eyebrow">3D Configurator</p>
             <h1>INSHOW SOFA #1</h1>
           </div>
-          <SunSlider />
           <div className="metrics">
             <span>W {w} mm</span>
             <span>D {d} mm</span>

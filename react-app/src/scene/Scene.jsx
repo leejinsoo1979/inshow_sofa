@@ -1,9 +1,11 @@
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Environment } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import { EffectComposer, Outline, Selection } from "@react-three/postprocessing";
 import { Suspense, useRef } from "react";
 import * as THREE from "three";
 import Lights from "./Lights";
+import StudioEnvironment from "./StudioEnvironment";
+import SunAnimator from "./SunAnimator";
 import SofaModule from "./SofaModule";
 import Hotspots from "./Hotspots";
 import ModuleToolbar from "./ModuleToolbar";
@@ -50,7 +52,8 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
       style={{ background: "linear-gradient(180deg, #ffffff 0%, #f4f2ed 100%)" }}
     >
       <Suspense fallback={null}>
-        <Environment preset="city" environmentIntensity={0.5} />
+        <StudioEnvironment />
+        <SunAnimator />
         <Lights />
         <Floor />
         <Selection>

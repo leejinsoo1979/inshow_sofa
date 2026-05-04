@@ -1,8 +1,24 @@
 import { create } from "zustand";
 import { moduleCatalog } from "../data/catalog";
 import { sofaColors, baseFrameOptionsByGroup, trayWoodColors } from "../data/colors";
+import { STUDIO_LIGHT_PRESETS } from "../scene/lighting";
 
 const initialModule = { id: "module-1", type: "armlessLeft", x: 0, z: 0, rotation: 0 };
+
+const createStudioLightingState = (presetId = "softbox") => {
+  const preset = STUDIO_LIGHT_PRESETS[presetId] || STUDIO_LIGHT_PRESETS.softbox;
+  return {
+    presetId,
+    exposure: preset.exposure,
+    environmentIntensity: preset.environmentIntensity,
+    keyLight: preset.keyLight,
+    fillLight: preset.fillLight,
+    rimLight: preset.rimLight,
+    topSoftbox: preset.topSoftbox,
+    spotLight: preset.spotLight,
+    pointLight: preset.pointLight
+  };
+};
 
 export const useConfigurator = create((set, get) => ({
   layout: "armlessLeft",
@@ -11,13 +27,31 @@ export const useConfigurator = create((set, get) => ({
   baseColor: baseFrameOptionsByGroup.light[0],
   trayWood: trayWoodColors[0],
   accentCushion: null,
+  lightingPreset: "softbox",
+  studioLighting: createStudioLightingState("softbox"),
+  backgroundColor: "#f4f2ed",
+  hdri: { name: null, url: null, kind: null },
+  sun: { playing: false, time: 12, month: 6, latitude: 37.5 },
   selectedId: null,
   modules: [initialModule],
   options: { trayWood: {}, cushion: {} },
   showDimensions: true,
-  sunAngle: 135,
   openHotspotSide: null,
   setOpenHotspotSide: (side) => set({ openHotspotSide: side }),
+
+  setLightingPreset: (presetId) => set({ lightingPreset: presetId, studioLighting: createStudioLightingState(presetId) }),
+  setStudioLightingValue: (key, value) => set((s) => ({ studioLighting: { ...s.studioLighting, [key]: value } })),
+  setBackgroundColor: (backgroundColor) => set({ backgroundColor }),
+  setHdri: (hdri) => set({ hdri }),
+  clearHdri: () => set({ hdri: { name: null, url: null, kind: null } }),
+
+  setSunPlaying: (playing) => set((s) => ({ sun: { ...s.sun, playing } })),
+  setSunTime: (time) => set((s) => ({ sun: { ...s.sun, time: ((time % 24) + 24) % 24 } })),
+  stepSunTime: (deltaHours) => set((s) => ({
+    sun: { ...s.sun, time: ((s.sun.time + deltaHours) % 24 + 24) % 24 }
+  })),
+  setSunMonth: (month) => set((s) => ({ sun: { ...s.sun, month: Math.min(12, Math.max(1, Math.round(month))) } })),
+  setSunLatitude: (latitude) => set((s) => ({ sun: { ...s.sun, latitude: Math.min(66, Math.max(-66, latitude)) } })),
 
   setSofaColor: (item) => {
     const material = item.id === "leatherBlack" ? "naturalLeather" : "fabric";
@@ -34,7 +68,6 @@ export const useConfigurator = create((set, get) => ({
   setTrayWood: (item) => set({ trayWood: item }),
   setAccentCushion: (item) => set({ accentCushion: item }),
   setSelectedId: (id) => set({ selectedId: id }),
-  setSunAngle: (deg) => set({ sunAngle: deg }),
   toggleDimensions: () => set((s) => ({ showDimensions: !s.showDimensions })),
 
   setLayout: (layout) => {
@@ -50,20 +83,16 @@ export const useConfigurator = create((set, get) => ({
     const newId = `module-${Date.now().toString().slice(-5)}`;
     let x = 0, z = 0;
     if (modules.length > 0) {
-      let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity;
-      for (const m of modules) {
-        const ms = moduleCatalog[m.type];
-        const hw = ms.width / 2, hd = ms.depth / 2;
-        minX = Math.min(minX, m.x - hw);
-        maxX = Math.max(maxX, m.x + hw);
-        minZ = Math.min(minZ, m.z - hd);
-        maxZ = Math.max(maxZ, m.z + hd);
-      }
-      const SEAM = 0;
-      x = side === "left"
-        ? minX - spec.width / 2 + SEAM
-        : maxX + spec.width / 2 - SEAM;
-      z = (minZ + maxZ) / 2;
+      // 인접 모듈 = 가장 왼쪽 또는 오른쪽
+      const sorted = [...modules].sort((a, b) => a.x - b.x);
+      const ref = side === "left" ? sorted[0] : sorted[sorted.length - 1];
+      const refSpec = moduleCatalog[ref.type];
+      // base끼리 맞닿게: 두 모듈 base 가장자리 거리만큼 X 이동
+      const newBaseW = spec.baseWidth || spec.width;
+      const refBaseW = refSpec.baseWidth || refSpec.width;
+      const offset = (refBaseW + newBaseW) / 2;
+      x = side === "left" ? ref.x - offset : ref.x + offset;
+      z = ref.z;
     }
     const m = { id: newId, type, x, z, rotation: 0 };
     set({ modules: [...modules, m], selectedId: newId });

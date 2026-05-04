@@ -3,6 +3,7 @@ import { sofaColors, trayWoodColors, accentCushionColors } from "../data/colors"
 import ModuleCatalog from "./ModuleCatalog";
 import Swatches from "./Swatches";
 import Cart from "./Cart";
+import StudioLightingPanel from "./StudioLightingPanel";
 
 export default function SidePanel() {
   const sofaColor = useConfigurator((s) => s.sofaColor);
@@ -20,6 +21,7 @@ export default function SidePanel() {
   return (
     <aside className="panel" aria-label="Configurator options">
       <div className="panel-scroll">
+        <StudioLightingPanel />
         <ModuleCatalog />
 
         <section className="control-group">
