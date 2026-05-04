@@ -93,20 +93,7 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
         <Floor />
         <Selection>
           <EffectComposer multisampling={isHigh ? 4 : 8} autoClear={false} enableNormalPass={isHigh}>
-            {/* SSAO: high 모드에서만 — 카메라 거리 변동에도 안정적 */}
-            {isHigh && (
-              <SSAO
-                blendFunction={BlendFunction.MULTIPLY}
-                samples={16}
-                radius={0.04}
-                intensity={20}
-                bias={0.015}
-                worldDistanceThreshold={2}
-                worldDistanceFalloff={0.5}
-                worldProximityThreshold={2}
-                worldProximityFalloff={0.5}
-              />
-            )}
+            {/* SSAO: 임시 비활성 — 모듈 추가 시 광 변동 원인 검증용 */}
             {/* Bloom: high만 */}
             {/* Bloom 비활성 — 광 과해서 제거 */}
             {/* 색감 보정: high만 */}
