@@ -26,10 +26,28 @@ export function importedMaterialRole(materialName, roles) {
   return "upholstery";
 }
 
+// 단일 PNG 텍스처 캐시 + intentional 마크
+const _texCache = new Map();
+function loadTextureCached(url, repeat = [1, 1]) {
+  if (!url) return null;
+  if (_texCache.has(url)) return _texCache.get(url);
+  const loader = new THREE.TextureLoader();
+  const t = loader.load(url);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = THREE.RepeatWrapping;
+  t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(repeat[0], repeat[1]);
+  t._intentional = true;
+  _texCache.set(url, t);
+  return t;
+}
+
 export function createUpholsteryMaterial(sofaColor, isLeather) {
   const c = new THREE.Color(sofaColor.color);
+  const map = loadTextureCached(sofaColor.image, [4, 4]);
   return new THREE.MeshPhysicalMaterial({
     color: c,
+    map: map || null,
     roughness: isLeather ? 0.42 : 0.88,
     metalness: 0,
     sheen: isLeather ? 0.75 : 0.12,
@@ -42,8 +60,10 @@ export function createUpholsteryMaterial(sofaColor, isLeather) {
 }
 
 export function createBaseMaterial(baseColor, isLeather) {
+  const map = loadTextureCached(baseColor.image, [3, 3]);
   return new THREE.MeshPhysicalMaterial({
     color: new THREE.Color(baseColor.color),
+    map: map || null,
     roughness: isLeather ? 0.45 : 0.6,
     metalness: 0,
     sheen: isLeather ? 0.9 : 0.12,
