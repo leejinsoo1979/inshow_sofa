@@ -4,11 +4,7 @@ import {
   EffectComposer,
   Outline,
   Selection,
-  ToneMapping,
-  BrightnessContrast,
-  HueSaturation,
 } from "@react-three/postprocessing";
-import { ToneMappingMode } from "postprocessing";
 import { Suspense, useRef, useMemo } from "react";
 import * as THREE from "three";
 import Lights from "./Lights";
@@ -75,9 +71,9 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
         antialias: true,
         alpha: true,
         outputColorSpace: THREE.SRGBColorSpace,
-        // medium: 기존 ACES + exposure 0.92, high: NoToneMapping (postprocessing이 처리)
-        toneMapping: isHigh ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping,
-        toneMappingExposure: isHigh ? 1.4 : 0.92
+        // 양 모드 모두 Canvas ACES + exposure (post-processing 색감 보정 제거)
+        toneMapping: THREE.ACESFilmicToneMapping,
+        toneMappingExposure: isHigh ? 1.0 : 0.92
       }}
     >
       <Suspense fallback={null}>
@@ -91,15 +87,7 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
         <Lights />
         <Floor />
         <Selection>
-          <EffectComposer multisampling={isHigh ? 4 : 8} autoClear={false} enableNormalPass={isHigh}>
-            {/* SSAO: 임시 비활성 — 모듈 추가 시 광 변동 원인 검증용 */}
-            {/* Bloom: high만 */}
-            {/* Bloom 비활성 — 광 과해서 제거 */}
-            {/* 색감 보정: high만 */}
-            {isHigh && <BrightnessContrast brightness={0.0} contrast={0.06} />}
-            {isHigh && <HueSaturation saturation={0.06} />}
-            {/* 톤매핑: high만 post에서 (medium은 Canvas 자체 톤매핑) */}
-            {isHigh && <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />}
+          <EffectComposer multisampling={8} autoClear={false}>
             <Outline
               blur
               kernelSize={3}
