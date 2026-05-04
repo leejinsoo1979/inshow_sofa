@@ -1375,20 +1375,9 @@ h3 {
     font-size: 22px;
   }
 
-  .sun-control {
-    padding: 6px 12px;
-  }
-
-  .sun-control input[type="range"] {
-    width: 120px;
-  }
-
+  .sun-control,
   .metrics {
-    font-size: 14px;
-  }
-
-  .metrics span {
-    padding: 9px 12px;
+    display: none;
   }
 
   .tool-rail {
@@ -1406,7 +1395,7 @@ h3 {
   }
   .tool-rail .icon-btn--dim {
     position: fixed;
-    top: 300px;
+    top: calc(110px + env(safe-area-inset-top));
     right: 16px;
     bottom: auto;
     left: auto;
@@ -1414,7 +1403,7 @@ h3 {
   }
   .tool-rail .icon-btn--light {
     position: fixed;
-    top: 356px;
+    top: calc(166px + env(safe-area-inset-top));
     right: 16px;
     bottom: auto;
     left: auto;
