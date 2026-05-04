@@ -132,13 +132,14 @@ export function createBaseMaterial(baseColor, isLeather, quality = "medium") {
   });
 }
 
-export function createMetalMaterial() {
+export function createMetalMaterial(quality = "medium") {
+  const isHigh = quality === "high";
   // 스테인리스 스틸: metalness 1.0 + 낮은 roughness + envMap 반사
   return new THREE.MeshPhysicalMaterial({
     color: 0xb8bcc0,
     metalness: 1.0,
     roughness: 0.28,
-    envMapIntensity: 1.5
+    envMapIntensity: isHigh ? 1.5 : 2.2
   });
 }
 

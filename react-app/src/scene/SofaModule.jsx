@@ -134,7 +134,7 @@ export default function SofaModule({ module: m }) {
     const isLeather = material === "naturalLeather";
     const ups = createUpholsteryMaterial(sofaColor, isLeather, renderQuality);
     const bas = createBaseMaterial(baseColor, isLeather, renderQuality);
-    const met = createMetalMaterial();
+    const met = createMetalMaterial(renderQuality);
     const tw = createTrayWoodMaterial(trayWood);
     const roles = modelMaterialRoles[spec.model];
 
