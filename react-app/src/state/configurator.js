@@ -125,7 +125,28 @@ export const useConfigurator = create((set, get) => ({
   removeSelected: () => {
     const { modules, selectedId } = get();
     if (modules.length <= 1) return;
+    const target = modules.find((m) => m.id === selectedId);
     const filtered = modules.filter((m) => m.id !== selectedId);
+
+    // 삭제된 모듈 양옆을 끌어다 붙임 (X축 정렬 가정)
+    if (target) {
+      const targetSpec = moduleCatalog[target.type];
+      const removedW = targetSpec?.baseWidth || targetSpec?.width || 0;
+      const sorted = [...filtered].sort((a, b) => a.x - b.x);
+      // 같은 z(±10cm)에서 target.x 좌측/우측에 있는 가장 가까운 모듈
+      const sameRow = sorted.filter((m) => Math.abs(m.z - target.z) < 0.1);
+      const leftSide = sameRow.filter((m) => m.x < target.x);
+      const rightSide = sameRow.filter((m) => m.x > target.x);
+      if (leftSide.length && rightSide.length) {
+        // 우측 모듈들을 모두 removedW만큼 왼쪽으로 끌어옴
+        const ids = new Set(rightSide.map((m) => m.id));
+        const shifted = filtered.map((m) =>
+          ids.has(m.id) ? { ...m, x: m.x - removedW } : m
+        );
+        set({ modules: shifted, selectedId: shifted[0]?.id || null });
+        return;
+      }
+    }
     set({ modules: filtered, selectedId: filtered[0]?.id || null });
   },
 
