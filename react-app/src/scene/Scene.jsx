@@ -37,13 +37,11 @@ function Floor() {
       <ContactShadows
         position={[0, 0.001, 0]}
         opacity={0.4}
-        scale={20}
+        scale={12}
         blur={5.5}
-        far={2.0}
+        far={1.8}
         resolution={1024}
         color="#1a160f"
-        smooth
-        frames={1}
       />
     </>
   );
