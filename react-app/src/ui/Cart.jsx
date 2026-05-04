@@ -79,17 +79,19 @@ export default function Cart() {
         </div>
       </div>
       <button className="checkout-btn" type="button">장바구니 담기</button>
-      {/* 모바일 collapsed 뷰: 토글 아래 인라인 total + cart 아이콘 */}
+      {/* 모바일 하단 고정 푸터 */}
       <div className="checkout-mobile">
-        <span className="checkout-mobile-label">TOTAL</span>
-        <strong className="checkout-mobile-total">{fmt(total)}</strong>
-        <button className="checkout-mobile-cart" type="button" aria-label="장바구니 담기">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="9" cy="21" r="1.4" />
-            <circle cx="18" cy="21" r="1.4" />
-            <path d="M3 4h2.4l2.6 12.5a2 2 0 0 0 2 1.5h8.4a2 2 0 0 0 2-1.5L22 8H6" />
-          </svg>
-        </button>
+        <div className="checkout-mobile-row1">
+          <span className="checkout-mobile-modules">구성 모듈 <strong>{totalCount}</strong> 개</span>
+          <span className="checkout-mobile-total-wrap">
+            <span className="checkout-mobile-total-label">총 금액</span>
+            <strong className="checkout-mobile-total">{fmt(total)}</strong>
+          </span>
+        </div>
+        <div className="checkout-mobile-row2">
+          <button className="checkout-mobile-save" type="button">저장</button>
+          <button className="checkout-mobile-buy" type="button">장바구니 담기</button>
+        </div>
       </div>
     </>
   );

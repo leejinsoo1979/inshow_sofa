@@ -1375,39 +1375,37 @@ h3 {
     font-size: 22px;
   }
 
-  .sun-control,
+  .sun-control {
+    padding: 6px 12px;
+    align-self: flex-start;
+  }
+  .sun-control input[type="range"] {
+    width: 110px;
+  }
   .metrics {
-    display: none;
+    font-size: 12px;
+    gap: 6px;
+  }
+  .metrics span {
+    padding: 7px 10px;
+  }
+  .brand-bar {
+    flex-wrap: wrap;
   }
 
   .tool-rail {
-    top: auto;
-    bottom: calc(var(--sheet-peek, 220px) + 80px);
-    left: 16px;
+    top: calc(140px + env(safe-area-inset-top));
+    bottom: auto;
+    left: 12px;
     gap: 10px;
-    transition: bottom 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  /* 모바일: home/zoom/rotate 숨김. dim/light는 우측에 세로 배치 (타임라인 아래) */
   .tool-rail .icon-btn--reset,
   .tool-rail .icon-btn--zoom,
-  .tool-rail .icon-btn--rotate {
-    display: none;
-  }
-  .tool-rail .icon-btn--dim {
-    position: fixed;
-    top: calc(110px + env(safe-area-inset-top));
-    right: 16px;
-    bottom: auto;
-    left: auto;
-    z-index: 15;
-  }
+  .tool-rail .icon-btn--rotate,
+  .tool-rail .icon-btn--dim,
   .tool-rail .icon-btn--light {
-    position: fixed;
-    top: calc(166px + env(safe-area-inset-top));
-    right: 16px;
-    bottom: auto;
-    left: auto;
-    z-index: 15;
+    position: static;
+    display: inline-flex;
   }
 
   .icon-btn {
@@ -1439,47 +1437,36 @@ h3 {
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 72px; /* fixed checkout-mobile 위 */
+    bottom: 110px; /* fixed checkout-mobile 위 */
+    top: 50dvh;
     height: auto;
-    max-height: calc(85dvh - 72px);
+    max-height: calc(50dvh - 110px);
     border: 0;
     border-top-left-radius: 18px;
     border-top-right-radius: 18px;
-    box-shadow: 0 -16px 38px rgba(40, 34, 25, 0.16);
-    transform: translateY(0);
-    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 -16px 38px rgba(40, 34, 25, 0.10);
+    transform: none;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    touch-action: none;
+    touch-action: auto;
     z-index: 20;
-  }
-  /* collapsed: panel 완전히 내림 (가격 fixed만 남음) */
-  .panel.is-collapsed {
-    transform: translateY(100%);
-  }
-  /* collapsed 상태에서 다시 펼 수 있게 핸들을 panel 위 viewport에 노출 */
-  .panel.is-collapsed .sheet-handle {
-    position: fixed;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 64px;
-    height: 24px;
     background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-    z-index: 30;
-    pointer-events: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
-  .panel.is-collapsed .sheet-handle::before {
-    background: rgba(24,24,24,0.4);
-  }
+  .panel.is-collapsed { transform: none; }
+  .sheet-handle { display: none !important; }
   .panel-tabs {
-    padding: 6px 20px 0;
+    display: none;
+  }
+  .panel-section {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  /* 모바일: 모듈/재질 둘 다 보이게 (탭 토글 무시) */
+  .panel-scroll[data-tab] .panel-section--modules,
+  .panel-scroll[data-tab] .panel-section--materials {
+    display: flex;
   }
   .panel-scroll {
     flex: 1 1 auto;
@@ -1501,41 +1488,75 @@ h3 {
   }
   .checkout-mobile {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 10px;
-    padding: 10px 14px;
-    border-radius: 12px;
+    padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+    background: #fff;
+    border-top: 1px solid #eee;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+    box-shadow: 0 -8px 22px rgba(0,0,0,0.06);
+  }
+  .checkout-mobile-row1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .checkout-mobile-modules {
+    font-size: 13px;
+    color: #555;
+  }
+  .checkout-mobile-modules strong {
+    color: #1a1a1a;
     background: #1a1a1a;
     color: #fff;
-    position: fixed;
-    left: 14px;
-    right: 14px;
-    bottom: calc(8px + env(safe-area-inset-bottom));
-    z-index: 30;
-    box-shadow: 0 6px 22px rgba(0,0,0,0.18);
-  }
-  .checkout-mobile-label {
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    color: rgba(255,255,255,0.7);
+    border-radius: 8px;
+    padding: 2px 8px;
     font-weight: 700;
+    margin: 0 2px;
+  }
+  .checkout-mobile-total-wrap {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .checkout-mobile-total-label {
+    font-size: 13px;
+    color: #555;
   }
   .checkout-mobile-total {
-    flex: 1;
-    text-align: right;
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 800;
+    color: #1a1a1a;
   }
-  .checkout-mobile-cart {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    border: 0;
+  .checkout-mobile-row2 {
+    display: flex;
+    gap: 8px;
+  }
+  .checkout-mobile-save {
+    flex: 0 0 30%;
+    padding: 14px;
+    border-radius: 28px;
+    border: 1.5px solid #1a1a1a;
     background: #fff;
     color: #1a1a1a;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .checkout-mobile-buy {
+    flex: 1;
+    padding: 14px;
+    border-radius: 28px;
+    border: 0;
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
     cursor: pointer;
   }
 
@@ -1617,31 +1638,23 @@ h3 {
     gap: 8px;
   }
 
-  /* 모바일: 모듈 그리드 → 가로 스크롤 캐러셀 */
+  /* 모바일: 모듈 그리드 3열 */
   .module-grid {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
-    padding-bottom: 4px;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-x;
   }
 
   .module-option {
     display: flex;
-    flex: 0 0 96px;
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
     grid-template-rows: none;
     min-height: 0;
-    padding: 4px;
-    font-size: 10px;
-    gap: 2px;
-    scroll-snap-align: start;
+    padding: 8px 6px;
+    font-size: 11px;
+    gap: 4px;
   }
 
   .module-option img {
@@ -1653,27 +1666,37 @@ h3 {
     background: #fff;
   }
 
+  /* 모바일: swatch 가로 스크롤 */
   .swatches {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px 8px;
+    display: flex;
+    grid-template-columns: none;
+    flex-wrap: nowrap;
+    gap: 14px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+    scroll-snap-type: x proximity;
   }
   .swatches .swatch {
-    flex-direction: column;
-    gap: 4px;
+    flex: 0 0 auto;
+    flex-direction: row;
+    gap: 8px;
     align-items: center;
-    text-align: center;
+    text-align: left;
+    scroll-snap-align: start;
   }
   .swatches .swatch::before {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
   }
   .swatches .swatch span {
-    font-size: 10px;
-    line-height: 1.15;
+    font-size: 12px;
+    line-height: 1.2;
     word-break: keep-all;
+    color: #888;
   }
   .swatches.accent-grid {
-    grid-template-columns: repeat(4, 1fr);
+    flex-wrap: nowrap;
   }
 
   .preset-grid,
