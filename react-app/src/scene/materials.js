@@ -73,11 +73,11 @@ export function createUpholsteryMaterial(sofaColor, isLeather, quality = "medium
     ? (isOilyLeather ? new THREE.Color(0x3a3633) : new THREE.Color(0xffffff))
     : new THREE.Color(sofaColor.color);
   // oily leather: 광택 표현
-  const oilyRoughness = isHigh ? 0.5 : 0.42;
-  const oilySheen = isHigh ? 0.45 : 0.5;
-  const oilyClearcoat = isHigh ? 0.22 : 0.35;
-  const oilyClearcoatRough = isHigh ? 0.45 : 0.35;
-  const oilyEnvMap = isHigh ? 0.7 : 1.2;
+  const oilyRoughness = isHigh ? 0.5 : 0.36;
+  const oilySheen = isHigh ? 0.45 : 0.6;
+  const oilyClearcoat = isHigh ? 0.22 : 0.45;
+  const oilyClearcoatRough = isHigh ? 0.45 : 0.28;
+  const oilyEnvMap = isHigh ? 0.7 : 1.5;
   const material = new THREE.MeshPhysicalMaterial({
     color: c,
     map: map || null,
@@ -106,14 +106,14 @@ export function createBaseMaterial(baseColor, isLeather, quality = "medium") {
     return new THREE.MeshPhysicalMaterial({
       color: map ? new THREE.Color(0x3a3633) : new THREE.Color(baseColor.color),
       map: map || null,
-      roughness: isHigh ? 0.5 : 0.42,
+      roughness: isHigh ? 0.5 : 0.36,
       metalness: 0,
-      sheen: isHigh ? 0.45 : 0.5,
-      sheenRoughness: isHigh ? 0.5 : 0.4,
-      sheenColor: new THREE.Color(isHigh ? 0x4a4744 : 0x60584f),
-      clearcoat: isHigh ? 0.22 : 0.35,
-      clearcoatRoughness: isHigh ? 0.45 : 0.35,
-      envMapIntensity: isHigh ? 0.7 : 1.2
+      sheen: isHigh ? 0.45 : 0.6,
+      sheenRoughness: isHigh ? 0.5 : 0.32,
+      sheenColor: new THREE.Color(isHigh ? 0x4a4744 : 0x6c635a),
+      clearcoat: isHigh ? 0.22 : 0.45,
+      clearcoatRoughness: isHigh ? 0.45 : 0.28,
+      envMapIntensity: isHigh ? 0.7 : 1.5
     });
   }
   // 일반 base
