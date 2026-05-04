@@ -1940,34 +1940,39 @@ h3 {
   .swatches.accent-grid {
     display: grid !important;
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    gap: 6px 4px !important;
+    gap: 8px 6px !important;
   }
   .swatches .swatch,
   .swatches.accent-grid .swatch {
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
     padding: 0;
     align-items: center;
     text-align: center;
     min-width: 0;
+    overflow: hidden;
   }
   .swatches .swatch::before,
   .swatches.accent-grid .swatch::before {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     flex: 0 0 auto;
   }
   .swatches .swatch span,
   .swatches.accent-grid .swatch span {
     display: block;
-    font-size: 9px;
-    line-height: 1.1;
+    font-size: 8px;
+    line-height: 1.05;
     color: #888;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 100%;
+    max-width: 100%;
   }
+  /* 가로모드에서 group-title 라벨도 줄임 */
+  .group-title h3 { font-size: 12px; }
+  .group-title span { font-size: 10px; }
 
   /* 하단 풀폭 푸터: 구성모듈 / 주문안내 / 총금액 / [저장][장바구니] */
   .panel .checkout {
