@@ -1379,7 +1379,7 @@ h3 {
 
   .tool-rail {
     top: auto;
-    bottom: calc(var(--sheet-peek, 220px) + 16px);
+    bottom: calc(var(--sheet-peek, 220px) + 80px);
     left: 16px;
     gap: 10px;
     transition: bottom 0.3s cubic-bezier(0.22, 1, 0.36, 1);
