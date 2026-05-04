@@ -1469,20 +1469,24 @@ h3 {
   }
 
   .module-option {
-    grid-template-rows: 1fr auto;
-    aspect-ratio: 1 / 1.15;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    grid-template-rows: none;
     min-height: 0;
     padding: 4px;
     font-size: 10px;
-    gap: 2px;
+    gap: 4px;
   }
 
   .module-option img {
     width: 100%;
-    height: 100%;
+    height: auto;
     aspect-ratio: 1 / 1;
     object-fit: contain;
     transform: scale(1);
+    background: #fff;
   }
 
   .swatches {
@@ -1584,12 +1588,14 @@ h3 {
   }
 
   .module-option {
-    aspect-ratio: 1 / 1.18;
     padding: 3px;
     font-size: 9px;
+    gap: 3px;
   }
 
   .module-option img {
+    width: 100%;
+    height: auto;
     aspect-ratio: 1 / 1;
     object-fit: contain;
     transform: scale(1);
