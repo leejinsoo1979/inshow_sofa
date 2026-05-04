@@ -46,7 +46,24 @@ export default function SofaModule({ module: m }) {
   }, [scene]);
 
   // 클론은 한 번만 (모듈 인스턴스별로 고유)
-  const clone = useMemo(() => cloneSkinned(scene), [scene, m.id]);
+  // cloneSkinned 후 원본 scene → clone mesh 매핑으로 _origMatNames를 clone에 박음
+  const clone = useMemo(() => {
+    const c = cloneSkinned(scene);
+    // scene + clone을 동시 traverse — Three.js는 clone 시 자식 순서 유지
+    const sceneNodes = [];
+    scene.traverse(n => sceneNodes.push(n));
+    const cloneNodes = [];
+    c.traverse(n => cloneNodes.push(n));
+    for (let i = 0; i < cloneNodes.length && i < sceneNodes.length; i++) {
+      const cn = cloneNodes[i];
+      const sn = sceneNodes[i];
+      if (cn.isMesh && sn.userData?._origMatNames !== undefined) {
+        cn.userData._origMatNames = sn.userData._origMatNames;
+        cn.userData._origMatMarked = true;
+      }
+    }
+    return c;
+  }, [scene, m.id]);
 
   const upholsteryRepeatForMesh = (mesh) => {
     if (material === "naturalLeather") return [1.5, 1.5];
