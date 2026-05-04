@@ -139,7 +139,9 @@ export default function SofaModule({ module: m }) {
         const isRightArm = armCx_w > 0;
         const armOuterX_w = isRightArm ? ab.max.x : ab.min.x;
         const baseEdgeX_w = isRightArm ? baseMaxX : baseMinX;
-        const deltaWorld = baseEdgeX_w - armOuterX_w; // 외측 → base 끝까지의 world delta
+        const extraInset = 0.04; // base 끝선에서 추가로 안쪽으로 들어갈 양 (m)
+        const targetX_w = baseEdgeX_w + (isRightArm ? -extraInset : extraInset);
+        const deltaWorld = targetX_w - armOuterX_w;
 
         // 부모 누적 X scale (절댓값)
         let absScaleX = 1;
