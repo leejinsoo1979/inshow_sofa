@@ -354,6 +354,10 @@ function createUpholsteryMaterial() {
   });
   // PBR 텍스처 폴더가 지정된 색상이면 자동 적용
   applyPBRToMaterial(mat, currentSofaColor().textureFolder);
+  if (mat.map) {
+    mat.map.center.set(0.5, 0.5);
+    mat.map.repeat.set(isLeather ? 1.5 : 2, isLeather ? 1.5 : 2);
+  }
   return mat;
 }
 
@@ -393,6 +397,8 @@ walnutTexture.colorSpace = THREE.SRGBColorSpace;
 walnutTexture.wrapS = THREE.RepeatWrapping;
 walnutTexture.wrapT = THREE.RepeatWrapping;
 walnutTexture.repeat.set(1.5, 1.5);
+walnutTexture.center.set(0.5, 0.5);
+walnutTexture.rotation = Math.PI / 2;
 walnutTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
 const leatherTexture = _textureLoader.load("./assets/thumbnails/texture/Kashi%209.jpg");

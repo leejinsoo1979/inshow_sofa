@@ -45,7 +45,7 @@ function loadTextureCached(url, repeat = [1, 1]) {
 
 export function createUpholsteryMaterial(sofaColor, isLeather) {
   const c = new THREE.Color(sofaColor.color);
-  const map = loadTextureCached(sofaColor.image, [4, 4]);
+  const map = loadTextureCached(sofaColor.image, [2, 2]);
   return new THREE.MeshPhysicalMaterial({
     color: c,
     map: map || null,
@@ -95,6 +95,8 @@ function getWalnutTexture() {
   _walnutTex.wrapS = THREE.RepeatWrapping;
   _walnutTex.wrapT = THREE.RepeatWrapping;
   _walnutTex.repeat.set(1.5, 1.5);
+  _walnutTex.center.set(0.5, 0.5);
+  _walnutTex.rotation = Math.PI / 2;
   _walnutTex._intentional = true;
   return _walnutTex;
 }

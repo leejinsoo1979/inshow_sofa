@@ -1,12 +1,12 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { Html } from "@react-three/drei";
 import { useConfigurator } from "../state/configurator";
 import { moduleCatalog } from "../data/catalog";
 
 export default function Hotspots() {
   const modules = useConfigurator((s) => s.modules);
-  const addModuleAtSide = useConfigurator((s) => s.addModuleAtSide);
-  const [openSide, setOpenSide] = useState(null);
+  const openSide = useConfigurator((s) => s.openHotspotSide);
+  const setOpenSide = useConfigurator((s) => s.setOpenHotspotSide);
 
   const { leftX, rightX, z, leftEnabled, rightEnabled } = useMemo(() => {
     if (!modules.length) return { leftX: -0.6, rightX: 0.6, z: 0, leftEnabled: false, rightEnabled: false };
@@ -24,7 +24,6 @@ export default function Hotspots() {
     const rightMod = sorted[sorted.length - 1];
     const leftSpec = moduleCatalog[leftMod.type];
     const rightSpec = moduleCatalog[rightMod.type];
-    // 회전 고려한 world openSides
     const worldOpen = (mod, spec) => {
       const step = ((Math.round((mod.rotation || 0) / (Math.PI / 2)) % 4) + 4) % 4;
       const map = {
@@ -79,44 +78,6 @@ export default function Hotspots() {
           >
             <SvgPlus />
           </button>
-        </Html>
-      )}
-      {openSide && (
-        <Html fullscreen zIndexRange={[100, 0]}>
-          <div
-            className="hotspot-popover is-open"
-            style={{
-              pointerEvents: "auto",
-              position: "fixed",
-              left: 0,
-              right: "420px",
-              bottom: 0,
-              top: "auto",
-              transform: "none",
-              zIndex: 100
-            }}
-          >
-            <div className="popover-head">
-              <span>추가할 모듈</span>
-              <button onClick={() => setOpenSide(null)} aria-label="닫기">×</button>
-            </div>
-            <div className="thumbnail-grid">
-              {Object.entries(moduleCatalog).map(([type, spec]) => (
-                <button
-                  key={type}
-                  className="thumbnail-card"
-                  title={spec.label}
-                  onClick={() => {
-                    addModuleAtSide(type, openSide);
-                    setOpenSide(null);
-                  }}
-                >
-                  <img src={spec.thumbnail} alt={spec.label} />
-                  <span>{spec.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
         </Html>
       )}
     </>

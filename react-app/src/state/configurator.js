@@ -16,6 +16,8 @@ export const useConfigurator = create((set, get) => ({
   options: { trayWood: {}, cushion: {} },
   showDimensions: true,
   sunAngle: 135,
+  openHotspotSide: null,
+  setOpenHotspotSide: (side) => set({ openHotspotSide: side }),
 
   setSofaColor: (item) => {
     const material = item.id === "leatherBlack" ? "naturalLeather" : "fabric";
