@@ -1457,8 +1457,38 @@ h3 {
     z-index: 20;
     background: #fff;
   }
-  .panel.is-collapsed { transform: none; }
-  .sheet-handle { display: none !important; }
+  /* sheet-handle: panel 상단에 작게 노출 (탭/접기 토글) */
+  .sheet-handle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    height: 22px;
+    padding: 6px 0 0;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+  }
+  .sheet-handle::before {
+    content: "";
+    width: 44px;
+    height: 4px;
+    border-radius: 3px;
+    background: rgba(24,24,24,0.18);
+  }
+
+  /* collapsed: 핸들 + 탭 + checkout만 보이고 panel-scroll 사라짐 */
+  .panel.is-collapsed {
+    top: auto;
+    bottom: 110px;
+    height: auto;
+    max-height: none;
+  }
+  .panel.is-collapsed .panel-scroll {
+    display: none;
+  }
+  .panel.is-collapsed .panel-tabs {
+    border-bottom: 0;
+  }
   .panel-tabs {
     display: none;
   }
