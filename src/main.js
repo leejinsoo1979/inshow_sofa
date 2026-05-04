@@ -330,9 +330,7 @@ function currentBaseColor() {
 }
 
 function baseFollowsSofaMaterial() {
-  // 모든 패브릭/가죽 옵션에서 base를 sofa와 동일하게 통일
-  // (사용자가 base 색을 별도로 선택해도 무시하고 sofa 따라감)
-  return true;
+  return false;
 }
 
 function createUpholsteryMaterial() {

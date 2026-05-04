@@ -62,14 +62,6 @@ export default function SofaModule({ module: m }) {
     const tw = createTrayWoodMaterial(trayWood);
     const roles = modelMaterialRoles[spec.model];
 
-    const remap = (mat) => {
-      const role = importedMaterialRole(mat?.name, roles);
-      if (role === "metal") return met.clone();
-      if (role === "trayWood") return tw.clone();
-      if (role === "base") return bas.clone();
-      return ups.clone();
-    };
-
     const isSelected = selectedId === m.id;
     const glowColor = new THREE.Color(0x3b82f6);
     const applyGlow = (mat) => {
@@ -97,16 +89,32 @@ export default function SofaModule({ module: m }) {
       child.userData.isModuleMesh = true;
       if (child.geometry?.attributes?.color) child.geometry.deleteAttribute("color");
 
+      // 원본 머티리얼 이름을 userData에 저장 (effect 재실행 시 lookup용)
+      if (!child.userData.origMatNames) {
+        child.userData.origMatNames = Array.isArray(child.material)
+          ? child.material.map(m => m?.name || "")
+          : (child.material?.name || "");
+      }
+      const origNames = child.userData.origMatNames;
+
+      const matForRole = (role) => {
+        if (role === "metal") return met.clone();
+        if (role === "trayWood") return tw.clone();
+        if (role === "base") return bas.clone();
+        return ups.clone();
+      };
+
       let newMat;
-      if (Array.isArray(child.material)) {
+      if (Array.isArray(origNames)) {
         const roleCache = {};
-        newMat = child.material.map((m) => {
-          const role = importedMaterialRole(m?.name, roles);
-          if (!roleCache[role]) roleCache[role] = remap(m);
+        newMat = origNames.map((nm) => {
+          const role = importedMaterialRole(nm, roles);
+          if (!roleCache[role]) roleCache[role] = matForRole(role);
           return roleCache[role];
         });
       } else {
-        newMat = remap(child.material);
+        const role = importedMaterialRole(origNames, roles);
+        newMat = matForRole(role);
       }
 
       const stripMap = (mat) => {
