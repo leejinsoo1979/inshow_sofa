@@ -1896,6 +1896,10 @@ h3 {
   .app-shell {
     grid-template-columns: 1fr 30%;
     height: 100dvh;
+    transition: grid-template-columns 0.3s ease;
+  }
+  .app-shell:has(.panel.is-collapsed) {
+    grid-template-columns: 1fr 0;
   }
   .viewer { height: 100dvh; }
 
@@ -1950,7 +1954,39 @@ h3 {
     flex-direction: column;
     overflow: hidden;
   }
-  .sheet-handle { display: none !important; }
+  /* 가로모드: sheet-handle을 우측바 좌측에 세로로 (접기 토글) */
+  .sheet-handle {
+    display: flex !important;
+    position: absolute;
+    top: 50%;
+    left: -22px;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 64px;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-right: 0;
+    border-radius: 12px 0 0 12px;
+    box-shadow: -4px 0 12px rgba(0,0,0,0.06);
+    cursor: pointer;
+    z-index: 30;
+  }
+  .sheet-handle::before {
+    width: 4px;
+    height: 32px;
+    border-radius: 3px;
+    background: rgba(24,24,24,0.4);
+  }
+  /* panel은 transform이 아닌 grid column으로 접힘 (app-shell:has 사용) */
+  .panel.is-collapsed .sheet-handle {
+    /* 접힌 상태에서도 핸들은 viewport 우측 가장자리에 남음 */
+    position: fixed;
+    right: 0;
+    left: auto;
+    top: 50%;
+  }
   .panel-tabs { display: none; }
   .panel-section { display: flex; flex-direction: column; gap: 18px; }
   .panel-scroll {
