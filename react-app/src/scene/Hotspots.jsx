@@ -36,8 +36,11 @@ export default function Hotspots() {
       (spec.openSides || []).forEach((s) => set.add(map[s]));
       return set;
     };
-    const leftOpens = worldOpen(leftMod, leftSpec).has("left");
-    const rightOpens = worldOpen(rightMod, rightSpec).has("right");
+    // 끝 모듈은 항상 외측에 모듈 추가 가능 (openSides에 막혀 있어도 외측은 비어있는 공간이므로 추가 허용)
+    // 단, 모듈이 1개일 때는 양쪽 모두 핫스팟 노출
+    const leftOpens = true;
+    const rightOpens = true;
+    void worldOpen; // 사용 안 함 (호환용)
     const ghost = 1.15;
     return {
       leftX: minX - ghost / 2,
