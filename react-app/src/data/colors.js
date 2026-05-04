@@ -12,7 +12,8 @@ export const baseFrameOptionsByGroup = {
     { label: "비건가죽 헤이즐", color: "#716253", swatchColor: "#716253", image: "/materials/frame/vegan_leather_hazel.png" },
     { label: "비건가죽 올리브", color: "#595b45", swatchColor: "#595b45", image: "/materials/frame/vegan_leather_olive.png" },
     { label: "비건가죽 그린", color: "#2c4128", swatchColor: "#2c4128", image: "/materials/frame/vegan_leather_green.png" },
-    { label: "천연가죽 썬더", color: "#4d4843", swatchColor: "#4d4843", image: "/materials/frame/vegan_leather_thunder.png" }
+    { label: "비건가죽 썬더", color: "#4d4843", swatchColor: "#4d4843", image: "/materials/frame/vegan_leather_thunder.png" },
+    { label: "천연가죽 블랙", color: "#1a1a1a", swatchColor: "#1a1a1a", image: "/materials/sofa/leather_black.png" }
   ],
   fabricDark: [
     sofaColors[2]
