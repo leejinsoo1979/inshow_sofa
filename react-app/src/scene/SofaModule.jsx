@@ -124,66 +124,30 @@ export default function SofaModule({ module: m }) {
     }
     clone.position.y = -bounds.min.y;
 
-    // 팔걸이(Armrest 메쉬) 외측 vertex를 base 가장자리 X에 정확히 정렬
-    // 위치/안쪽 면은 그대로 — 외측 vertex만 X 위치 재조정해서 base 끝과 일치
+    // 팔걸이를 안쪽으로 평행이동: 외측 면이 base 끝과 정확히 일치하게
     if (!baseBounds.isEmpty()) {
       clone.updateMatrixWorld(true);
-      const baseMinX = baseBounds.min.x; // world
-      const baseMaxX = baseBounds.max.x; // world
+      const baseMinX = baseBounds.min.x;
+      const baseMaxX = baseBounds.max.x;
       clone.traverse((c) => {
         if (!c.isMesh) return;
         if (!/armrest/i.test(c.name || "")) return;
-        if (c.userData._armSlimmed) return;
-        const geom = c.geometry;
-        if (!geom?.attributes?.position) return;
+        if (c.userData._armShifted) return;
 
-        // 월드 bounds로 외측/내측 판단 (모듈 중심 0 기준)
         const ab = new THREE.Box3().setFromObject(c);
-        const armCx = (ab.min.x + ab.max.x) / 2;
-        const isRightArm = armCx > 0;
-        const armMinX_w = ab.min.x;
-        const armMaxX_w = ab.max.x;
-
-        // 로컬 좌표에서 외측 vertex 식별 위해 로컬 bbox 계산
-        geom.computeBoundingBox();
-        const local = geom.boundingBox;
-        const localMinX = local.min.x;
-        const localMaxX = local.max.x;
-        const localMid = (localMinX + localMaxX) / 2;
-
-        // mirror 고려: clone.scale.x 부호가 음수이면 외측 방향이 반대
-        const mirrorSign = (clone.scale.x || 1) < 0 ? -1 : 1;
-        const outerIsLocalMax = (isRightArm ? 1 : -1) * mirrorSign > 0;
-        const outerLocalEdge = outerIsLocalMax ? localMaxX : localMinX;
-
-        // 현재 외측 world X와 base 끝 world X의 차이 → 로컬 좌표로 변환
-        const armOuterX_w = isRightArm ? armMaxX_w : armMinX_w;
+        const armCx_w = (ab.min.x + ab.max.x) / 2;
+        const isRightArm = armCx_w > 0;
+        const armOuterX_w = isRightArm ? ab.max.x : ab.min.x;
         const baseEdgeX_w = isRightArm ? baseMaxX : baseMinX;
-        const deltaWorld = baseEdgeX_w - armOuterX_w; // 외측을 이만큼 이동시켜야 함
-        // 메쉬가 받는 X scale의 절댓값으로 world→local 변환
-        // (부모 누적 스케일 추정)
-        let absScaleX = 1;
-        let n = c;
-        while (n) { absScaleX *= Math.abs(n.scale.x || 1); n = n.parent; }
-        const deltaLocal = deltaWorld / (absScaleX || 1);
-        // mirrorSign 반영 (scale.x 음수면 로컬 방향이 반대)
-        const deltaLocalSigned = deltaLocal * mirrorSign;
+        const deltaWorld = baseEdgeX_w - armOuterX_w; // 외측 → base 끝까지의 world delta
 
-        const pos = geom.attributes.position;
-        const arr = pos.array;
-        // 외측 vertex(중심 너머)만 X를 base 가장자리에 맞춰 이동 (linear taper: 중심=0, 외측끝=1)
-        for (let i = 0; i < pos.count; i++) {
-          const x = arr[i * 3];
-          const onOuterSide = outerIsLocalMax ? (x > localMid) : (x < localMid);
-          if (!onOuterSide) continue;
-          const t = (x - localMid) / (outerLocalEdge - localMid); // 0..1
-          arr[i * 3] = x + deltaLocalSigned * t;
-        }
-        pos.needsUpdate = true;
-        geom.computeBoundingBox();
-        geom.computeBoundingSphere();
-        if (geom.attributes.normal) geom.computeVertexNormals();
-        c.userData._armSlimmed = true;
+        // 부모 누적 X scale (절댓값)
+        let absScaleX = 1;
+        let n = c.parent;
+        while (n) { absScaleX *= Math.abs(n.scale.x || 1); n = n.parent; }
+        // local position에 적용할 delta (부모 scale 기준)
+        c.position.x += deltaWorld / (absScaleX || 1);
+        c.userData._armShifted = true;
       });
     }
   }, [clone, spec]);
