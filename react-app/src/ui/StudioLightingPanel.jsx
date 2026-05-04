@@ -49,8 +49,6 @@ export default function StudioLightingPanel() {
   const setSunTime = useConfigurator((s) => s.setSunTime);
   const setSunMonth = useConfigurator((s) => s.setSunMonth);
   const setSunLatitude = useConfigurator((s) => s.setSunLatitude);
-  const renderQuality = useConfigurator((s) => s.renderQuality);
-  const setRenderQuality = useConfigurator((s) => s.setRenderQuality);
   const fileInputRef = useRef(null);
   const lastHdriUrlRef = useRef(null);
 
@@ -91,29 +89,6 @@ export default function StudioLightingPanel() {
         hidden
         onChange={onFileChange}
       />
-
-      <section className="control-group">
-        <div className="group-title">
-          <h3>렌더링 퀄리티</h3>
-          <span>{renderQuality === "high" ? "High" : "Medium"}</span>
-        </div>
-        <div className="quality-toggle">
-          <button
-            type="button"
-            className={`quality-btn${renderQuality === "high" ? " is-active" : ""}`}
-            onClick={() => setRenderQuality("high")}
-          >
-            High
-          </button>
-          <button
-            type="button"
-            className={`quality-btn${renderQuality === "medium" ? " is-active" : ""}`}
-            onClick={() => setRenderQuality("medium")}
-          >
-            Medium
-          </button>
-        </div>
-      </section>
 
       <section className="control-group">
         <div className="group-title">

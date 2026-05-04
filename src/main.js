@@ -338,7 +338,7 @@ function createUpholsteryMaterial() {
   const sofaColor = new THREE.Color(currentSofaColor().color);
   const mat = new THREE.MeshPhysicalMaterial({
     color: sofaColor,
-    roughness: isLeather ? 0.42 : 0.88,
+    roughness: isLeather ? 0.34 : 0.88,
     metalness: 0,
     sheen: isLeather ? 0.75 : 0.12,
     sheenRoughness: isLeather ? 0.42 : 0.95,
@@ -346,11 +346,11 @@ function createUpholsteryMaterial() {
       ? new THREE.Color(0xdddddd)
       : sofaColor.clone().multiplyScalar(1.02),
     map: isLeather ? leatherTexture : null,
-    clearcoat: 0,
-    clearcoatRoughness: 0.42,
+    clearcoat: isLeather ? 0.35 : 0,
+    clearcoatRoughness: isLeather ? 0.32 : 0.42,
     emissive: new THREE.Color(0x000000),
     emissiveIntensity: 0,
-    envMapIntensity: isLeather ? 0.95 : 0.85
+    envMapIntensity: isLeather ? 1.25 : 0.85
   });
   // PBR 텍스처 폴더가 지정된 색상이면 자동 적용
   applyPBRToMaterial(mat, currentSofaColor().textureFolder);
