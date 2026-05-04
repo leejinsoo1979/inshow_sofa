@@ -42,13 +42,7 @@ export default function App() {
   const [showSofaModal, setShowSofaModal] = useState(false);
 
   const onTitleClick = () => {
-    const isMobile = typeof window !== "undefined"
-      && window.matchMedia("(max-width: 900px)").matches;
-    if (isMobile) {
-      window.location.href = SOFA_URL;
-    } else {
-      setShowSofaModal(true);
-    }
+    setShowSofaModal(true);
   };
 
   return (
