@@ -37,12 +37,13 @@ function Floor() {
       <ContactShadows
         position={[0, 0.001, 0]}
         opacity={0.4}
-        scale={12}
+        scale={20}
         blur={5.5}
         far={2.0}
         resolution={1024}
         color="#1a160f"
         smooth
+        frames={1}
       />
     </>
   );
@@ -94,18 +95,18 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
         <Floor />
         <Selection>
           <EffectComposer multisampling={isHigh ? 4 : 8} autoClear={false}>
-            {/* SSAO: high 모드에서만 */}
+            {/* SSAO: high 모드에서만 — 카메라 거리 변동에도 안정적 */}
             {isHigh && (
               <SSAO
                 blendFunction={BlendFunction.MULTIPLY}
-                samples={20}
-                radius={0.06}
-                intensity={28}
-                bias={0.012}
-                worldDistanceThreshold={1}
-                worldDistanceFalloff={1}
-                worldProximityThreshold={1}
-                worldProximityFalloff={1}
+                samples={16}
+                radius={0.04}
+                intensity={20}
+                bias={0.015}
+                worldDistanceThreshold={2}
+                worldDistanceFalloff={0.5}
+                worldProximityThreshold={2}
+                worldProximityFalloff={0.5}
               />
             )}
             {/* Bloom: high만 */}
