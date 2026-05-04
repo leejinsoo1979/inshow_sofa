@@ -3,14 +3,13 @@ import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { RectAreaLightUniformsLib } from "three/addons/lights/RectAreaLightUniformsLib.js";
 import { useConfigurator } from "../state/configurator";
-import { getSolarState, STUDIO_LIGHT_PRESETS } from "./lighting";
+import { getSolarState } from "./lighting";
 
 RectAreaLightUniformsLib.init();
 
 export default function Lights() {
   const { gl } = useThree();
   const lighting = useConfigurator((s) => s.studioLighting);
-  const preset = useMemo(() => STUDIO_LIGHT_PRESETS[lighting.presetId] || STUDIO_LIGHT_PRESETS.softbox, [lighting.presetId]);
   const sun = useConfigurator((s) => s.sun);
   const keyRef = useRef();
   const fillRef = useRef();

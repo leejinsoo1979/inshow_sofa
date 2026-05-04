@@ -75,9 +75,32 @@ export default function SofaModule({ module: m }) {
     clone.position.set(0, 0, 0);
     clone.updateMatrixWorld(true);
     const bounds = new THREE.Box3().setFromObject(clone);
-    // X/Z를 정확히 0 중심 (모듈 간 spec.width 만큼 정확히 인접하게)
-    clone.position.x = -(bounds.min.x + bounds.max.x) / 2;
-    clone.position.z = -(bounds.min.z + bounds.max.z) / 2;
+
+    // base mesh(가죽.02 / 가죽.006) 중심을 X/Z 0에 정렬 → 인접 시 base center 기준 일관
+    const baseBounds = new THREE.Box3();
+    baseBounds.makeEmpty();
+    clone.traverse((c) => {
+      if (!c.isMesh) return;
+      const matsArr = Array.isArray(c.material) ? c.material : [c.material];
+      const matchesBase = matsArr.some(mt => {
+        const n = (mt?.name || "").toLowerCase();
+        return n.startsWith("가죽.02") || n.startsWith("가죽.006") || n === "base";
+      });
+      if (matchesBase) {
+        const b = new THREE.Box3().setFromObject(c);
+        baseBounds.union(b);
+      }
+    });
+
+    if (!baseBounds.isEmpty()) {
+      const bcx = (baseBounds.min.x + baseBounds.max.x) / 2;
+      const bcz = (baseBounds.min.z + baseBounds.max.z) / 2;
+      clone.position.x = -bcx;
+      clone.position.z = -bcz;
+    } else {
+      clone.position.x = -(bounds.min.x + bounds.max.x) / 2;
+      clone.position.z = -(bounds.min.z + bounds.max.z) / 2;
+    }
     clone.position.y = -bounds.min.y;
   }, [clone, spec]);
 

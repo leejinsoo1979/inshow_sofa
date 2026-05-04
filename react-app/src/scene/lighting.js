@@ -129,8 +129,13 @@ export function getSolarState({ hour = 12, month = 6, latitude = 37.5 }) {
 
 export function formatTime(hours) {
   const h = Math.floor(((hours % 24) + 24) % 24);
-  const m = Math.round(((((hours % 24) + 24) % 24) - h) * 60);
-  const hh = String(h).padStart(2, "0");
+  let m = Math.round(((((hours % 24) + 24) % 24) - h) * 60);
+  let hhNum = h;
+  if (m === 60) {
+    hhNum = (hhNum + 1) % 24;
+    m = 0;
+  }
+  const hh = String(hhNum).padStart(2, "0");
   const mm = String(m).padStart(2, "0");
   return `${hh}:${mm}`;
 }
