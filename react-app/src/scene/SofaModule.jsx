@@ -235,27 +235,7 @@ export default function SofaModule({ module: m }) {
     });
   }, [clone, sofaColor, baseColor, trayWood, material, spec, m.id, renderQuality]);
 
-  // selection glow는 별도 effect: 머티리얼 안 갈고 emissive만 토글
-  useEffect(() => {
-    const isSelected = selectedId === m.id;
-    const glowColor = new THREE.Color(0x3b82f6);
-    clone.traverse((child) => {
-      if (!child.isMesh || child.userData.isOutline) return;
-      const apply = (mat) => {
-        if (!mat || !("emissive" in mat)) return;
-        if (isSelected) {
-          mat.emissive = glowColor.clone();
-          mat.emissiveIntensity = 0.18;
-        } else {
-          mat.emissive = new THREE.Color(0x000000);
-          mat.emissiveIntensity = 0;
-        }
-        mat.needsUpdate = true;
-      };
-      if (Array.isArray(child.material)) child.material.forEach(apply);
-      else apply(child.material);
-    });
-  }, [selectedId, m.id, clone]);
+  // selection glow는 EffectComposer Outline에서 처리 — 머티리얼 emissive 건드리지 않음
 
   // group에 clone 직접 add (vanilla 방식, r3f reconciler 우회)
   useEffect(() => {
