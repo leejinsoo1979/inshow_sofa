@@ -1424,25 +1424,24 @@ h3 {
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: var(--checkout-h, 140px); /* checkout fixed 영역 위로 띄움 */
     height: auto;
-    max-height: 85dvh;
+    max-height: calc(85dvh - var(--checkout-h, 140px));
     border: 0;
     border-top-left-radius: 18px;
     border-top-right-radius: 18px;
     box-shadow: 0 -16px 38px rgba(40, 34, 25, 0.16);
-    transform: translateY(calc(100% - var(--sheet-peek, 240px)));
+    transform: translateY(calc(100% - var(--sheet-peek, 260px)));
     transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
     grid-template-rows: auto 1fr auto;
     overflow: hidden;
     touch-action: none;
     z-index: 20;
   }
-  /* 모바일: 모듈 그리드는 sheet-peek 안에 들어오도록 panel 상단에서 보임 */
   .panel-tabs {
     padding-top: 6px;
   }
-  /* checkout(가격+장바구니)은 panel과 별개로 viewport 하단 고정 */
+  /* checkout(가격+장바구니) viewport 하단 고정 */
   .panel .checkout {
     position: fixed;
     left: 0;
@@ -1450,11 +1449,6 @@ h3 {
     bottom: 0;
     z-index: 25;
     box-shadow: 0 -8px 22px rgba(40, 34, 25, 0.10);
-  }
-  /* panel은 checkout 높이만큼 위로 들려있어야 겹침 없음 */
-  .panel {
-    bottom: var(--checkout-h, 140px);
-    transform: translateY(calc(100% - var(--sheet-peek, 220px) + var(--checkout-h, 140px)));
   }
 
   .panel.is-expanded {
