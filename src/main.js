@@ -748,6 +748,11 @@ function createImportedModule(module, upholsteryMaterial, baseMaterial, metalMat
       if (!mat) return;
       if ("vertexColors" in mat) mat.vertexColors = false;
       if ("map" in mat && mat.map && state.material !== "naturalLeather") mat.map = null;
+      if (!String(mat.name || "").toLowerCase().includes("metal")) {
+        mat.side = THREE.DoubleSide;
+        mat.transparent = false;
+        mat.opacity = 1;
+      }
       mat.needsUpdate = true;
     };
     if (Array.isArray(child.material)) child.material.forEach(enforceUniform);

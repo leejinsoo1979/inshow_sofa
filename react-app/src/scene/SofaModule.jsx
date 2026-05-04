@@ -47,10 +47,10 @@ export default function SofaModule({ module: m }) {
     clone.position.set(0, 0, 0);
     clone.updateMatrixWorld(true);
     const bounds = new THREE.Box3().setFromObject(clone);
-    // X/Z를 spec.width/depth 기준으로 강제 중앙 정렬 (GLB 자체 center offset 제거)
-    clone.position.x = -(bounds.min.x + spec.width / 2);
-    clone.position.z = -(bounds.min.z + spec.depth / 2);
-    clone.position.y = -bounds.min.y;
+    const center = bounds.getCenter(new THREE.Vector3());
+    clone.position.x -= center.x;
+    clone.position.z -= center.z;
+    clone.position.y -= bounds.min.y;
   }, [clone, spec]);
 
   // 2) 머티리얼만 갱신 (위치/스케일 안 건드림)
@@ -120,6 +120,10 @@ export default function SofaModule({ module: m }) {
       const stripMap = (mat) => {
         if (!mat) return;
         // trayWood/base 머티리얼이 의도적으로 가지는 텍스처는 보존
+        if (mat.name?.toLowerCase().includes("metal")) return;
+        mat.side = THREE.DoubleSide;
+        mat.transparent = false;
+        mat.opacity = 1;
         mat.needsUpdate = true;
       };
       if (Array.isArray(newMat)) newMat.forEach(stripMap);
