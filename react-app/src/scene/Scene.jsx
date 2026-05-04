@@ -22,23 +22,27 @@ function CanvasBackground() {
 }
 
 function Floor() {
+  const moduleCount = useConfigurator((s) => s.modules.length);
   return (
     <>
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[18, 14]} />
         <shadowMaterial color={0x000000} opacity={0} transparent />
       </mesh>
-      {/* 단일 ContactShadows — 자연스러운 부드러운 그림자 */}
-      <ContactShadows
-        position={[0, 0.001, 0]}
-        opacity={0.45}
-        scale={6}
-        blur={3}
-        far={1.2}
-        resolution={2048}
-        color="#1a160f"
-        frames={Infinity}
-      />
+      {/* 모듈 있을 때만 ContactShadows 렌더 (모듈 삭제 시 그림자도 즉시 사라짐) */}
+      {moduleCount > 0 && (
+        <ContactShadows
+          key={moduleCount}
+          position={[0, 0.001, 0]}
+          opacity={0.45}
+          scale={6}
+          blur={3}
+          far={1.2}
+          resolution={2048}
+          color="#1a160f"
+          frames={Infinity}
+        />
+      )}
     </>
   );
 }
