@@ -83,7 +83,18 @@ export default function Hotspots() {
       )}
       {openSide && (
         <Html fullscreen zIndexRange={[20, 0]}>
-          <div className="hotspot-popover is-open" style={{ pointerEvents: "auto" }}>
+          <div
+            className="hotspot-popover is-open"
+            style={{
+              pointerEvents: "auto",
+              position: "fixed",
+              left: 0,
+              right: 420,
+              bottom: 0,
+              top: "auto",
+              transform: "none"
+            }}
+          >
             <div className="popover-head">
               <span>추가할 모듈</span>
               <button onClick={() => setOpenSide(null)} aria-label="닫기">×</button>

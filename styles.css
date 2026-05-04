@@ -335,13 +335,14 @@ h1 {
 
 .hotspot-popover {
   position: fixed;
-  left: 24px;
-  bottom: 24px;
-  width: calc(100vw - 420px - 48px); /* 우측 패널 420px + 좌우 마진 48px 제외 */
+  left: 0;
+  right: 420px; /* 우측 패널 너비 제외 */
+  bottom: 0;
   top: auto;
   transform: none;
   z-index: 50;
   display: none;
+  margin: 24px;
   padding: 14px 18px;
   border: 1px solid rgba(24, 24, 24, 0.12);
   border-radius: 14px;
