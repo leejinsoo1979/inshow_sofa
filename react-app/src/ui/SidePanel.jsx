@@ -18,6 +18,7 @@ export default function SidePanel() {
 
   const baseOptions = baseOptionsForCurrent(sofaColor);
   const [tab, setTab] = useState("modules");
+  const [collapsed, setCollapsed] = useState(false);
 
   const ModulesSection = () => <ModuleCatalog />;
   const MaterialsSection = () => (
@@ -65,7 +66,13 @@ export default function SidePanel() {
   );
 
   return (
-    <aside className="panel" aria-label="Configurator options">
+    <aside className={`panel${collapsed ? " is-collapsed" : ""}`} aria-label="Configurator options">
+      <button
+        className="sheet-handle"
+        onClick={() => setCollapsed((c) => !c)}
+        aria-label={collapsed ? "패널 열기" : "패널 닫기"}
+        type="button"
+      />
       <div className="panel-tabs" role="tablist">
         <button
           className={`panel-tab${tab === "modules" ? " is-active" : ""}`}
