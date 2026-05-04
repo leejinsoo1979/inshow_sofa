@@ -696,6 +696,10 @@ h1 {
   display: contents;
 }
 
+.checkout-mobile {
+  display: none;
+}
+
 .panel .checkout {
   display: flex !important;
   flex-direction: column !important;
@@ -1470,20 +1474,50 @@ h3 {
   }
   .panel .checkout {
     flex: 0 0 auto;
-    padding: 10px 20px calc(12px + env(safe-area-inset-bottom));
+    padding: 8px 16px calc(10px + env(safe-area-inset-bottom));
     gap: 6px;
   }
   .panel .checkout .cart-toggle {
-    padding: 8px 12px;
-    font-size: 12px;
+    padding: 10px 14px;
+    font-size: 13px;
   }
-  .panel .checkout-row {
-    gap: 6px;
-    padding: 4px 0;
+  /* 모바일에선 데스크탑 row/btn 숨김 → 컴팩트한 인라인 푸터로 대체 */
+  .panel .checkout-row,
+  .panel .checkout-btn {
+    display: none;
   }
-  .panel .checkout .checkout-btn {
-    padding: 12px;
-    font-size: 14px;
+  .checkout-mobile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    border-radius: 12px;
+    background: #1a1a1a;
+    color: #fff;
+  }
+  .checkout-mobile-label {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.7);
+    font-weight: 700;
+  }
+  .checkout-mobile-total {
+    flex: 1;
+    text-align: right;
+    font-size: 17px;
+    font-weight: 800;
+  }
+  .checkout-mobile-cart {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 0;
+    background: #fff;
+    color: #1a1a1a;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
   }
 
   .panel.is-expanded {
