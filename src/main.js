@@ -1153,12 +1153,12 @@ function computeCameraTarget(keepAngle) {
 
   const fovV = THREE.MathUtils.degToRad(camera.fov);
   const fovH = 2 * Math.atan(Math.tan(fovV / 2) * camera.aspect);
-  const horizontalPad = 2.6;
-  const verticalPad = 3.0;
+  const horizontalPad = 2.0;
+  const verticalPad = 2.4;
   const distH = (size.x * horizontalPad) / (2 * Math.tan(fovH / 2));
   const distV = (size.y * verticalPad) / (2 * Math.tan(fovV / 2));
   const distZ = (size.z * horizontalPad) / (2 * Math.tan(fovH / 2));
-  const distance = THREE.MathUtils.clamp(Math.max(distH, distV, distZ) + 1.8, 6, 20);
+  const distance = THREE.MathUtils.clamp(Math.max(distH, distV, distZ) + 1.0, 4.5, 20);
 
   const direction = keepAngle
     ? camera.position.clone().sub(controls.target).normalize()
