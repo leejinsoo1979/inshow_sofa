@@ -1394,6 +1394,20 @@ h3 {
     gap: 10px;
     transition: bottom 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   }
+  /* 모바일: home/zoom/rotate 숨김. light는 좌측 그대로. dim은 우상단 분리 */
+  .tool-rail .icon-btn--reset,
+  .tool-rail .icon-btn--zoom,
+  .tool-rail .icon-btn--rotate {
+    display: none;
+  }
+  .tool-rail .icon-btn--dim {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    bottom: auto;
+    left: auto;
+    z-index: 15;
+  }
 
   .icon-btn {
     width: 44px;

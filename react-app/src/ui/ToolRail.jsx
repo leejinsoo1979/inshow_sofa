@@ -7,13 +7,13 @@ export default function ToolRail({ onResetCamera, onZoom, onRotate }) {
   const setOpenLightingPanel = useConfigurator((s) => s.setOpenLightingPanel);
   return (
     <div className="tool-rail" aria-label="View controls">
-      <button className="icon-btn" onClick={onResetCamera} title="Reset view" aria-label="Reset view">⌂</button>
-      <button className="icon-btn" onClick={() => onZoom?.(-1)} title="Zoom in" aria-label="Zoom in">+</button>
-      <button className="icon-btn" onClick={() => onZoom?.(1)} title="Zoom out" aria-label="Zoom out">−</button>
-      <button className="icon-btn" onClick={() => onRotate?.(-1)} title="Rotate left" aria-label="Rotate left">↺</button>
-      <button className="icon-btn" onClick={() => onRotate?.(1)} title="Rotate right" aria-label="Rotate right">↻</button>
+      <button className="icon-btn icon-btn--reset" onClick={onResetCamera} title="Reset view" aria-label="Reset view">⌂</button>
+      <button className="icon-btn icon-btn--zoom" onClick={() => onZoom?.(-1)} title="Zoom in" aria-label="Zoom in">+</button>
+      <button className="icon-btn icon-btn--zoom" onClick={() => onZoom?.(1)} title="Zoom out" aria-label="Zoom out">−</button>
+      <button className="icon-btn icon-btn--rotate" onClick={() => onRotate?.(-1)} title="Rotate left" aria-label="Rotate left">↺</button>
+      <button className="icon-btn icon-btn--rotate" onClick={() => onRotate?.(1)} title="Rotate right" aria-label="Rotate right">↻</button>
       <button
-        className={`icon-btn${openLightingPanel ? " is-active" : ""}`}
+        className={`icon-btn icon-btn--light${openLightingPanel ? " is-active" : ""}`}
         onClick={() => setOpenLightingPanel(!openLightingPanel)}
         title="스튜디오 조명"
         aria-pressed={openLightingPanel}
@@ -25,7 +25,7 @@ export default function ToolRail({ onResetCamera, onZoom, onRotate }) {
         </svg>
       </button>
       <button
-        className={`icon-btn${showDimensions ? " is-active" : ""}`}
+        className={`icon-btn icon-btn--dim${showDimensions ? " is-active" : ""}`}
         onClick={toggleDimensions}
         title="치수 표시"
         aria-pressed={showDimensions}
