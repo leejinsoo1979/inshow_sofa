@@ -1,8 +1,13 @@
 import { useProgress } from "@react-three/drei";
+import { useState, useEffect } from "react";
 
 export default function LoadingScreen() {
   const { active, progress, item } = useProgress();
-  if (!active && progress >= 100) return null;
+  const [done, setDone] = useState(false);
+  useEffect(() => {
+    if (!active && progress >= 100) setDone(true);
+  }, [active, progress]);
+  if (done) return null;
   return (
     <div className="loading-screen" aria-live="polite">
       <div className="loading-inner">
