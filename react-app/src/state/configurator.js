@@ -60,8 +60,13 @@ export const useConfigurator = create((set, get) => ({
     set({ sofaColor: item, material });
     const group = item.group || "light";
     const opts = baseFrameOptionsByGroup[group] || baseFrameOptionsByGroup.light;
+    // leatherBlack 선택 시 base를 "천연가죽 썬더" 자동 적용
+    if (item.id === "leatherBlack") {
+      const thunder = opts.find((o) => /천연가죽.*썬더|leather.*thunder/i.test(o.label || ""));
+      if (thunder) set({ baseColor: thunder });
+      return;
+    }
     const cur = get().baseColor;
-    if ((group === "fabricDark" || group === "leatherBlack")) return;
     if (!opts.some((o) => o.color === cur.color)) {
       set({ baseColor: opts[0] });
     }
