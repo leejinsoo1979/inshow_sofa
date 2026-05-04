@@ -1904,8 +1904,10 @@ h3 {
     overflow-y: auto;
   }
   .panel-scroll[data-tab] .panel-section--modules,
-  .panel-scroll[data-tab] .panel-section--materials {
-    display: flex;
+  .panel-scroll[data-tab] .panel-section--materials,
+  .panel-scroll[data-tab="modules"] .panel-section--materials,
+  .panel-scroll[data-tab="materials"] .panel-section--modules {
+    display: flex !important;
   }
 
   /* 모듈 그리드 3열 정사각 */
