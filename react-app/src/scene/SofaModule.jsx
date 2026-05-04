@@ -127,10 +127,12 @@ export default function SofaModule({ module: m }) {
 
   // 2) 머티리얼만 갱신 (위치/스케일 안 건드림)
   // useLayoutEffect: 첫 paint 전 동기 실행 → GLB 원본 검정이 잠깐 보이는 flash 방지
+  const renderQuality = useConfigurator((s) => s.renderQuality);
+
   useLayoutEffect(() => {
     const isLeather = material === "naturalLeather";
-    const ups = createUpholsteryMaterial(sofaColor, isLeather);
-    const bas = createBaseMaterial(baseColor, isLeather);
+    const ups = createUpholsteryMaterial(sofaColor, isLeather, renderQuality);
+    const bas = createBaseMaterial(baseColor, isLeather, renderQuality);
     const met = createMetalMaterial();
     const tw = createTrayWoodMaterial(trayWood);
     const roles = modelMaterialRoles[spec.model];
@@ -216,7 +218,7 @@ export default function SofaModule({ module: m }) {
       else enforceUniform(newMat);
       child.material = newMat;
     });
-  }, [clone, sofaColor, baseColor, trayWood, material, spec, m.id]);
+  }, [clone, sofaColor, baseColor, trayWood, material, spec, m.id, renderQuality]);
 
   // selection glow는 별도 effect: 머티리얼 안 갈고 emissive만 토글
   useEffect(() => {
