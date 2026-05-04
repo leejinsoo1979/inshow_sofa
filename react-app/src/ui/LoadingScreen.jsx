@@ -2,7 +2,7 @@ import { useProgress } from "@react-three/drei";
 import { useState, useEffect } from "react";
 
 export default function LoadingScreen() {
-  const { active, progress, item } = useProgress();
+  const { active, progress } = useProgress();
   const [done, setDone] = useState(false);
   useEffect(() => {
     if (!active && progress >= 100) setDone(true);
