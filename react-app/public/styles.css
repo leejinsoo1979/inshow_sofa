@@ -769,7 +769,9 @@ h1 {
 }
 .sofa-modal-iframe {
   width: 100%;
-  height: 100%;
+  /* 상단 헤더 약 90px 잘라내기: 위로 -90px 띄우고 그만큼 height 키움 */
+  height: calc(100% + 90px);
+  margin-top: -90px;
   border: 0;
   display: block;
 }
