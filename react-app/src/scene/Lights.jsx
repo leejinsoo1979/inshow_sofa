@@ -109,10 +109,11 @@ export default function Lights() {
         castShadow
         intensity={2}
         color={0xffffff}
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={[1024, 1024]}
         shadow-bias={-0.00035}
         shadow-normalBias={0.045}
-        shadow-radius={18}
+        shadow-radius={60}
+        shadow-blurSamples={25}
       >
         <orthographicCamera attach="shadow-camera" args={[-10, 10, 10, -10, 1, 24]} />
       </directionalLight>

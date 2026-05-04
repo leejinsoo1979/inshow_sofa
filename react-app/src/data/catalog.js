@@ -1,14 +1,15 @@
 export const moduleCatalog = {
   // baseWidth = 하부 프레임(base mesh) X range — 인접 시 base끼리 맞닿게 하는 기준
+  // 파일명은 "left"이지만 GLB에 팔걸이가 X+ (우측)에 있어 좌측 모듈에 mirror 적용
   armlessLeft: {
     label: "싱글암(좌)", width: 0.986, baseWidth: 0.923, depth: 0.9, height: 0.68, seats: 1,
-    model: "singleArmLeft1", arms: ["right"], openSides: ["left"],
+    model: "singleArmLeft1", arms: ["left"], openSides: ["right"], mirror: true,
     price: { fabric: 960000, leather: 1818000 },
     thumbnail: "/assets/thumbnails/singlearm_L_1.png"
   },
   armlessRight: {
     label: "싱글암(우)", width: 0.986, baseWidth: 0.923, depth: 0.9, height: 0.68, seats: 1,
-    model: "singleArmLeft1", mirror: true, arms: ["left"], openSides: ["right"],
+    model: "singleArmLeft1", arms: ["right"], openSides: ["left"],
     price: { fabric: 960000, leather: 1818000 },
     thumbnail: "/assets/thumbnails/singlearm_R_1.png"
   },
@@ -26,13 +27,13 @@ export const moduleCatalog = {
   },
   singleLeftTwo: {
     label: "싱글암2인(좌)", width: 1.722, baseWidth: 1.673, depth: 0.9, height: 0.68, seats: 2,
-    model: "singleArmLeft2", arms: ["left"], openSides: ["right"],
+    model: "singleArmLeft2", mirror: true, arms: ["left"], openSides: ["right"],
     price: { fabric: 1410000, leather: 2727000 },
     thumbnail: "/assets/thumbnails/singlearm_L_2.png"
   },
   singleRightTwo: {
     label: "싱글암2인(우)", width: 1.722, baseWidth: 1.673, depth: 0.9, height: 0.68, seats: 2,
-    model: "singleArmLeft2", mirror: true, arms: ["right"], openSides: ["left"],
+    model: "singleArmLeft2", arms: ["right"], openSides: ["left"],
     price: { fabric: 1410000, leather: 2727000 },
     thumbnail: "/assets/thumbnails/singlearm_R_2.png"
   },
