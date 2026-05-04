@@ -1884,8 +1884,8 @@ h3 {
     inset: auto;
     top: 0;
     bottom: 0;
-    height: calc(100dvh - 60px); /* 하단 푸터 60px 제외 */
-    max-height: calc(100dvh - 60px);
+    height: calc(100dvh - 50px); /* 하단 푸터 60px 제외 */
+    max-height: calc(100dvh - 50px);
     border-radius: 0;
     border-left: 1px solid var(--line);
     box-shadow: none;
@@ -1933,26 +1933,31 @@ h3 {
   .control-group { gap: 8px; }
   .panel-section { gap: 14px !important; }
 
-  /* swatch 가로 한 줄 (5개 정렬) */
+  /* swatch 가로 정렬 (이미지 + 라벨) */
   .swatches {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: wrap;
-    gap: 10px;
-    grid-template-columns: none !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 6px 4px !important;
   }
   .swatches .swatch {
-    flex: 0 0 auto;
-    width: auto;
-    min-width: 0;
-    flex-direction: row;
-    gap: 0;
+    flex-direction: column;
+    gap: 2px;
     padding: 0;
     align-items: center;
     text-align: center;
+    min-width: 0;
   }
-  .swatches .swatch::before { width: 36px; height: 36px; flex: 0 0 auto; }
-  .swatches .swatch span { display: none; }
+  .swatches .swatch::before { width: 28px; height: 28px; flex: 0 0 auto; }
+  .swatches .swatch span {
+    display: block;
+    font-size: 9px;
+    line-height: 1.1;
+    color: #888;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+  }
 
   /* 하단 풀폭 푸터: 구성모듈 / 주문안내 / 총금액 / [저장][장바구니] */
   .panel .checkout {
@@ -1967,8 +1972,8 @@ h3 {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 16px;
-    padding: 10px 18px calc(10px + env(safe-area-inset-bottom));
+    gap: 14px;
+    padding: 6px 16px calc(6px + env(safe-area-inset-bottom));
     background: #fff;
     border-top: 1px solid #eee;
     position: fixed;
@@ -1976,6 +1981,12 @@ h3 {
     right: 0;
     bottom: 0;
     z-index: 30;
+    height: 50px;
+  }
+  .checkout-mobile-save,
+  .checkout-mobile-buy {
+    padding: 9px 22px !important;
+    font-size: 13px !important;
   }
   .checkout-mobile-row1 {
     display: contents;
@@ -2025,5 +2036,5 @@ h3 {
     font-weight: 700;
     cursor: pointer;
   }
-  .viewer { height: calc(100dvh - 60px); }
+  .viewer { height: calc(100dvh - 50px); }
 }
