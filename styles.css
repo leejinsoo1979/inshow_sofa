@@ -1577,15 +1577,7 @@ h3 {
     gap: 8px;
   }
   .checkout-mobile-save {
-    flex: 0 0 30%;
-    padding: 14px;
-    border-radius: 28px;
-    border: 1.5px solid #1a1a1a;
-    background: #fff;
-    color: #1a1a1a;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
+    display: none; /* portrait에선 숨김 */
   }
   .checkout-mobile-buy {
     flex: 1;
@@ -1837,4 +1829,171 @@ h3 {
     font-size: 9px;
     gap: 2px;
   }
+}
+
+/* ================ Landscape mobile ================ */
+@media (max-width: 950px) and (orientation: landscape) {
+  .app-shell {
+    grid-template-columns: 1fr 320px;
+    height: 100dvh;
+  }
+  .viewer { height: 100dvh; }
+
+  /* sun-control 보이게 (가로는 공간 있음) */
+  .sun-control { display: inline-flex; padding: 6px 12px; }
+  .sun-control input[type="range"] { width: 130px; }
+  .metrics { display: inline-flex; }
+
+  /* 우상단 dim/light 분리 해제 — 좌측 툴바에 통합 */
+  .tool-rail {
+    top: 50%;
+    transform: translateY(-50%);
+    bottom: auto;
+    left: 12px;
+  }
+  .tool-rail .icon-btn--reset,
+  .tool-rail .icon-btn--zoom,
+  .tool-rail .icon-btn--rotate,
+  .tool-rail .icon-btn--dim,
+  .tool-rail .icon-btn--light {
+    position: static;
+    display: inline-flex;
+  }
+
+  /* 우측 사이드 패널 (320px 고정) */
+  .panel {
+    position: relative;
+    inset: auto;
+    top: auto;
+    bottom: auto;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+    border-left: 1px solid var(--line);
+    box-shadow: none;
+    transform: none !important;
+    background: var(--panel);
+    z-index: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .sheet-handle { display: none !important; }
+  .panel-tabs { display: none; }
+  .panel-section { display: flex; flex-direction: column; gap: 18px; }
+  .panel-scroll {
+    flex: 1 1 auto;
+    padding: 22px 18px 18px;
+    overflow-y: auto;
+  }
+  .panel-scroll[data-tab] .panel-section--modules,
+  .panel-scroll[data-tab] .panel-section--materials {
+    display: flex;
+  }
+
+  /* 모듈 그리드 3열 정사각 */
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .module-option {
+    flex: initial;
+    padding: 8px 6px;
+    font-size: 11px;
+  }
+  .module-option img {
+    aspect-ratio: 1 / 1;
+    transform: scale(0.95);
+  }
+
+  /* swatch 가로 한 줄 (비건 색상) */
+  .swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .swatches .swatch {
+    flex: 0 0 auto;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+    text-align: center;
+  }
+  .swatches .swatch::before { width: 32px; height: 32px; }
+  .swatches .swatch span { font-size: 10px; color: #888; }
+
+  /* 하단 풀폭 푸터: 구성모듈 / 주문안내 / 총금액 / [저장][장바구니] */
+  .panel .checkout {
+    display: contents;
+  }
+  .panel .checkout-row,
+  .panel .checkout-btn,
+  .panel .cart-toggle {
+    display: none !important;
+  }
+  .checkout-mobile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 18px calc(10px + env(safe-area-inset-bottom));
+    background: #fff;
+    border-top: 1px solid #eee;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+  }
+  .checkout-mobile-row1 {
+    display: contents;
+  }
+  .checkout-mobile-modules {
+    flex: 0 0 auto;
+    font-size: 13px;
+    color: #555;
+  }
+  .checkout-mobile-modules strong {
+    background: #1a1a1a;
+    color: #fff;
+    border-radius: 8px;
+    padding: 2px 8px;
+    margin: 0 2px;
+  }
+  .checkout-mobile-total-wrap {
+    flex: 1;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  .checkout-mobile-total-label { font-size: 13px; color: #555; }
+  .checkout-mobile-total { font-size: 17px; font-weight: 800; }
+  .checkout-mobile-row2 {
+    display: flex;
+    gap: 8px;
+    flex: 0 0 auto;
+  }
+  .checkout-mobile-save {
+    flex: 0 0 auto;
+    padding: 12px 28px;
+    border-radius: 28px;
+    border: 1.5px solid #1a1a1a;
+    background: #fff;
+    color: #1a1a1a;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .checkout-mobile-buy {
+    padding: 12px 28px;
+    border-radius: 28px;
+    border: 0;
+    background: #1a1a1a;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  /* panel은 푸터 위 영역까지 */
+  .panel { bottom: 60px; height: calc(100dvh - 60px); }
+  .viewer { height: calc(100dvh - 60px); }
 }
