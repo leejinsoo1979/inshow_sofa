@@ -60,7 +60,7 @@ export default function CameraRig({ controlsRef, resetCameraRef }) {
     const isLandscape = typeof window !== "undefined" && window.matchMedia("(orientation: landscape)").matches;
     // 모바일은 더 타이트하게, 가로모드는 가로 여백 더
     const horizontalPad = isMobile ? (isLandscape ? 1.3 : 2.0) : 2.2;
-    const verticalPad = isMobile ? (isLandscape ? 1.5 : 2.2) : 2.6;
+    const verticalPad = isMobile ? (isLandscape ? 1.7 : 2.4) : 3.0;
     const distH = (sx * horizontalPad) / (2 * Math.tan(fovH / 2));
     const distV = (sy * verticalPad) / (2 * Math.tan(fovV / 2));
     const distZ = (sz * horizontalPad) / (2 * Math.tan(fovH / 2));

@@ -62,12 +62,13 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
           <EffectComposer multisampling={8} autoClear={false}>
             <Outline
               blur
-              kernelSize={4}
+              kernelSize={3}
               visibleEdgeColor={0x3b82f6}
               hiddenEdgeColor={0x3b82f6}
-              edgeStrength={10}
+              edgeStrength={6}
               pulseSpeed={0}
-              width={1500}
+              xRay={true}
+              width={1000}
             />
           </EffectComposer>
           <Modules />
