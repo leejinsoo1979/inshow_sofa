@@ -109,11 +109,11 @@ export default function Lights() {
         castShadow
         intensity={2}
         color={0xffffff}
-        shadow-mapSize={[1024, 1024]}
-        shadow-bias={-0.0003}
-        shadow-normalBias={0.04}
-        shadow-radius={24}
-        shadow-blurSamples={32}
+        shadow-mapSize={[512, 512]}
+        shadow-bias={-0.0005}
+        shadow-normalBias={0.06}
+        shadow-radius={50}
+        shadow-blurSamples={48}
       >
         <orthographicCamera attach="shadow-camera" args={[-10, 10, 10, -10, 1, 24]} />
       </directionalLight>
@@ -128,7 +128,7 @@ export default function Lights() {
         penumbra={0.85}
         decay={2}
         distance={24}
-        shadow-mapSize={[1024, 1024]}
+        shadow-mapSize={[512, 512]}
         shadow-bias={-0.0003}
         shadow-radius={24}
         shadow-blurSamples={32}
