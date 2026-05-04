@@ -1831,8 +1831,8 @@ h3 {
   }
 }
 
-/* ================ Landscape mobile ================ */
-@media (max-width: 950px) and (orientation: landscape) {
+/* ================ Landscape mobile/tablet ================ */
+@media (max-height: 600px) and (orientation: landscape) {
   .app-shell {
     grid-template-columns: 1fr 320px;
     height: 100dvh;
