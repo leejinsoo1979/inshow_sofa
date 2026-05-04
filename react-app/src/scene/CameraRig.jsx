@@ -45,7 +45,10 @@ export default function CameraRig({ controlsRef, resetCameraRef }) {
 
     // vanilla computeCameraTarget 동일 공식
     const sy = 0.68; // module height
-    const target = new THREE.Vector3(cx, sy * 0.5 + sy * 0.05, cz);
+    // 모바일에서는 target을 낮게 잡아 가구가 화면 더 위쪽에 보이게
+    const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 900px)").matches;
+    const yOffset = isMobile ? -0.35 : 0;
+    const target = new THREE.Vector3(cx, sy * 0.5 + sy * 0.05 + yOffset, cz);
     // OrbitControls target은 모듈 center에 둔다.
     // 모듈 center를 화면 가운데에 두기 위해 카메라 위치만 보정 (X 약간 좌측에서 보면 화면상 모듈이 중앙에 옴)
 
