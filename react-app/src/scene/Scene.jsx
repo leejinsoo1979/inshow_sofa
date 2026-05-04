@@ -35,11 +35,11 @@ function Floor() {
       {/* 컨택트 섀도우 — 매우 부드럽게 뭉개진 단일 그림자 */}
       <ContactShadows
         position={[0, 0.001, 0]}
-        opacity={0.6}
-        scale={20}
-        blur={20}
-        far={4}
-        resolution={256}
+        opacity={0.55}
+        scale={14}
+        blur={14}
+        far={3}
+        resolution={2048}
         color="#1a160f"
       />
     </>
