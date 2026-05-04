@@ -134,9 +134,9 @@ export function createTrayWoodMaterial(trayWood) {
   const isWalnut = trayWood?.label === "월넛";
   if (isWalnut) {
     return new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color(0x6a6258),
+      color: new THREE.Color(0x968874),
       map: getWalnutTexture(),
-      roughness: 0.55,
+      roughness: 0.5,
       metalness: 0,
       clearcoat: 0.35,
       clearcoatRoughness: 0.45
