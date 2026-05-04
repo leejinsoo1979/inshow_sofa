@@ -1431,12 +1431,30 @@ h3 {
     border-top-left-radius: 18px;
     border-top-right-radius: 18px;
     box-shadow: 0 -16px 38px rgba(40, 34, 25, 0.16);
-    transform: translateY(calc(100% - var(--sheet-peek, 220px)));
+    transform: translateY(calc(100% - var(--sheet-peek, 240px)));
     transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
     grid-template-rows: auto 1fr auto;
     overflow: hidden;
     touch-action: none;
     z-index: 20;
+  }
+  /* 모바일: 모듈 그리드는 sheet-peek 안에 들어오도록 panel 상단에서 보임 */
+  .panel-tabs {
+    padding-top: 6px;
+  }
+  /* checkout(가격+장바구니)은 panel과 별개로 viewport 하단 고정 */
+  .panel .checkout {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 25;
+    box-shadow: 0 -8px 22px rgba(40, 34, 25, 0.10);
+  }
+  /* panel은 checkout 높이만큼 위로 들려있어야 겹침 없음 */
+  .panel {
+    bottom: var(--checkout-h, 140px);
+    transform: translateY(calc(100% - var(--sheet-peek, 220px) + var(--checkout-h, 140px)));
   }
 
   .panel.is-expanded {
@@ -1517,13 +1535,22 @@ h3 {
     gap: 8px;
   }
 
+  /* 모바일: 모듈 그리드 → 가로 스크롤 캐러셀 */
   .module-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 6px;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 8px;
+    padding-bottom: 4px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
   }
 
   .module-option {
     display: flex;
+    flex: 0 0 96px;
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
@@ -1532,9 +1559,7 @@ h3 {
     padding: 4px;
     font-size: 10px;
     gap: 2px;
-  }
-  .module-option .module-price {
-    font-size: 9px;
+    scroll-snap-align: start;
   }
 
   .module-option img {
@@ -1663,21 +1688,13 @@ h3 {
   }
 
   .module-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 5px;
+    gap: 6px;
   }
 
   .module-option {
+    flex: 0 0 84px;
     padding: 3px;
     font-size: 9px;
-    gap: 3px;
-  }
-
-  .module-option img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1 / 1;
-    object-fit: contain;
-    transform: scale(1);
+    gap: 2px;
   }
 }
