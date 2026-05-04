@@ -37,7 +37,9 @@ export const useConfigurator = create((set, get) => ({
   options: { trayWood: {}, cushion: {} },
   showDimensions: true,
   openHotspotSide: null,
+  openLightingPanel: false,
   setOpenHotspotSide: (side) => set({ openHotspotSide: side }),
+  setOpenLightingPanel: (open) => set({ openLightingPanel: open }),
 
   setLightingPreset: (presetId) => set({ lightingPreset: presetId, studioLighting: createStudioLightingState(presetId) }),
   setStudioLightingValue: (key, value) => set((s) => ({ studioLighting: { ...s.studioLighting, [key]: value } })),

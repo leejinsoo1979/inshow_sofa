@@ -85,8 +85,8 @@ export default function SofaModule({ module: m }) {
     const mirror = spec.mirror ? -1 : 1;
     // vanilla 공식: 각 축을 spec dimensions로 정규화
     const scaleX = Number.isFinite(spec.width / initialSize.x) ? spec.width / initialSize.x : 1;
-    const scaleZ = Number.isFinite(spec.depth / initialSize.z) ? spec.depth / initialSize.z : 1;
-    const scaleY = scaleX; // GLB 원본 Y/X 비율 유지 (납작 방지)
+    const scaleY = scaleX;
+    const scaleZ = scaleX; // Z도 X 비율로 (모듈 간 depth 비율 동일 → z 정렬 일관)
     clone.scale.set(scaleX * mirror, scaleY, scaleZ);
 
     clone.position.set(0, 0, 0);
@@ -119,7 +119,6 @@ export default function SofaModule({ module: m }) {
       clone.position.x = -bcx;
       clone.position.z = -bcz;
     } else {
-      // fallback: spec.depth/2 기준 정렬 (모든 모듈 동일 z)
       clone.position.x = -(bounds.min.x + bounds.max.x) / 2;
       clone.position.z = -(bounds.min.z + spec.depth / 2);
     }

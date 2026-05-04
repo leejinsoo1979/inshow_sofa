@@ -7,6 +7,7 @@ import { moduleCatalog } from "./data/catalog";
 import { useKeyboardShortcuts } from "./ui/useKeyboardShortcuts";
 import LoadingScreen from "./ui/LoadingScreen";
 import HotspotPopover from "./ui/HotspotPopover";
+import StudioLightingPopover from "./ui/StudioLightingPopover";
 
 function useFootprintCm() {
   const modules = useConfigurator((s) => s.modules);
@@ -58,6 +59,7 @@ export default function App() {
         />
         <div className="scene-help">드래그 회전 · 휠 줌 · 소파 클릭 선택</div>
         <HotspotPopover />
+        <StudioLightingPopover />
       </section>
       <SidePanel />
     </main>
