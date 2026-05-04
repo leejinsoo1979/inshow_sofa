@@ -123,25 +123,6 @@ export default function SofaModule({ module: m }) {
       clone.position.z = -(bounds.min.z + spec.depth / 2);
     }
     clone.position.y = -bounds.min.y;
-
-    // 팔걸이를 안쪽(모듈 중심 방향)으로 2cm 평행이동
-    clone.updateMatrixWorld(true);
-    clone.traverse((c) => {
-      if (!c.isMesh) return;
-      if (!/armrest/i.test(c.name || "")) return;
-      if (c.userData._armShifted2cm) return;
-      const ab = new THREE.Box3().setFromObject(c);
-      const armCx_w = (ab.min.x + ab.max.x) / 2;
-      const isRightArm = armCx_w > 0;
-      // world 좌표로 안쪽 = 우측팔이면 -X(중심 방향), 좌측팔이면 +X
-      const deltaWorld = isRightArm ? -0.02 : 0.02;
-      // 부모 누적 X scale (mirror 부호 포함)
-      let scaleX = 1;
-      let n = c.parent;
-      while (n) { scaleX *= (n.scale.x || 1); n = n.parent; }
-      c.position.x += deltaWorld / (scaleX || 1); // 부호 그대로 (mirror면 자동 반전)
-      c.userData._armShifted2cm = true;
-    });
   }, [clone, spec]);
 
   // 2) 머티리얼만 갱신 (위치/스케일 안 건드림)
