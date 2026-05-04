@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { Select } from "@react-three/postprocessing";
 import { clone as cloneSkinned } from "three/examples/jsm/utils/SkeletonUtils.js";
@@ -126,7 +126,8 @@ export default function SofaModule({ module: m }) {
   }, [clone, spec]);
 
   // 2) 머티리얼만 갱신 (위치/스케일 안 건드림)
-  useEffect(() => {
+  // useLayoutEffect: 첫 paint 전 동기 실행 → GLB 원본 검정이 잠깐 보이는 flash 방지
+  useLayoutEffect(() => {
     const isLeather = material === "naturalLeather";
     const ups = createUpholsteryMaterial(sofaColor, isLeather);
     const bas = createBaseMaterial(baseColor, isLeather);
