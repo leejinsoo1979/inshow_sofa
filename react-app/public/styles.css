@@ -1454,9 +1454,29 @@ h3 {
     touch-action: none;
     z-index: 20;
   }
-  /* collapsed: panel 본체 내려가고 sheet-handle만 노출 */
+  /* collapsed: panel 완전히 내림 (가격 fixed만 남음) */
   .panel.is-collapsed {
-    transform: translateY(calc(100% - 28px));
+    transform: translateY(100%);
+  }
+  /* collapsed 상태에서 다시 펼 수 있게 핸들을 panel 위 viewport에 노출 */
+  .panel.is-collapsed .sheet-handle {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 64px;
+    height: 24px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    z-index: 30;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .panel.is-collapsed .sheet-handle::before {
+    background: rgba(24,24,24,0.4);
   }
   .panel-tabs {
     padding: 6px 20px 0;
