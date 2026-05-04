@@ -1,9 +1,0 @@
-{
-  "albedo": "fabric_albedo.jpg",
-  "normal": "fabric_normal.jpg",
-  "roughness": "fabric_roughness.jpg",
-  "metalness": "fabric_metallic.jpg",
-  "ao": "fabric_ao.jpg",
-  "displacement": "fabric_displacement.jpg",
-  "repeat": [4, 4]
-}
