@@ -1934,20 +1934,24 @@ h3 {
 
   /* swatch 가로 한 줄 (5개 정렬) */
   .swatches {
-    display: flex;
-    flex-wrap: nowrap;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap;
     gap: 10px;
-    overflow-x: auto;
+    grid-template-columns: none !important;
   }
   .swatches .swatch {
     flex: 0 0 auto;
-    flex-direction: column;
-    gap: 4px;
+    width: auto;
+    min-width: 0;
+    flex-direction: row;
+    gap: 0;
+    padding: 0;
     align-items: center;
     text-align: center;
   }
-  .swatches .swatch::before { width: 32px; height: 32px; }
-  .swatches .swatch span { font-size: 10px; color: #888; }
+  .swatches .swatch::before { width: 36px; height: 36px; flex: 0 0 auto; }
+  .swatches .swatch span { display: none; }
 
   /* 하단 풀폭 푸터: 구성모듈 / 주문안내 / 총금액 / [저장][장바구니] */
   .panel .checkout {
