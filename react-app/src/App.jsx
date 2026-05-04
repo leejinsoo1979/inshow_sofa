@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import SidePanel from "./ui/SidePanel";
 import Scene from "./scene/Scene";
 import ToolRail from "./ui/ToolRail";
@@ -30,12 +30,25 @@ function useFootprintCm() {
   }, [modules]);
 }
 
+const SOFA_URL = "https://inshowstore.com/products/sofa/";
+
 export default function App() {
   const { w, d } = useFootprintCm();
   const resetCameraRef = useRef(() => {});
   const zoomRef = useRef(() => {});
   const rotateRef = useRef(() => {});
   useKeyboardShortcuts(() => resetCameraRef.current?.());
+  const [showSofaModal, setShowSofaModal] = useState(false);
+
+  const onTitleClick = () => {
+    const isMobile = typeof window !== "undefined"
+      && window.matchMedia("(max-width: 900px)").matches;
+    if (isMobile) {
+      window.location.href = SOFA_URL;
+    } else {
+      setShowSofaModal(true);
+    }
+  };
 
   return (
     <>
@@ -45,7 +58,16 @@ export default function App() {
         <Scene resetCameraRef={resetCameraRef} zoomRef={zoomRef} rotateRef={rotateRef} />
         <div className="brand-bar">
           <div>
-            <h1>INSHOW SOFA #1</h1>
+            <h1
+              className="brand-title"
+              onClick={onTitleClick}
+              style={{ cursor: "pointer" }}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onTitleClick(); }}
+            >
+              INSHOW SOFA #1
+            </h1>
           </div>
           <SunSlider />
           <div className="metrics">
@@ -64,6 +86,28 @@ export default function App() {
       </section>
       <SidePanel />
     </main>
+    {showSofaModal && (
+      <div
+        className="sofa-modal-backdrop"
+        role="dialog"
+        aria-modal="true"
+        onClick={() => setShowSofaModal(false)}
+      >
+        <div className="sofa-modal" onClick={(e) => e.stopPropagation()}>
+          <button
+            type="button"
+            className="sofa-modal-close"
+            onClick={() => setShowSofaModal(false)}
+            aria-label="닫기"
+          >×</button>
+          <iframe
+            src={SOFA_URL}
+            title="INSHOW SOFA"
+            className="sofa-modal-iframe"
+          />
+        </div>
+      </div>
+    )}
     </>
   );
 }
