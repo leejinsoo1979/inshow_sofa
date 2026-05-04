@@ -120,7 +120,7 @@ export function createBaseMaterial(baseColor, isLeather) {
     roughness: isLeather ? 0.45 : 0.6,
     metalness: 0,
     sheen: isLeather ? 0.9 : 0.12,
-    sheenColor: isLeather ? new THREE.Color(0xdddddd) : undefined,
+    sheenColor: isLeather ? new THREE.Color(0xdddddd) : new THREE.Color(0xffffff),
     clearcoat: isLeather ? 0 : 0.18,
     clearcoatRoughness: 0.6,
     envMapIntensity: isLeather ? 0.85 : 1.0,

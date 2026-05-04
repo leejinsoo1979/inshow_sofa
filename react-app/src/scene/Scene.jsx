@@ -92,7 +92,7 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
         <Lights />
         <Floor />
         <Selection>
-          <EffectComposer multisampling={isHigh ? 4 : 8} autoClear={false}>
+          <EffectComposer multisampling={isHigh ? 4 : 8} autoClear={false} enableNormalPass={isHigh}>
             {/* SSAO: high 모드에서만 — 카메라 거리 변동에도 안정적 */}
             {isHigh && (
               <SSAO
