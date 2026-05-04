@@ -72,7 +72,8 @@ export const useConfigurator = create((set, get) => ({
       x = side === "left"
         ? minX - spec.width / 2 + SEAM
         : maxX + spec.width / 2 - SEAM;
-      z = (minZ + maxZ) / 2;
+      // z는 첫 모듈과 정확히 동일 (footprint center 사용 시 micro-offset)
+      z = modules[0].z;
     }
     const m = { id: newId, type, x, z, rotation: 0 };
     set({ modules: [...modules, m], selectedId: newId });
