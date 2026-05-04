@@ -21,7 +21,7 @@ scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).textur
 scene.environmentIntensity = 0.5;
 
 const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
-camera.position.set(4.5, 1.4, 5.2);
+camera.position.set(3.2, 1.2, 3.8);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;

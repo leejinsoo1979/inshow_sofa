@@ -52,12 +52,12 @@ export default function CameraRig({ controlsRef, resetCameraRef }) {
     const fovV = (camera.fov * Math.PI) / 180;
     const aspect = camera.aspect || 1.6;
     const fovH = 2 * Math.atan(Math.tan(fovV / 2) * aspect);
-    const horizontalPad = 2.6;
-    const verticalPad = 3.0;
+    const horizontalPad = 2.0;
+    const verticalPad = 2.4;
     const distH = (sx * horizontalPad) / (2 * Math.tan(fovH / 2));
     const distV = (sy * verticalPad) / (2 * Math.tan(fovV / 2));
     const distZ = (sz * horizontalPad) / (2 * Math.tan(fovH / 2));
-    const distance = Math.max(6, Math.min(20, Math.max(distH, distV, distZ) + 1.8));
+    const distance = Math.max(4, Math.min(20, Math.max(distH, distV, distZ) + 1.0));
 
     const newPos = target.clone().addScaledVector(DEFAULT_DIRECTION, distance);
 
