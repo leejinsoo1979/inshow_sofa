@@ -364,10 +364,10 @@ h1 {
 
 .lighting-popover {
   position: absolute;
-  left: 24px;
+  left: 96px;
   top: 134px;
   z-index: 60;
-  width: min(420px, calc(100vw - 48px));
+  width: min(360px, calc(100vw - 540px));
   max-height: calc(100vh - 172px);
   display: grid;
   grid-template-rows: auto 1fr;
