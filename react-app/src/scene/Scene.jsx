@@ -30,16 +30,16 @@ function Floor() {
     <>
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[18, 14]} />
-        <shadowMaterial color={0x000000} opacity={0.22} transparent />
+        <shadowMaterial color={0x000000} opacity={0.05} transparent />
       </mesh>
-      {/* 컨택트 섀도우: 가구-바닥 만남 부분 자연스럽게 */}
+      {/* 컨택트 섀도우 — 부드럽게 뭉개진 단일 그림자 */}
       <ContactShadows
         position={[0, 0.001, 0]}
-        opacity={0.4}
-        scale={12}
-        blur={5.5}
-        far={1.8}
-        resolution={1024}
+        opacity={0.55}
+        scale={14}
+        blur={9}
+        far={2.5}
+        resolution={512}
         color="#1a160f"
       />
     </>
