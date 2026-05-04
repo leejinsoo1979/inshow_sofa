@@ -12,11 +12,16 @@ import CameraControls from "./CameraControls";
 import DimensionLabels from "./DimensionLabels";
 import { useConfigurator } from "../state/configurator";
 
+function CanvasBackground() {
+  const bg = useConfigurator((s) => s.backgroundColor);
+  return <color attach="background" args={[bg]} />;
+}
+
 function Floor() {
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
       <planeGeometry args={[18, 14]} />
-      <shadowMaterial color={0x1a160f} opacity={0.32} transparent />
+      <shadowMaterial color={0x000000} opacity={0.45} transparent />
     </mesh>
   );
 }
@@ -47,10 +52,10 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
         toneMapping: THREE.ACESFilmicToneMapping,
         toneMappingExposure: 0.92
       }}
-      style={{ background: "linear-gradient(180deg, #ffffff 0%, #f4f2ed 100%)" }}
     >
       <Suspense fallback={null}>
-        <Environment preset="city" environmentIntensity={0.5} />
+        <CanvasBackground />
+        <Environment preset="city" environmentIntensity={0.5} background={false} />
         <Lights />
         <Floor />
         <Selection>
