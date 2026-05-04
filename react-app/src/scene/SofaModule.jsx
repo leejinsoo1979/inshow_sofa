@@ -102,8 +102,9 @@ export default function SofaModule({ module: m }) {
       clone.position.x = -bcx;
       clone.position.z = -bcz;
     } else {
+      // fallback: spec.depth/2 기준 정렬 (모든 모듈 동일 z)
       clone.position.x = -(bounds.min.x + bounds.max.x) / 2;
-      clone.position.z = -(bounds.min.z + bounds.max.z) / 2;
+      clone.position.z = -(bounds.min.z + spec.depth / 2);
     }
     clone.position.y = -bounds.min.y;
   }, [clone, spec]);

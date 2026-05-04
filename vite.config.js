@@ -4,7 +4,7 @@ import path from "path";
 
 export default defineConfig({
   root: "react-app",
-  publicDir: path.resolve(__dirname),
+  publicDir: path.resolve(__dirname, "react-app/public"),
   plugins: [react()],
   server: { port: 4173 },
   base: "./"
