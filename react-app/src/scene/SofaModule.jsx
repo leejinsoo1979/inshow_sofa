@@ -30,8 +30,22 @@ export default function SofaModule({ module: m }) {
   const { scene } = useGLTF(url);
   const groupRef = useRef();
 
+  // GLB scene 첫 로드 시 원본 머티리얼 이름을 mesh userData에 영구 마크
+  // (useGLTF는 같은 scene 반환 + cloneSkinned는 자식 머티리얼 reference 공유 → 클론 후 첫 모듈에서
+  //  머티리얼 갈아엎으면 두 번째 모듈 clone에서 .name이 빈 문자열이 됨)
+  useMemo(() => {
+    scene.traverse((child) => {
+      if (child.isMesh && !child.userData._origMatMarked) {
+        child.userData._origMatNames = Array.isArray(child.material)
+          ? child.material.map(mt => mt?.name || "")
+          : (child.material?.name || "");
+        child.userData._origMatMarked = true;
+      }
+    });
+    return null;
+  }, [scene]);
+
   // 클론은 한 번만 (모듈 인스턴스별로 고유)
-  // 매번 deep clone — useGLTF가 모든 인스턴스에 같은 scene 반환하므로 인스턴스마다 독립 복사 필요
   const clone = useMemo(() => cloneSkinned(scene), [scene, m.id]);
 
   const upholsteryRepeatForMesh = (mesh) => {
@@ -103,13 +117,12 @@ export default function SofaModule({ module: m }) {
       child.userData.isModuleMesh = true;
       if (child.geometry?.attributes?.color) child.geometry.deleteAttribute("color");
 
-      // 원본 머티리얼 이름을 userData에 저장 (effect 재실행 시 lookup용)
-      if (!child.userData.origMatNames) {
-        child.userData.origMatNames = Array.isArray(child.material)
-          ? child.material.map(m => m?.name || "")
-          : (child.material?.name || "");
-      }
-      const origNames = child.userData.origMatNames;
+      // 원본 머티리얼 이름 (영구 마크 우선, 없으면 현재 mat name)
+      const origNames = child.userData._origMatNames !== undefined
+        ? child.userData._origMatNames
+        : (Array.isArray(child.material)
+            ? child.material.map(mt => mt?.name || "")
+            : (child.material?.name || ""));
 
       const matForRole = (role) => {
         if (role === "metal") return met.clone();
