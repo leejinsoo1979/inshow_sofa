@@ -13,6 +13,7 @@ import {
   cloneTextureWithRepeat
 } from "./materials";
 import { useConfigurator } from "../state/configurator";
+import { registerModuleClone } from "./sceneRefs";
 
 // 사전 prefetch (선택)
 Object.values(modelSources).forEach((src) => useGLTF.preload(src));
@@ -247,8 +248,10 @@ export default function SofaModule({ module: m }) {
     const g = groupRef.current;
     if (!g) return;
     g.add(clone);
+    const unregister = registerModuleClone(g);
     return () => {
       g.remove(clone);
+      unregister();
     };
   }, [clone]);
 

@@ -9,6 +9,7 @@ import { useKeyboardShortcuts } from "./ui/useKeyboardShortcuts";
 import LoadingScreen from "./ui/LoadingScreen";
 import HotspotPopover from "./ui/HotspotPopover";
 import StudioLightingPopover from "./ui/StudioLightingPopover";
+import ARButton from "./ui/ARButton";
 
 function useFootprintCm() {
   const modules = useConfigurator((s) => s.modules);
@@ -81,6 +82,7 @@ export default function App() {
           onRotate={(dir) => rotateRef.current?.(dir)}
         />
         <div className="scene-help">드래그 회전 · 휠 줌 · 소파 클릭 선택</div>
+        <ARButton />
         <a
           className="powered-by"
           href="https://www.uable.co.kr"
