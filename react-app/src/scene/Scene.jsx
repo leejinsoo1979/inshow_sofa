@@ -5,7 +5,6 @@ import {
   Outline,
   Selection,
   SSAO,
-  Bloom,
   ToneMapping,
   BrightnessContrast,
   HueSaturation,
