@@ -133,12 +133,12 @@ export function createBaseMaterial(baseColor, isLeather, quality = "medium") {
 }
 
 export function createMetalMaterial() {
-  return new THREE.MeshPhongMaterial({
-    color: 0xcfcfcf,
-    specular: 0xffffff,
-    shininess: 220,
-    emissive: 0x282828,
-    reflectivity: 0.75
+  // 스테인리스 스틸: metalness 1.0 + 낮은 roughness + envMap 반사
+  return new THREE.MeshPhysicalMaterial({
+    color: 0xb8bcc0,
+    metalness: 1.0,
+    roughness: 0.28,
+    envMapIntensity: 1.5
   });
 }
 
