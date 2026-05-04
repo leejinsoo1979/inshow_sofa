@@ -133,12 +133,13 @@ export default function SofaModule({ module: m }) {
       const ab = new THREE.Box3().setFromObject(c);
       const armCx_w = (ab.min.x + ab.max.x) / 2;
       const isRightArm = armCx_w > 0;
-      // world 좌표로 안쪽 = 우측팔이면 -X, 좌측팔이면 +X
+      // world 좌표로 안쪽 = 우측팔이면 -X(중심 방향), 좌측팔이면 +X
       const deltaWorld = isRightArm ? -0.02 : 0.02;
-      let absScaleX = 1;
+      // 부모 누적 X scale (mirror 부호 포함)
+      let scaleX = 1;
       let n = c.parent;
-      while (n) { absScaleX *= Math.abs(n.scale.x || 1); n = n.parent; }
-      c.position.x += deltaWorld / (absScaleX || 1);
+      while (n) { scaleX *= (n.scale.x || 1); n = n.parent; }
+      c.position.x += deltaWorld / (scaleX || 1); // 부호 그대로 (mirror면 자동 반전)
       c.userData._armShifted2cm = true;
     });
   }, [clone, spec]);
