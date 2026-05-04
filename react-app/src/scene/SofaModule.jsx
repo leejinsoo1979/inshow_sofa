@@ -61,12 +61,9 @@ export default function SofaModule({ module: m }) {
     clone.position.set(0, 0, 0);
     clone.updateMatrixWorld(true);
     const bounds = new THREE.Box3().setFromObject(clone);
-    // X: spec.width의 정확한 중앙으로 정렬 (모듈 간 이격/겹침 방지)
-    const xMid = (bounds.min.x + bounds.max.x) / 2;
-    clone.position.x = -xMid;
-    // Z: GLB 자체 center
-    const zMid = (bounds.min.z + bounds.max.z) / 2;
-    clone.position.z = -zMid;
+    // X/Z를 정확히 0 중심 (모듈 간 spec.width 만큼 정확히 인접하게)
+    clone.position.x = -(bounds.min.x + bounds.max.x) / 2;
+    clone.position.z = -(bounds.min.z + bounds.max.z) / 2;
     clone.position.y = -bounds.min.y;
   }, [clone, spec]);
 
