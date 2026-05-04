@@ -1852,7 +1852,7 @@ h3 {
 /* ================ Landscape mobile/tablet ================ */
 @media (max-height: 600px) and (orientation: landscape) {
   .app-shell {
-    grid-template-columns: 1fr 320px;
+    grid-template-columns: 1fr 360px;
     height: 100dvh;
   }
   .viewer { height: 100dvh; }
@@ -1910,32 +1910,39 @@ h3 {
     display: flex !important;
   }
 
-  /* 모듈 그리드 3열 정사각 */
+  /* 모듈 그리드 3열 컴팩트 */
   .module-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
+    gap: 6px;
   }
   .module-option {
     flex: initial;
-    padding: 8px 6px;
-    font-size: 11px;
+    padding: 6px 4px;
+    font-size: 10px;
+    gap: 2px;
   }
   .module-option img {
-    aspect-ratio: 1 / 1;
-    transform: scale(0.95);
+    aspect-ratio: 1 / 0.8;
+    transform: scale(0.85);
   }
+  /* group-title 컴팩트 */
+  .group-title h3 { font-size: 13px; }
+  .group-title span { font-size: 11px; }
+  .control-group { gap: 8px; }
+  .panel-section { gap: 14px !important; }
 
-  /* swatch 가로 한 줄 (비건 색상) */
+  /* swatch 가로 한 줄 (5개 정렬) */
   .swatches {
     display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
+    flex-wrap: nowrap;
+    gap: 10px;
+    overflow-x: auto;
   }
   .swatches .swatch {
     flex: 0 0 auto;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
     align-items: center;
     text-align: center;
   }
