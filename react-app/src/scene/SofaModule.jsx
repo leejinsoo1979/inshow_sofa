@@ -76,14 +76,18 @@ export default function SofaModule({ module: m }) {
     clone.updateMatrixWorld(true);
     const bounds = new THREE.Box3().setFromObject(clone);
 
-    // base mesh(가죽.02 / 가죽.006) 중심을 X/Z 0에 정렬 → 인접 시 base center 기준 일관
+    // base mesh(가죽.02 / 가죽.006) 중심을 X/Z 0에 정렬
+    // userData._origMatNames 우선 사용 (cloneSkinned 시 mat reference 공유로 인한 빈 이름 회피)
     const baseBounds = new THREE.Box3();
     baseBounds.makeEmpty();
     clone.traverse((c) => {
       if (!c.isMesh) return;
-      const matsArr = Array.isArray(c.material) ? c.material : [c.material];
-      const matchesBase = matsArr.some(mt => {
-        const n = (mt?.name || "").toLowerCase();
+      const orig = c.userData._origMatNames;
+      const namesArr = Array.isArray(orig)
+        ? orig
+        : (typeof orig === "string" ? [orig] : (Array.isArray(c.material) ? c.material.map(m => m?.name || "") : [c.material?.name || ""]));
+      const matchesBase = namesArr.some(nm => {
+        const n = (nm || "").toLowerCase();
         return n.startsWith("가죽.02") || n.startsWith("가죽.006") || n === "base";
       });
       if (matchesBase) {
