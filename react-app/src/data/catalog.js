@@ -57,31 +57,22 @@ export const modelSources = {
   trayLeft: "/models/tray_left.glb?v=1"
 };
 
+// 새 GLB 머티리얼 명명: 가죽.01 = 본체(upholstery), 가죽.02 = 하부(base), Metal.01 = 다리
+const COMMON_ROLES = {
+  upholstery: ["가죽.01", "fabric"],
+  base: ["가죽.02", "base"],
+  metal: ["metal.01", "__metal*", "metal"]
+};
+
 export const modelMaterialRoles = {
-  singleArmLeft1: {
-    upholstery: ["fabric", "가죽1"],
-    base: ["base", "가죽1_0", "가죽1_1"],
-    metal: ["metal", "__metal*"]
-  },
-  singleArmLeft2: {
-    upholstery: ["fabric", "가죽1"],
-    base: ["base", "가죽1_0", "가죽1_1"],
-    metal: ["metal", "__metal*"]
-  },
-  doubleArm1: {
-    upholstery: ["fabric", "가죽1"],
-    base: ["base", "가죽1_0", "가죽1_1"],
-    metal: ["metal", "__metal*"]
-  },
-  doubleArm2: {
-    upholstery: ["fabric", "가죽1"],
-    base: ["base", "가죽1_0", "가죽1_1"],
-    metal: ["metal", "__metal*"]
-  },
+  singleArmLeft1: COMMON_ROLES,
+  singleArmLeft2: COMMON_ROLES,
+  doubleArm1: COMMON_ROLES,
+  doubleArm2: COMMON_ROLES,
   trayLeft: {
-    upholstery: ["fabric", "가죽1"],
-    base: ["base", "가죽1_0", "가죽1_1"],
-    trayWood: ["trayWood", "material_89", "wood"],
-    metal: ["metal", "__metal*"]
+    upholstery: ["가죽.005", "가죽.01", "fabric"],
+    base: ["가죽.006", "가죽.02", "base"],
+    trayWood: ["walnut wood", "trayWood", "material_89", "wood"],
+    metal: ["metal.003", "metal.01", "__metal*", "metal"]
   }
 };

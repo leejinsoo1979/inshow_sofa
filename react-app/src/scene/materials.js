@@ -1,7 +1,8 @@
 import * as THREE from "three";
 
 export function normalizeMaterialName(name) {
-  return (name || "").toLowerCase().replace(/\.\d+$/, "");
+  // .001/.002 같은 Blender duplicate suffix만 제거 (.01 / .02 는 의미있는 이름이라 보존)
+  return (name || "").toLowerCase().replace(/\.\d{3,}$/, "");
 }
 
 function nameMatches(name, patterns = []) {
