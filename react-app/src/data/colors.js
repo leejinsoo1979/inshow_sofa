@@ -7,11 +7,12 @@ export const sofaColors = [
 
 export const baseFrameOptionsByGroup = {
   light: [
-    { label: "비건가죽 그레이", color: "#b7aa9e", image: "/materials/frame/vegan_leather_gray.png" },
-    { label: "비건가죽 헤이즐", color: "#716253", image: "/materials/frame/vegan_leather_hazel.png" },
-    { label: "비건가죽 올리브", color: "#595b45", image: "/materials/frame/vegan_leather_olive.png" },
-    { label: "비건가죽 그린", color: "#2c4128", image: "/materials/frame/vegan_leather_green.png" },
-    { label: "천연가죽 썬더", color: "#4d4843", image: "/materials/frame/vegan_leather_thunder.png" }
+    // color는 swatch 표시용(섬네일 색), 머티리얼은 image 텍스처를 흰색에 곱해서 그대로 표현
+    { label: "비건가죽 그레이", color: "#b7aa9e", swatchColor: "#b7aa9e", image: "/materials/frame/vegan_leather_gray.png" },
+    { label: "비건가죽 헤이즐", color: "#716253", swatchColor: "#716253", image: "/materials/frame/vegan_leather_hazel.png" },
+    { label: "비건가죽 올리브", color: "#595b45", swatchColor: "#595b45", image: "/materials/frame/vegan_leather_olive.png" },
+    { label: "비건가죽 그린", color: "#2c4128", swatchColor: "#2c4128", image: "/materials/frame/vegan_leather_green.png" },
+    { label: "천연가죽 썬더", color: "#4d4843", swatchColor: "#4d4843", image: "/materials/frame/vegan_leather_thunder.png" }
   ],
   fabricDark: [
     sofaColors[2]

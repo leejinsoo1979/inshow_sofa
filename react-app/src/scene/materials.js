@@ -58,8 +58,9 @@ export function cloneTextureWithRepeat(texture, repeat = [1, 1]) {
 }
 
 export function createUpholsteryMaterial(sofaColor, isLeather) {
-  const c = new THREE.Color(sofaColor.color);
   const map = loadTextureCached(sofaColor.image, isLeather ? [1.5, 1.5] : [0.24, 0.24]);
+  // 텍스처 있으면 흰색 곱하기 (텍스처 색 그대로)
+  const c = map ? new THREE.Color(0xffffff) : new THREE.Color(sofaColor.color);
   const material = new THREE.MeshPhysicalMaterial({
     color: c,
     map: map || null,
@@ -67,7 +68,7 @@ export function createUpholsteryMaterial(sofaColor, isLeather) {
     metalness: 0,
     sheen: isLeather ? 0.18 : 0.12,
     sheenRoughness: isLeather ? 0.85 : 0.95,
-    sheenColor: isLeather ? new THREE.Color(0x6b6764) : c.clone().multiplyScalar(1.02),
+    sheenColor: isLeather ? new THREE.Color(0x6b6764) : new THREE.Color(sofaColor.swatchColor || sofaColor.color),
     clearcoat: 0,
     clearcoatRoughness: 0.7,
     envMapIntensity: isLeather ? 0.45 : 0.85
@@ -77,8 +78,10 @@ export function createUpholsteryMaterial(sofaColor, isLeather) {
 
 export function createBaseMaterial(baseColor, isLeather) {
   const map = loadTextureCached(baseColor.image, [3, 3]);
+  // 텍스처가 있으면 color를 흰색으로 (텍스처 색이 곱해져서 어두워지는 거 방지)
+  const color = map ? new THREE.Color(0xffffff) : new THREE.Color(baseColor.color);
   return new THREE.MeshPhysicalMaterial({
-    color: new THREE.Color(baseColor.color),
+    color,
     map: map || null,
     roughness: isLeather ? 0.45 : 0.6,
     metalness: 0,
