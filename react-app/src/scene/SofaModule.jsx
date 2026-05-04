@@ -246,7 +246,17 @@ export default function SofaModule({ module: m }) {
     if (!g) return;
     g.add(clone);
     return () => {
-      g.remove(clone);
+      // 부모에서 분리
+      if (clone.parent) clone.parent.remove(clone);
+      // clone의 모든 mesh material/geometry는 다른 모듈과 공유 가능 → dispose 안 함
+      // 단 clone 자체 traverse해서 visible false로 강제
+      clone.traverse((c) => {
+        if (c.isMesh) {
+          c.visible = false;
+          c.castShadow = false;
+          c.receiveShadow = false;
+        }
+      });
     };
   }, [clone]);
 
