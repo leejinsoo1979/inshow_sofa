@@ -112,8 +112,8 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
             {/* Bloom: high만 */}
             {isHigh && (
               <Bloom
-                intensity={0.18}
-                luminanceThreshold={0.85}
+                intensity={0.08}
+                luminanceThreshold={0.95}
                 luminanceSmoothing={0.2}
                 mipmapBlur
               />
