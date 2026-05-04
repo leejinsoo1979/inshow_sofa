@@ -2,14 +2,14 @@ import * as THREE from "three";
 
 export const STUDIO_LIGHT_PRESETS = {
   softbox: {
-    exposure: 1.05,
-    environmentIntensity: 0.95,
-    keyLight: 2.0,
-    fillLight: 0.95,
-    rimLight: 0.45,
-    topSoftbox: 2.8,
-    spotLight: 0.55,
-    pointLight: 0.18
+    exposure: 0.50,
+    environmentIntensity: 0.00,
+    keyLight: 0.00,
+    fillLight: 1.21,
+    rimLight: 0.00,
+    topSoftbox: 0.50,
+    spotLight: 1.97,
+    pointLight: 1.55
   },
   jewelry: {
     exposure: 1.18,
