@@ -1862,7 +1862,7 @@ h3 {
   .sun-control input[type="range"] { width: 130px; }
   .metrics { display: inline-flex; }
 
-  /* 우상단 dim/light 분리 해제 — 좌측 툴바에 통합 */
+  /* 좌측 툴바: 조명 + 줄자만 노출, 나머지 숨김 */
   .tool-rail {
     top: 50%;
     transform: translateY(-50%);
@@ -1871,7 +1871,9 @@ h3 {
   }
   .tool-rail .icon-btn--reset,
   .tool-rail .icon-btn--zoom,
-  .tool-rail .icon-btn--rotate,
+  .tool-rail .icon-btn--rotate {
+    display: none !important;
+  }
   .tool-rail .icon-btn--dim,
   .tool-rail .icon-btn--light {
     position: static;
@@ -1933,13 +1935,15 @@ h3 {
   .control-group { gap: 8px; }
   .panel-section { gap: 14px !important; }
 
-  /* swatch 가로 정렬 (이미지 + 라벨) */
-  .swatches {
+  /* swatch — 모든 종류(소파/프레임/쿠션) 동일 사이즈 */
+  .swatches,
+  .swatches.accent-grid {
     display: grid !important;
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 6px 4px !important;
   }
-  .swatches .swatch {
+  .swatches .swatch,
+  .swatches.accent-grid .swatch {
     flex-direction: column;
     gap: 2px;
     padding: 0;
@@ -1947,8 +1951,14 @@ h3 {
     text-align: center;
     min-width: 0;
   }
-  .swatches .swatch::before { width: 28px; height: 28px; flex: 0 0 auto; }
-  .swatches .swatch span {
+  .swatches .swatch::before,
+  .swatches.accent-grid .swatch::before {
+    width: 28px;
+    height: 28px;
+    flex: 0 0 auto;
+  }
+  .swatches .swatch span,
+  .swatches.accent-grid .swatch span {
     display: block;
     font-size: 9px;
     line-height: 1.1;
