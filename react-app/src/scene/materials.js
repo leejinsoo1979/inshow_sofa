@@ -136,18 +136,18 @@ export function createTrayWoodMaterial(trayWood) {
     return new THREE.MeshPhysicalMaterial({
       color: new THREE.Color(0x968874),
       map: getWalnutTexture(),
-      roughness: 0.5,
+      roughness: 0.85,
       metalness: 0,
-      clearcoat: 0.35,
-      clearcoatRoughness: 0.45
+      clearcoat: 0.05,
+      clearcoatRoughness: 0.85
     });
   }
   return new THREE.MeshPhysicalMaterial({
     color: new THREE.Color(trayWood?.color || "#000000"),
-    roughness: 0.55,
+    roughness: 0.85,
     metalness: 0,
-    clearcoat: 0.35,
-    clearcoatRoughness: 0.45,
-    sheen: 0.1
+    clearcoat: 0.05,
+    clearcoatRoughness: 0.85,
+    sheen: 0.05
   });
 }
