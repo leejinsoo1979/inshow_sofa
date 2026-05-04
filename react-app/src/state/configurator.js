@@ -30,6 +30,7 @@ export const useConfigurator = create((set, get) => ({
   lightingPreset: "softbox",
   studioLighting: createStudioLightingState("softbox"),
   backgroundColor: "#f4f2ed",
+  renderQuality: "high", /* high | medium */
   hdri: { name: null, url: null, kind: null },
   sun: { playing: false, time: 12, month: 6, latitude: 37.5 },
   selectedId: null,
@@ -44,6 +45,7 @@ export const useConfigurator = create((set, get) => ({
   setLightingPreset: (presetId) => set({ lightingPreset: presetId, studioLighting: createStudioLightingState(presetId) }),
   setStudioLightingValue: (key, value) => set((s) => ({ studioLighting: { ...s.studioLighting, [key]: value } })),
   setBackgroundColor: (backgroundColor) => set({ backgroundColor }),
+  setRenderQuality: (q) => set({ renderQuality: q === "medium" ? "medium" : "high" }),
   setHdri: (hdri) => set({ hdri }),
   clearHdri: () => set({ hdri: { name: null, url: null, kind: null } }),
 

@@ -1216,6 +1216,31 @@ h3 {
   gap: 6px;
 }
 
+.quality-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.quality-btn {
+  padding: 10px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: #555;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.quality-btn:hover {
+  border-color: #999;
+}
+.quality-btn.is-active {
+  border-color: #1a1a1a;
+  background: #1a1a1a;
+  color: #fff;
+}
+
 .range-field {
   display: grid;
   grid-template-columns: 100px 1fr 50px;

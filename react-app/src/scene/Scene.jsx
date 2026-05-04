@@ -65,6 +65,8 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
     () => typeof window !== "undefined" && window.matchMedia("(max-width: 900px)").matches,
     []
   );
+  const quality = useConfigurator((s) => s.renderQuality);
+  const isHigh = quality === "high" && !isMobile;
   return (
     <Canvas
       shadows={{ type: THREE.PCFSoftShadowMap }}
@@ -81,18 +83,18 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
     >
       <Suspense fallback={null}>
         <CanvasBackground />
-        {/* HDRI: drei built-in studio (모바일은 city 가벼운 버전) */}
+        {/* HDRI: high 모드에서만 studio, 그 외 city */}
         <Environment
-          preset={isMobile ? "city" : "studio"}
-          environmentIntensity={0.6}
+          preset={isHigh ? "studio" : "city"}
+          environmentIntensity={isHigh ? 0.6 : 0.5}
           background={false}
         />
         <Lights />
         <Floor />
         <Selection>
-          <EffectComposer multisampling={4} autoClear={false}>
-            {/* SSAO: 가구 사이/쿠션 아래 그늘 (데스크탑만) */}
-            {!isMobile && (
+          <EffectComposer multisampling={isHigh ? 4 : 8} autoClear={false}>
+            {/* SSAO: high 모드에서만 */}
+            {isHigh && (
               <SSAO
                 blendFunction={BlendFunction.MULTIPLY}
                 samples={20}
@@ -105,17 +107,19 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
                 worldProximityFalloff={1}
               />
             )}
-            {/* 약한 bloom: 가죽 specular 살림 */}
-            <Bloom
-              intensity={0.18}
-              luminanceThreshold={0.85}
-              luminanceSmoothing={0.2}
-              mipmapBlur
-            />
-            {/* 색감 보정 */}
-            <BrightnessContrast brightness={0.0} contrast={0.06} />
-            <HueSaturation saturation={0.06} />
-            {/* 톤매핑 (ACES Filmic) */}
+            {/* Bloom: high만 */}
+            {isHigh && (
+              <Bloom
+                intensity={0.18}
+                luminanceThreshold={0.85}
+                luminanceSmoothing={0.2}
+                mipmapBlur
+              />
+            )}
+            {/* 색감 보정: high만 */}
+            {isHigh && <BrightnessContrast brightness={0.0} contrast={0.06} />}
+            {isHigh && <HueSaturation saturation={0.06} />}
+            {/* 톤매핑 (항상 ACES) */}
             <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
             <Outline
               blur
