@@ -1857,10 +1857,20 @@ h3 {
   }
   .viewer { height: 100dvh; }
 
-  /* sun-control 보이게 (가로는 공간 있음) */
-  .sun-control { display: inline-flex; padding: 6px 12px; }
-  .sun-control input[type="range"] { width: 130px; }
-  .metrics { display: inline-flex; }
+  /* 가로모드 모바일: sun-control + metrics 숨김 */
+  .sun-control,
+  .metrics {
+    display: none !important;
+  }
+  /* 핫스팟 크기 축소 */
+  .side-hotspot {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  .side-hotspot svg {
+    width: 22px !important;
+    height: 22px !important;
+  }
 
   /* 좌측 툴바: 조명 + 줄자만 노출, 나머지 숨김 */
   .tool-rail {
