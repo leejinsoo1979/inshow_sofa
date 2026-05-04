@@ -16,7 +16,7 @@ function Floor() {
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
       <planeGeometry args={[18, 14]} />
-      <shadowMaterial color={0x1a160f} opacity={0.4} />
+      <shadowMaterial color={0x1a160f} opacity={0.18} transparent />
     </mesh>
   );
 }

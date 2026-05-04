@@ -109,11 +109,11 @@ export default function Lights() {
         castShadow
         intensity={2}
         color={0xffffff}
-        shadow-mapSize={[512, 512]}
-        shadow-bias={-0.00035}
-        shadow-normalBias={0.045}
-        shadow-radius={120}
-        shadow-blurSamples={40}
+        shadow-mapSize={[256, 256]}
+        shadow-bias={-0.0006}
+        shadow-normalBias={0.08}
+        shadow-radius={240}
+        shadow-blurSamples={64}
       >
         <orthographicCamera attach="shadow-camera" args={[-10, 10, 10, -10, 1, 24]} />
       </directionalLight>
@@ -125,10 +125,13 @@ export default function Lights() {
         castShadow
         intensity={0.8}
         angle={THREE.MathUtils.degToRad(26)}
-        penumbra={0.45}
+        penumbra={0.85}
         decay={2}
         distance={24}
-        shadow-mapSize={[1024, 1024]}
+        shadow-mapSize={[256, 256]}
+        shadow-bias={-0.0006}
+        shadow-radius={240}
+        shadow-blurSamples={64}
       />
       <pointLight ref={pointRef} intensity={0.35} distance={10} decay={2} />
     </>
