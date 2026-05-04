@@ -38,17 +38,17 @@ export const moduleCatalog = {
     price: { fabric: 1410000, leather: 2727000 },
     thumbnail: "/assets/thumbnails/singlearm_R_2.png"
   },
-  // 트레이(좌) = GLB 그대로
+  // 트레이(좌) = 트레이가 좌측 → 본체는 우측 → 우측만 모듈 추가 가능
   trayLeftOne: {
     label: "트레이(좌)", width: 1.134, baseWidth: 1.133, depth: 0.9, height: 0.68, seats: 1,
-    model: "trayLeft", arms: [], openSides: ["left"],
+    model: "trayLeft", arms: [], openSides: ["right"],
     price: { fabric: 818000, leather: 1636000 },
     thumbnail: "/assets/thumbnails/trey_L.png"
   },
-  // 트레이(우) = mirror
+  // 트레이(우) = 트레이가 우측 → 본체는 좌측 → 좌측만 모듈 추가 가능
   trayRightOne: {
     label: "트레이(우)", width: 1.134, baseWidth: 1.133, depth: 0.9, height: 0.68, seats: 1,
-    model: "trayLeft", mirror: true, arms: [], openSides: ["right"],
+    model: "trayLeft", mirror: true, arms: [], openSides: ["left"],
     price: { fabric: 818000, leather: 1636000 },
     thumbnail: "/assets/thumbnails/trey_R.png"
   }
