@@ -27,9 +27,13 @@ export default function ARButton() {
         headers: { "Content-Type": "model/gltf-binary" },
         body: glbBuffer
       });
-      if (!res.ok) throw new Error(`업로드 실패 (${res.status})`);
+      if (!res.ok) {
+        const errText = await res.text().catch(() => "");
+        throw new Error(`업로드 실패 (${res.status}) ${errText}`);
+      }
       const { id } = await res.json();
-      const url = `${window.location.origin}/ar/${id}`;
+      // AR 뷰어 페이지 (model-viewer) URL — GLB blob URL을 ?src 쿼리로 전달
+      const url = `${window.location.origin}/ar.html?id=${id}`;
       setArUrl(url);
       const dataUrl = await QRCode.toDataURL(url, { width: 280, margin: 1 });
       setQrDataUrl(dataUrl);

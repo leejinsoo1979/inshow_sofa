@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>INSHOW SOFA — AR</title>
+<script type="module" src="https://unpkg.com/@google/model-viewer@4.0.0/dist/model-viewer.min.js"></script>
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: #f4f2ed;
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+  }
+  .wrap {
+    display: flex; flex-direction: column;
+    height: 100dvh;
+  }
+  header {
+    padding: 14px 18px calc(8px + env(safe-area-inset-top));
+    padding-top: calc(14px + env(safe-area-inset-top));
+    text-align: center;
+    color: #1a1a1a;
+    font-weight: 700;
+  }
+  header small { display: block; color: #777; font-size: 12px; font-weight: 500; margin-top: 4px; }
+  model-viewer {
+    flex: 1 1 auto;
+    width: 100%;
+    background: #f4f2ed;
+    --poster-color: #f4f2ed;
+  }
+  .ar-btn {
+    position: absolute;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 14px 28px;
+    border-radius: 999px;
+    background: #1a1a1a;
+    color: #fff;
+    border: 0;
+    font-size: 15px;
+    font-weight: 700;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+    cursor: pointer;
+    z-index: 5;
+  }
+  .err {
+    padding: 24px; text-align: center; color: #c00;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    INSHOW SOFA #1
+    <small>AR로 보기 — 휴대폰 화면에서 [AR] 버튼을 눌러주세요</small>
+  </header>
+  <div id="container" style="flex:1; display:flex;"></div>
+</div>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+  const container = document.getElementById("container");
+  if (!id) {
+    container.innerHTML = '<div class="err">잘못된 링크입니다. id가 없습니다.</div>';
+  } else {
+    // /api/ar/{id} → 302 redirect to actual blob URL
+    const glbUrl = `/api/ar/${id}`;
+    const mv = document.createElement("model-viewer");
+    mv.setAttribute("src", glbUrl);
+    mv.setAttribute("alt", "INSHOW SOFA");
+    mv.setAttribute("ar", "");
+    mv.setAttribute("ar-modes", "scene-viewer webxr quick-look");
+    mv.setAttribute("ar-scale", "fixed"); // 실측 스케일 강제
+    mv.setAttribute("ar-placement", "floor");
+    mv.setAttribute("camera-controls", "");
+    mv.setAttribute("touch-action", "pan-y");
+    mv.setAttribute("interaction-prompt", "auto");
+    mv.setAttribute("shadow-intensity", "1");
+    mv.setAttribute("exposure", "1");
+    mv.setAttribute("environment-image", "neutral");
+    mv.style.width = "100%";
+    mv.style.height = "100%";
+    container.appendChild(mv);
+  }
+</script>
+</body>
+</html>
