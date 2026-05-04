@@ -3,7 +3,7 @@ import { moduleCatalog } from "../data/catalog";
 import { sofaColors, baseFrameOptionsByGroup, trayWoodColors } from "../data/colors";
 import { STUDIO_LIGHT_PRESETS } from "../scene/lighting";
 
-const initialModule = { id: "module-1", type: "armlessLeft", x: 0, z: 0, rotation: 0 };
+const initialModule = { id: "module-1", type: "armlessRight", x: 0, z: 0, rotation: 0 };
 
 const createStudioLightingState = (presetId = "softbox") => {
   const preset = STUDIO_LIGHT_PRESETS[presetId] || STUDIO_LIGHT_PRESETS.softbox;
@@ -21,9 +21,9 @@ const createStudioLightingState = (presetId = "softbox") => {
 };
 
 export const useConfigurator = create((set, get) => ({
-  layout: "armlessLeft",
+  layout: "armlessRight",
   material: "fabric",
-  sofaColor: sofaColors[0],
+  sofaColor: sofaColors[1],
   baseColor: baseFrameOptionsByGroup.light[0],
   trayWood: trayWoodColors[0],
   accentCushion: null,
@@ -78,7 +78,7 @@ export const useConfigurator = create((set, get) => ({
   toggleDimensions: () => set((s) => ({ showDimensions: !s.showDimensions })),
 
   setLayout: (layout) => {
-    const initialType = moduleCatalog[layout] ? layout : "armlessLeft";
+    const initialType = moduleCatalog[layout] ? layout : "armlessRight";
     const m = { id: "module-1", type: initialType, x: 0, z: 0, rotation: 0 };
     set({ layout, modules: [m], selectedId: m.id });
   },
