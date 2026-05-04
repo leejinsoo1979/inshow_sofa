@@ -2,17 +2,15 @@ import { create } from "zustand";
 import { moduleCatalog } from "../data/catalog";
 import { sofaColors, baseFrameOptionsByGroup, trayWoodColors } from "../data/colors";
 
-const initialModule = { id: "module-1", type: "armlessLeft", x: 0, z: 0, rotation: 0 };
-
 export const useConfigurator = create((set, get) => ({
-  layout: "armlessLeft",
+  layout: null,
   material: "fabric",
   sofaColor: sofaColors[0],
   baseColor: baseFrameOptionsByGroup.light[0],
   trayWood: trayWoodColors[0],
   accentCushion: null,
   selectedId: null,
-  modules: [initialModule],
+  modules: [],
   options: { trayWood: {}, cushion: {} },
   showDimensions: true,
   sunAngle: 135,

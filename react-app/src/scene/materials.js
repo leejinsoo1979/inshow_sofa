@@ -74,6 +74,7 @@ function getWalnutTexture() {
   _walnutTex.wrapS = THREE.RepeatWrapping;
   _walnutTex.wrapT = THREE.RepeatWrapping;
   _walnutTex.repeat.set(1.5, 1.5);
+  _walnutTex._intentional = true;
   return _walnutTex;
 }
 

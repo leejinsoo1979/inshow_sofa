@@ -116,10 +116,12 @@ export default function SofaModule({ module: m }) {
       };
       if (Array.isArray(newMat)) newMat.forEach(stripMap);
       else stripMap(newMat);
-      // vertexColors만 off (의도된 텍스처는 보존)
+      // vertexColors off, GLB 잔여 텍스처 제거 (단 walnut은 mat.map 유지)
       const enforceUniform = (mat) => {
         if (!mat) return;
         if ("vertexColors" in mat) mat.vertexColors = false;
+        // map이 우리가 만든 walnut/leather 텍스처가 아니라면 제거 (GLB baked texture)
+        if (mat.map && !mat.map._intentional) mat.map = null;
         mat.needsUpdate = true;
       };
       if (Array.isArray(newMat)) newMat.forEach(enforceUniform);
