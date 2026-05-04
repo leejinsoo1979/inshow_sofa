@@ -50,11 +50,11 @@ export const moduleCatalog = {
 };
 
 export const modelSources = {
-  singleArmLeft1: "/models/single_arm_left_1.glb?v=1",
-  singleArmLeft2: "/models/single_arm_left_2.glb?v=1",
-  doubleArm1: "/models/double_arm_1.glb?v=1",
-  doubleArm2: "/models/double_arm_2.glb?v=1",
-  trayLeft: "/models/tray_left.glb?v=1"
+  singleArmLeft1: "/models/single_arm_left_1.glb?v=2",
+  singleArmLeft2: "/models/single_arm_left_2.glb?v=2",
+  doubleArm1: "/models/double_arm_1.glb?v=2",
+  doubleArm2: "/models/double_arm_2.glb?v=2",
+  trayLeft: "/models/tray_left.glb?v=2"
 };
 
 // 새 GLB 머티리얼 명명: 가죽.01 = 본체(upholstery), 가죽.02 = 하부(base), Metal.01 = 다리
