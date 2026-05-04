@@ -1464,19 +1464,21 @@ h3 {
   }
 
   .module-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px 10px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
   }
 
   .module-option {
-    grid-template-rows: minmax(68px, 1fr) auto;
-    min-height: 100px;
-    padding: 7px;
-    font-size: 11px;
+    grid-template-rows: minmax(48px, 1fr) auto;
+    min-height: 72px;
+    padding: 5px 4px;
+    font-size: 10px;
+    gap: 2px;
   }
 
   .module-option img {
-    height: 70px;
+    height: 50px;
+    transform: scale(0.85);
   }
 
   .swatches {
@@ -1570,5 +1572,22 @@ h3 {
 
   .swatches {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .module-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .module-option {
+    grid-template-rows: minmax(40px, 1fr) auto;
+    min-height: 62px;
+    padding: 4px 3px;
+    font-size: 9px;
+  }
+
+  .module-option img {
+    height: 42px;
+    transform: scale(0.88);
   }
 }
