@@ -106,10 +106,10 @@ export function createBaseMaterial(baseColor, isLeather) {
 
 export function createMetalMaterial() {
   return new THREE.MeshPhongMaterial({
-    color: 0xd9d9d9,
-    specular: 0xffffff,
+    color: 0xc4c4c4,
+    specular: 0xf0f0f0,
     shininess: 140,
-    emissive: 0x303030,
+    emissive: 0x282828,
     reflectivity: 0.55
   });
 }
