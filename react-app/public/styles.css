@@ -1397,19 +1397,43 @@ h3 {
     flex-wrap: wrap;
   }
 
+  /* 세로모드: home/zoom/rotate 숨기고 조명/줄자만 우측 상단 */
   .tool-rail {
-    top: calc(140px + env(safe-area-inset-top));
+    top: auto;
     bottom: auto;
-    left: 12px;
-    gap: 10px;
+    left: auto;
   }
   .tool-rail .icon-btn--reset,
   .tool-rail .icon-btn--zoom,
-  .tool-rail .icon-btn--rotate,
-  .tool-rail .icon-btn--dim,
-  .tool-rail .icon-btn--light {
-    position: static;
+  .tool-rail .icon-btn--rotate {
+    display: none !important;
+  }
+  .tool-rail .icon-btn--dim {
+    position: fixed;
+    top: calc(16px + env(safe-area-inset-top));
+    right: 16px;
+    bottom: auto;
+    left: auto;
+    z-index: 15;
     display: inline-flex;
+  }
+  .tool-rail .icon-btn--light {
+    position: fixed;
+    top: calc(72px + env(safe-area-inset-top));
+    right: 16px;
+    bottom: auto;
+    left: auto;
+    z-index: 15;
+    display: inline-flex;
+  }
+  /* 핫스팟 축소 */
+  .side-hotspot {
+    width: 38px !important;
+    height: 38px !important;
+  }
+  .side-hotspot svg {
+    width: 24px !important;
+    height: 24px !important;
   }
 
   .icon-btn {
