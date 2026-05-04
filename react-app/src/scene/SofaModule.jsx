@@ -135,14 +135,9 @@ export default function SofaModule({ module: m }) {
     const tw = createTrayWoodMaterial(trayWood);
     const roles = modelMaterialRoles[spec.model];
 
-    const isSelected = selectedId === m.id;
-    const glowColor = new THREE.Color(0x3b82f6);
-    const applyGlow = (mat) => {
-      if ("emissive" in mat) {
-        mat.emissive = glowColor.clone();
-        mat.emissiveIntensity = 0.18;
-      }
-    };
+    // selectedId는 별도 useEffect에서 처리 — deps에서 제외됨
+    const applyGlow = () => {};
+    void applyGlow;
 
     // 기존 outline 제거
     const oldOutlines = [];
@@ -219,14 +214,31 @@ export default function SofaModule({ module: m }) {
       };
       if (Array.isArray(newMat)) newMat.forEach(enforceUniform);
       else enforceUniform(newMat);
-      if (isSelected) {
-        if (Array.isArray(newMat)) newMat.forEach(applyGlow);
-        else applyGlow(newMat);
-      }
       child.material = newMat;
     });
+  }, [clone, sofaColor, baseColor, trayWood, material, spec, m.id]);
 
-  }, [clone, sofaColor, baseColor, trayWood, material, spec, selectedId, m.id]);
+  // selection glow는 별도 effect: 머티리얼 안 갈고 emissive만 토글
+  useEffect(() => {
+    const isSelected = selectedId === m.id;
+    const glowColor = new THREE.Color(0x3b82f6);
+    clone.traverse((child) => {
+      if (!child.isMesh || child.userData.isOutline) return;
+      const apply = (mat) => {
+        if (!mat || !("emissive" in mat)) return;
+        if (isSelected) {
+          mat.emissive = glowColor.clone();
+          mat.emissiveIntensity = 0.18;
+        } else {
+          mat.emissive = new THREE.Color(0x000000);
+          mat.emissiveIntensity = 0;
+        }
+        mat.needsUpdate = true;
+      };
+      if (Array.isArray(child.material)) child.material.forEach(apply);
+      else apply(child.material);
+    });
+  }, [selectedId, m.id, clone]);
 
   // group에 clone 직접 add (vanilla 방식, r3f reconciler 우회)
   useEffect(() => {
