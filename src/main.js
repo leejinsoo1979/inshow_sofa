@@ -117,18 +117,10 @@ const baseFrameOptionsByGroup = {
     { label: "천연가죽 썬더", color: "#4d4843", textureFolder: "./materials/frame/default" }
   ],
   fabricDark: [
-    { label: "비건가죽 그레이", color: "#b7aa9e", textureFolder: "./materials/frame/default" },
-    { label: "비건가죽 헤이즐", color: "#716253", textureFolder: "./materials/frame/default" },
-    { label: "비건가죽 올리브", color: "#595b45", textureFolder: "./materials/frame/default" },
-    { label: "비건가죽 그린", color: "#2c4128", textureFolder: "./materials/frame/default" },
-    { label: "천연가죽 썬더", color: "#4d4843", textureFolder: "./materials/frame/default" }
+    sofaColors[2]
   ],
   leatherBlack: [
-    { label: "비건가죽 그레이", color: "#b7aa9e", textureFolder: "./materials/frame/default" },
-    { label: "비건가죽 헤이즐", color: "#716253", textureFolder: "./materials/frame/default" },
-    { label: "비건가죽 올리브", color: "#595b45", textureFolder: "./materials/frame/default" },
-    { label: "비건가죽 그린", color: "#2c4128", textureFolder: "./materials/frame/default" },
-    { label: "천연가죽 썬더", color: "#4d4843", textureFolder: "./materials/frame/default" }
+    sofaColors[3]
   ]
 };
 
@@ -1729,6 +1721,9 @@ function renderBaseSwatches() {
   els.baseSwatches.innerHTML = "";
   const group = state.sofaColor.group || "light";
   const options = baseFrameOptionsByGroup[group] || baseFrameOptionsByGroup.light;
+  if (group === "fabricDark" || group === "leatherBlack") {
+    state.baseColor = state.sofaColor;
+  }
   if (!options.some((opt) => opt.color === state.baseColor.color)) {
     state.baseColor = options[0];
   }

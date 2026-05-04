@@ -82,16 +82,18 @@ export default function Hotspots() {
         </Html>
       )}
       {openSide && (
-        <Html
-          calculatePosition={() => [0, 0, 0]}
-          style={{ position: "fixed", left: 0, right: "420px", bottom: 0, top: "auto", width: "calc(100vw - 420px)", zIndex: 50, pointerEvents: "none" }}
-        >
+        <Html fullscreen zIndexRange={[100, 0]}>
           <div
             className="hotspot-popover is-open"
             style={{
               pointerEvents: "auto",
-              position: "static",
-              transform: "none"
+              position: "fixed",
+              left: 0,
+              right: "420px",
+              bottom: 0,
+              top: "auto",
+              transform: "none",
+              zIndex: 100
             }}
           >
             <div className="popover-head">
