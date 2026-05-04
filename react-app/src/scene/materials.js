@@ -76,18 +76,18 @@ export function createUpholsteryMaterial(sofaColor, isLeather) {
   const material = new THREE.MeshPhysicalMaterial({
     color: c,
     map: map || null,
-    roughness: isOilyLeather ? 0.42 : (isLeather ? 0.78 : 0.88),
+    roughness: isOilyLeather ? 0.68 : (isLeather ? 0.78 : 0.88),
     metalness: 0,
-    sheen: isOilyLeather ? 0.55 : (isLeather ? 0.18 : 0.12),
-    sheenRoughness: isOilyLeather ? 0.35 : (isLeather ? 0.85 : 0.95),
+    sheen: isOilyLeather ? 0.25 : (isLeather ? 0.18 : 0.12),
+    sheenRoughness: isOilyLeather ? 0.7 : (isLeather ? 0.85 : 0.95),
     sheenColor: isOilyLeather
-      ? new THREE.Color(0x55504d)
+      ? new THREE.Color(0x3a3835)
       : isLeather
         ? new THREE.Color(0x6b6764)
         : new THREE.Color(sofaColor.swatchColor || sofaColor.color),
-    clearcoat: isOilyLeather ? 0.35 : 0,
-    clearcoatRoughness: isOilyLeather ? 0.32 : 0.7,
-    envMapIntensity: isOilyLeather ? 0.85 : (isLeather ? 0.45 : 0.85)
+    clearcoat: isOilyLeather ? 0.08 : 0,
+    clearcoatRoughness: isOilyLeather ? 0.7 : 0.7,
+    envMapIntensity: isOilyLeather ? 0.45 : (isLeather ? 0.45 : 0.85)
   });
   return material;
 }
