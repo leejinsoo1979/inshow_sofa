@@ -31,10 +31,10 @@ function Floor() {
       {/* 단일 ContactShadows — 자연스러운 부드러운 그림자 */}
       <ContactShadows
         position={[0, 0.001, 0]}
-        opacity={0.5}
-        scale={16}
-        blur={20}
-        far={2.5}
+        opacity={0.45}
+        scale={6}
+        blur={3}
+        far={1.2}
         resolution={2048}
         color="#1a160f"
         frames={Infinity}
