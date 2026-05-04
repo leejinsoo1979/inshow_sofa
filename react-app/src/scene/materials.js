@@ -59,19 +59,27 @@ export function cloneTextureWithRepeat(texture, repeat = [1, 1]) {
 
 export function createUpholsteryMaterial(sofaColor, isLeather) {
   const map = loadTextureCached(sofaColor.image, isLeather ? [1.5, 1.5] : [0.24, 0.24]);
-  // 텍스처 있으면 흰색 곱하기 (텍스처 색 그대로)
-  const c = map ? new THREE.Color(0xffffff) : new THREE.Color(sofaColor.color);
+  // 천연가죽 블랙 = 더 어둡고 오일리한 광택
+  const isOilyLeather = isLeather && (sofaColor.id === "leatherBlack" || /black/i.test(sofaColor.id || ""));
+  // 텍스처 있으면 어두운 톤 (검정 가죽은 짙게)
+  const c = map
+    ? (isOilyLeather ? new THREE.Color(0x3a3633) : new THREE.Color(0xffffff))
+    : new THREE.Color(sofaColor.color);
   const material = new THREE.MeshPhysicalMaterial({
     color: c,
     map: map || null,
-    roughness: isLeather ? 0.78 : 0.88,
+    roughness: isOilyLeather ? 0.42 : (isLeather ? 0.78 : 0.88),
     metalness: 0,
-    sheen: isLeather ? 0.18 : 0.12,
-    sheenRoughness: isLeather ? 0.85 : 0.95,
-    sheenColor: isLeather ? new THREE.Color(0x6b6764) : new THREE.Color(sofaColor.swatchColor || sofaColor.color),
-    clearcoat: 0,
-    clearcoatRoughness: 0.7,
-    envMapIntensity: isLeather ? 0.45 : 0.85
+    sheen: isOilyLeather ? 0.55 : (isLeather ? 0.18 : 0.12),
+    sheenRoughness: isOilyLeather ? 0.35 : (isLeather ? 0.85 : 0.95),
+    sheenColor: isOilyLeather
+      ? new THREE.Color(0x55504d)
+      : isLeather
+        ? new THREE.Color(0x6b6764)
+        : new THREE.Color(sofaColor.swatchColor || sofaColor.color),
+    clearcoat: isOilyLeather ? 0.35 : 0,
+    clearcoatRoughness: isOilyLeather ? 0.32 : 0.7,
+    envMapIntensity: isOilyLeather ? 0.85 : (isLeather ? 0.45 : 0.85)
   });
   return material;
 }
