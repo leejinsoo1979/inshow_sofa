@@ -94,9 +94,25 @@ export function createUpholsteryMaterial(sofaColor, isLeather) {
 
 export function createBaseMaterial(baseColor, isLeather) {
   const isBlackLeather = /black|블랙/i.test(baseColor.label || "") && /leather_black|natural/i.test(baseColor.image || "");
-  const repeat = isBlackLeather ? [0.24, 0.24] : [3, 3];
-  const map = loadTextureCached(baseColor.image, repeat);
-  // 텍스처가 있으면 color를 흰색으로 (텍스처 색이 곱해져서 어두워지는 거 방지)
+  // 천연가죽 블랙 base = 소파의 oily leather와 동일 파라미터 (재질 일치)
+  if (isBlackLeather) {
+    const repeat = [0.12, 0.12];
+    const map = loadTextureCached(baseColor.image, repeat);
+    return new THREE.MeshPhysicalMaterial({
+      color: map ? new THREE.Color(0x3a3633) : new THREE.Color(baseColor.color),
+      map: map || null,
+      roughness: 0.7,
+      metalness: 0,
+      sheen: 0.25,
+      sheenRoughness: 0.7,
+      sheenColor: new THREE.Color(0x3a3835),
+      clearcoat: 0.08,
+      clearcoatRoughness: 0.7,
+      envMapIntensity: 0.4
+    });
+  }
+  // 일반 base
+  const map = loadTextureCached(baseColor.image, [3, 3]);
   const color = map ? new THREE.Color(0xffffff) : new THREE.Color(baseColor.color);
   return new THREE.MeshPhysicalMaterial({
     color,
