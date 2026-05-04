@@ -114,7 +114,7 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
             {isHigh && <BrightnessContrast brightness={0.0} contrast={0.06} />}
             {isHigh && <HueSaturation saturation={0.06} />}
             {/* 톤매핑: high만 post에서 (medium은 Canvas 자체 톤매핑 사용) */}
-            {isHigh && <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />}
+            {isHigh && <ToneMapping mode={ToneMappingMode.ACES_FILMIC} averageLuminance={0.6} middleGrey={0.5} />}
             <Outline
               blur
               kernelSize={3}

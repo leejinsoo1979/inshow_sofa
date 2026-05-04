@@ -87,7 +87,7 @@ export function createUpholsteryMaterial(sofaColor, isLeather) {
         : new THREE.Color(sofaColor.swatchColor || sofaColor.color),
     clearcoat: isOilyLeather ? 0.08 : 0,
     clearcoatRoughness: isOilyLeather ? 0.7 : 0.7,
-    envMapIntensity: isOilyLeather ? 0.4 : (isLeather ? 0.45 : 0.8)
+    envMapIntensity: isOilyLeather ? 0.4 : (isLeather ? 0.45 : 0.55)
   });
   return material;
 }
