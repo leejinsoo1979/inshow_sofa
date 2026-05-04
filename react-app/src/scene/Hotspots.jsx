@@ -19,28 +19,9 @@ export default function Hotspots() {
       minZ = Math.min(minZ, m.z - halfD);
       maxZ = Math.max(maxZ, m.z + halfD);
     }
-    const sorted = [...modules].sort((a, b) => a.x - b.x);
-    const leftMod = sorted[0];
-    const rightMod = sorted[sorted.length - 1];
-    const leftSpec = moduleCatalog[leftMod.type];
-    const rightSpec = moduleCatalog[rightMod.type];
-    const worldOpen = (mod, spec) => {
-      const step = ((Math.round((mod.rotation || 0) / (Math.PI / 2)) % 4) + 4) % 4;
-      const map = {
-        0: { left: "left", right: "right" },
-        1: { left: "back", right: "front" },
-        2: { left: "right", right: "left" },
-        3: { left: "front", right: "back" }
-      }[step];
-      const set = new Set();
-      (spec.openSides || []).forEach((s) => set.add(map[s]));
-      return set;
-    };
-    // 끝 모듈은 항상 외측에 모듈 추가 가능 (openSides에 막혀 있어도 외측은 비어있는 공간이므로 추가 허용)
-    // 단, 모듈이 1개일 때는 양쪽 모두 핫스팟 노출
+    // 끝 모듈은 항상 외측에 모듈 추가 가능 — 양쪽 핫스팟 항상 노출
     const leftOpens = true;
     const rightOpens = true;
-    void worldOpen; // 사용 안 함 (호환용)
     const ghost = 1.15;
     return {
       leftX: minX - ghost / 2,
