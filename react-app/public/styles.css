@@ -631,6 +631,16 @@ h1 {
   white-space: nowrap;
 }
 
+.module-option .module-price {
+  margin-top: 2px;
+  color: #6b6c70;
+  font-weight: 500;
+  font-size: 11px;
+}
+.module-option.is-active .module-price {
+  color: #2563eb;
+}
+
 .module-option:hover {
   border-color: #9aa0a8;
   box-shadow: 0 8px 18px rgba(30, 28, 24, 0.08);
@@ -1460,6 +1470,8 @@ h3 {
     gap: 18px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    overscroll-behavior: contain;
   }
 
   /* 모바일: 탭 노출 + 한 섹션만 표시 */
@@ -1519,7 +1531,10 @@ h3 {
     min-height: 0;
     padding: 4px;
     font-size: 10px;
-    gap: 4px;
+    gap: 2px;
+  }
+  .module-option .module-price {
+    font-size: 9px;
   }
 
   .module-option img {
