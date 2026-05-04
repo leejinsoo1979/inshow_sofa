@@ -16,7 +16,7 @@ export default function LoadingScreen() {
         <div className="loading-bar">
           <div className="loading-bar-fill" style={{ width: `${Math.round(progress)}%` }} />
         </div>
-        <p className="loading-status">{item ? `Loading ${item.split("/").pop()}…` : "Loading…"}</p>
+        <p className="loading-status">{Math.round(progress)}%</p>
       </div>
     </div>
   );
