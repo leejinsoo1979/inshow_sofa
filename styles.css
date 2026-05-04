@@ -1878,14 +1878,14 @@ h3 {
     display: inline-flex;
   }
 
-  /* 우측 사이드 패널 (320px 고정) */
+  /* 우측 사이드 패널 (360px 고정) */
   .panel {
     position: relative;
     inset: auto;
-    top: auto;
-    bottom: auto;
-    height: 100dvh;
-    max-height: none;
+    top: 0;
+    bottom: 0;
+    height: calc(100dvh - 60px); /* 하단 푸터 60px 제외 */
+    max-height: calc(100dvh - 60px);
     border-radius: 0;
     border-left: 1px solid var(--line);
     box-shadow: none;
@@ -1894,6 +1894,7 @@ h3 {
     z-index: auto;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
   }
   .sheet-handle { display: none !important; }
   .panel-tabs { display: none; }
@@ -2024,7 +2025,5 @@ h3 {
     font-weight: 700;
     cursor: pointer;
   }
-  /* panel은 푸터 위 영역까지 */
-  .panel { bottom: 60px; height: calc(100dvh - 60px); }
   .viewer { height: calc(100dvh - 60px); }
 }
