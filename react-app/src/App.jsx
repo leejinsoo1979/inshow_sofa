@@ -81,6 +81,14 @@ export default function App() {
           onRotate={(dir) => rotateRef.current?.(dir)}
         />
         <div className="scene-help">드래그 회전 · 휠 줌 · 소파 클릭 선택</div>
+        <a
+          className="powered-by"
+          href="https://www.uable.co.kr"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Powered by <strong>U:ABLE</strong>
+        </a>
         <HotspotPopover />
         <StudioLightingPopover />
       </section>
