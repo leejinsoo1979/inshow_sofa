@@ -26,26 +26,16 @@ function Floor() {
     <>
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[18, 14]} />
-        <shadowMaterial color={0x000000} opacity={0.18} transparent />
+        <shadowMaterial color={0x000000} opacity={0} transparent />
       </mesh>
-      {/* 가까운 컨택트 그림자 (가구 바로 아래 진함) */}
+      {/* 단일 ContactShadows — 자연스러운 부드러운 그림자 */}
       <ContactShadows
         position={[0, 0.001, 0]}
-        opacity={0.55}
-        scale={8}
-        blur={6}
-        far={0.6}
+        opacity={0.5}
+        scale={16}
+        blur={20}
+        far={2.5}
         resolution={2048}
-        color="#1a160f"
-      />
-      {/* 외곽 페이드 그림자 (자연스러운 그라데이션) */}
-      <ContactShadows
-        position={[0, 0.0015, 0]}
-        opacity={0.25}
-        scale={18}
-        blur={30}
-        far={3}
-        resolution={1024}
         color="#1a160f"
       />
     </>
