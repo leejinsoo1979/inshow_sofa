@@ -134,14 +134,22 @@ export function createBaseMaterial(baseColor, isLeather, quality = "medium") {
 
 export function createMetalMaterial(quality = "medium") {
   const isHigh = quality === "high";
-  // 스테인리스 스틸: metalness 1.0 + 낮은 roughness + envMap 반사
+  // medium: MeshStandardMaterial + 강한 emissive (envMap 의존 줄임)
+  if (!isHigh) {
+    return new THREE.MeshStandardMaterial({
+      color: 0xb8bcc0,
+      metalness: 0.7,
+      roughness: 0.35,
+      envMapIntensity: 1.5,
+      emissive: 0x808488,
+      emissiveIntensity: 0.5
+    });
+  }
   return new THREE.MeshPhysicalMaterial({
     color: 0xb8bcc0,
-    metalness: 0.95,
-    roughness: 0.32,
-    envMapIntensity: isHigh ? 1.5 : 1.6,
-    emissive: 0x404448,
-    emissiveIntensity: isHigh ? 0.0 : 0.3
+    metalness: 1.0,
+    roughness: 0.28,
+    envMapIntensity: 1.5
   });
 }
 

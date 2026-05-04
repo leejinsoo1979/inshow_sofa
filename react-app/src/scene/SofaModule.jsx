@@ -179,8 +179,8 @@ export default function SofaModule({ module: m }) {
         return ups.clone();
       };
 
-      // 메쉬 이름이 Leg로 시작하면 강제 metal (GLB material 매칭 실패해도 보정)
-      if (/^leg/.test(meshName)) {
+      // 메쉬 이름에 leg 포함되면 강제 metal (GLB material 매칭 실패해도 보정)
+      if (/leg/.test(meshName)) {
         const m = matForRole("metal");
         m.side = THREE.DoubleSide;
         m.needsUpdate = true;
