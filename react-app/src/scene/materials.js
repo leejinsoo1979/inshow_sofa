@@ -60,7 +60,7 @@ export function cloneTextureWithRepeat(texture, repeat = [1, 1]) {
 export function createUpholsteryMaterial(sofaColor, isLeather) {
   // 천연가죽 블랙 = 더 어둡고 오일리한 광택
   const isOilyLeather = isLeather && (sofaColor.id === "leatherBlack" || /black/i.test(sofaColor.id || ""));
-  const repeat = isOilyLeather ? [0.6, 0.6] : (isLeather ? [1.5, 1.5] : [0.24, 0.24]);
+  const repeat = isOilyLeather ? [0.12, 0.12] : (isLeather ? [1.5, 1.5] : [0.24, 0.24]);
   const map = loadTextureCached(sofaColor.image, repeat);
   // 텍스처 있으면 어두운 톤 (검정 가죽은 짙게)
   const c = map
@@ -87,7 +87,7 @@ export function createUpholsteryMaterial(sofaColor, isLeather) {
 
 export function createBaseMaterial(baseColor, isLeather) {
   const isBlackLeather = /black|블랙/i.test(baseColor.label || "") && /leather_black|natural/i.test(baseColor.image || "");
-  const repeat = isBlackLeather ? [1.2, 1.2] : [3, 3];
+  const repeat = isBlackLeather ? [0.24, 0.24] : [3, 3];
   const map = loadTextureCached(baseColor.image, repeat);
   // 텍스처가 있으면 color를 흰색으로 (텍스처 색이 곱해져서 어두워지는 거 방지)
   const color = map ? new THREE.Color(0xffffff) : new THREE.Color(baseColor.color);
