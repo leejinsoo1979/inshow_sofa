@@ -124,33 +124,53 @@ export default function SofaModule({ module: m }) {
     }
     clone.position.y = -bounds.min.y;
 
-    // 팔걸이(Armrest 메쉬)를 X축으로 슬림하게 + 바깥쪽 가장자리에 정렬 (base 끝에 맞춤)
-    // mirror 적용 후 world bounds 기준이므로 부모 group 좌표계에서 처리
+    // 팔걸이(Armrest 메쉬) 바깥쪽 면만 안쪽으로 당김 (geometry vertex 직접 변형)
+    // 위치/안쪽 면은 그대로 — 바깥쪽 vertex만 inset
     if (!baseBounds.isEmpty()) {
-      const baseMinX = baseBounds.min.x;
-      const baseMaxX = baseBounds.max.x;
       clone.updateMatrixWorld(true);
       clone.traverse((c) => {
         if (!c.isMesh) return;
         if (!/armrest/i.test(c.name || "")) return;
-        // 현재 월드 bounds
+        if (c.userData._armSlimmed) return; // 중복 적용 방지
+        const geom = c.geometry;
+        if (!geom?.attributes?.position) return;
+
+        // 월드 bounds로 외측/내측 판단 (모듈 중심 0 기준)
         const ab = new THREE.Box3().setFromObject(c);
         const armCx = (ab.min.x + ab.max.x) / 2;
-        const armW = ab.max.x - ab.min.x;
-        // 좌측인지 우측인지 (모듈 중심 기준)
         const isRightArm = armCx > 0;
-        const targetEdge = isRightArm ? baseMaxX : baseMinX;
-        // 바깥쪽 가장자리부터 안쪽으로 슬림 폭만큼 차지
-        const slim = 0.65; // 바깥 X 스케일 (작을수록 플랫)
-        const newW = armW * slim;
-        // 원래 armrest는 자체 lossless 스케일 가정 → 자식 변환에 직접 X scale 곱
-        c.scale.x *= slim;
-        // 위치 조정: 바깥쪽 가장자리 고정
-        c.updateMatrixWorld(true);
-        const ab2 = new THREE.Box3().setFromObject(c);
-        const newCx = (ab2.min.x + ab2.max.x) / 2;
-        const desiredCx = isRightArm ? (targetEdge - newW / 2) : (targetEdge + newW / 2);
-        c.position.x += (desiredCx - newCx) / (clone.scale.x || 1);
+
+        // 로컬 좌표에서 외측 vertex 식별 위해 로컬 bbox 계산
+        geom.computeBoundingBox();
+        const local = geom.boundingBox;
+        const localMinX = local.min.x;
+        const localMaxX = local.max.x;
+        const localMid = (localMinX + localMaxX) / 2;
+
+        // mirror 고려: clone.scale.x 부호가 음수이면 외측 방향이 반대
+        const mirrorSign = (clone.scale.x || 1) < 0 ? -1 : 1;
+        // 월드 기준 isRightArm을 로컬 외측으로 변환
+        const outerIsLocalMax = (isRightArm ? 1 : -1) * mirrorSign > 0;
+        const innerEdge = outerIsLocalMax ? localMinX : localMaxX;
+        const outerEdge = outerIsLocalMax ? localMaxX : localMinX;
+
+        const insetAmount = 0.15; // 바깥 면을 안쪽으로 당기는 비율 (0=그대로, 1=완전평면)
+        const pos = geom.attributes.position;
+        const arr = pos.array;
+        for (let i = 0; i < pos.count; i++) {
+          const x = arr[i * 3];
+          // 외측 절반에 있는 vertex만 안쪽으로 당김 (내측은 그대로)
+          const t = (x - localMid) / (outerEdge - localMid); // 0(중간) ~ 1(외측 끝)
+          if ((outerIsLocalMax && x > localMid) || (!outerIsLocalMax && x < localMid)) {
+            const eased = Math.max(0, t); // 0 이하는 0
+            arr[i * 3] = x - (x - localMid) * insetAmount * eased;
+          }
+        }
+        pos.needsUpdate = true;
+        geom.computeBoundingBox();
+        geom.computeBoundingSphere();
+        if (geom.attributes.normal) geom.computeVertexNormals();
+        c.userData._armSlimmed = true;
       });
     }
   }, [clone, spec]);
