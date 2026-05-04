@@ -1492,9 +1492,9 @@ h3 {
     left: 0;
     right: 0;
     bottom: 110px; /* fixed checkout-mobile 위 */
-    top: 55dvh;
+    top: 50dvh;
     height: auto;
-    max-height: calc(45dvh - 110px);
+    max-height: calc(50dvh - 110px);
     border: 0;
     border-top-left-radius: 18px;
     border-top-right-radius: 18px;
