@@ -63,14 +63,14 @@ export function createUpholsteryMaterial(sofaColor, isLeather) {
   const material = new THREE.MeshPhysicalMaterial({
     color: c,
     map: map || null,
-    roughness: isLeather ? 0.42 : 0.88,
+    roughness: isLeather ? 0.78 : 0.88,
     metalness: 0,
-    sheen: isLeather ? 0.75 : 0.12,
-    sheenRoughness: isLeather ? 0.42 : 0.95,
-    sheenColor: isLeather ? new THREE.Color(0xdddddd) : c.clone().multiplyScalar(1.02),
+    sheen: isLeather ? 0.18 : 0.12,
+    sheenRoughness: isLeather ? 0.85 : 0.95,
+    sheenColor: isLeather ? new THREE.Color(0x6b6764) : c.clone().multiplyScalar(1.02),
     clearcoat: 0,
-    clearcoatRoughness: 0.42,
-    envMapIntensity: isLeather ? 0.95 : 0.85
+    clearcoatRoughness: 0.7,
+    envMapIntensity: isLeather ? 0.45 : 0.85
   });
   return material;
 }
