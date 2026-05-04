@@ -1212,40 +1212,51 @@ h3 {
 
 .lighting-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: 1fr;
+  gap: 6px;
 }
 
 .range-field {
   display: grid;
-  gap: 8px;
-  padding: 10px 12px 11px;
+  grid-template-columns: 100px 1fr 50px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 10px;
   background: #fff;
   box-shadow: 0 1px 2px rgba(28, 24, 19, 0.04);
 }
 
+/* range-head 자체는 grid 셀 차지 안 하도록 contents 처리 + 자식만 배치 */
 .range-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  color: #2c2c28;
+  display: contents;
+}
+.range-head span {
   font-size: 12px;
   font-weight: 700;
+  color: #2c2c28;
+  white-space: nowrap;
+  grid-column: 1;
 }
-
 .range-head strong {
   color: #215f64;
   font-variant-numeric: tabular-nums;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 700;
+  grid-column: 3;
+}
+.range-field input[type="range"] {
+  grid-column: 2;
+  grid-row: 1;
 }
 
 .range-field input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 6px;
+  height: 8px;
   margin: 0;
   border-radius: 999px;
   background: linear-gradient(
@@ -1257,13 +1268,14 @@ h3 {
   );
   outline: none;
   box-shadow: inset 0 1px 2px rgba(19, 29, 29, 0.12);
+  cursor: pointer;
 }
 
 .range-field input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   border: 2px solid #ffffff;
   border-radius: 50%;
   background: var(--teal);
