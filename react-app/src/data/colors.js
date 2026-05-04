@@ -13,8 +13,20 @@ export const baseFrameOptionsByGroup = {
     { label: "비건가죽 그린", color: "#2c4128", image: "/materials/frame/vegan_leather_green.png" },
     { label: "천연가죽 썬더", color: "#4d4843", image: "/materials/frame/vegan_leather_thunder.png" }
   ],
-  fabricDark: [sofaColors[2]],
-  leatherBlack: [sofaColors[3]]
+  fabricDark: [
+    { label: "비건가죽 그레이", color: "#b7aa9e", image: "/materials/frame/vegan_leather_gray.png" },
+    { label: "비건가죽 헤이즐", color: "#716253", image: "/materials/frame/vegan_leather_hazel.png" },
+    { label: "비건가죽 올리브", color: "#595b45", image: "/materials/frame/vegan_leather_olive.png" },
+    { label: "비건가죽 그린", color: "#2c4128", image: "/materials/frame/vegan_leather_green.png" },
+    { label: "천연가죽 썬더", color: "#4d4843", image: "/materials/frame/vegan_leather_thunder.png" }
+  ],
+  leatherBlack: [
+    { label: "비건가죽 그레이", color: "#b7aa9e", image: "/materials/frame/vegan_leather_gray.png" },
+    { label: "비건가죽 헤이즐", color: "#716253", image: "/materials/frame/vegan_leather_hazel.png" },
+    { label: "비건가죽 올리브", color: "#595b45", image: "/materials/frame/vegan_leather_olive.png" },
+    { label: "비건가죽 그린", color: "#2c4128", image: "/materials/frame/vegan_leather_green.png" },
+    { label: "천연가죽 썬더", color: "#4d4843", image: "/materials/frame/vegan_leather_thunder.png" }
+  ]
 };
 
 export const trayWoodColors = [

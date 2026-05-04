@@ -23,9 +23,7 @@ export const useConfigurator = create((set, get) => ({
     const group = item.group || "light";
     const opts = baseFrameOptionsByGroup[group] || baseFrameOptionsByGroup.light;
     const cur = get().baseColor;
-    if (group === "fabricDark" || group === "leatherBlack") {
-      set({ baseColor: item });
-    } else if (!opts.some((o) => o.color === cur.color)) {
+    if (!opts.some((o) => o.color === cur.color)) {
       set({ baseColor: opts[0] });
     }
   },
