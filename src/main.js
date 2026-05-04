@@ -72,30 +72,30 @@ const modelSources = {
 
 const modelMaterialRoles = {
   singleArmLeftOne: {
-    upholstery: ["fabric", "가죽1"],
-    base: ["base", "가죽1_0", "가죽1_1", "가죽1_base_strip"],
-    metal: ["metal", "__metal*"]
+    upholstery: ["가죽.01", "fabric"],
+    base: ["가죽.02", "base"],
+    metal: ["metal.01", "__metal*", "metal"]
   },
   singleArmRightTwo: {
-    upholstery: ["fabric", "가죽1"],
-    base: ["base", "가죽1_0", "가죽1_1", "material_73", "가죽1_base_strip"],
-    metal: ["metal", "__metal*"]
+    upholstery: ["가죽.01", "fabric"],
+    base: ["가죽.02", "base"],
+    metal: ["metal.01", "__metal*", "metal"]
   },
   trayLeftOne: {
-    upholstery: ["fabric", "가죽1"],
-    base: ["base", "가죽1_0", "가죽1_1", "material_73", "가죽1_base_strip"],
-    trayWood: ["trayWood", "material_89"],
-    metal: ["metal", "__metal*"]
+    upholstery: ["가죽.005", "가죽.01", "fabric"],
+    base: ["가죽.006", "가죽.02", "base"],
+    trayWood: ["Walnut wood", "trayWood", "material_89", "wood"],
+    metal: ["metal.003", "metal.01", "__metal*", "metal"]
   },
   doubleArmOne: {
-    upholstery: ["fabric"],
-    base: ["base"],
-    metal: ["metal", "__metal*"]
+    upholstery: ["가죽.01", "fabric"],
+    base: ["가죽.02", "base"],
+    metal: ["metal.01", "__metal*", "metal"]
   },
   doubleArmTwo: {
-    upholstery: ["fabric"],
-    base: ["base"],
-    metal: ["metal", "__metal*"]
+    upholstery: ["가죽.01", "fabric"],
+    base: ["가죽.02", "base"],
+    metal: ["metal.01", "__metal*", "metal"]
   }
 };
 
@@ -654,6 +654,7 @@ function importedMaterialRole(materialName, modelKey) {
   if (name.includes("metal") || name.includes("__metal")) return "metal";
   if (name.includes("material_89") || name.includes("wood")) return "trayWood";
   if (name.includes("가죽1_0") || name.includes("가죽1_1")) return "base";
+  if (name.includes("가죽.02") || name.includes("가죽.006")) return "base";
   if (
     name.includes("base") ||
     name.includes("leather") ||

@@ -47,10 +47,10 @@ export default function SofaModule({ module: m }) {
     clone.position.set(0, 0, 0);
     clone.updateMatrixWorld(true);
     const bounds = new THREE.Box3().setFromObject(clone);
-    const center = bounds.getCenter(new THREE.Vector3());
-    clone.position.x -= center.x;
-    clone.position.z -= center.z;
-    clone.position.y -= bounds.min.y;
+    // X/Z를 spec.width/depth 기준으로 강제 중앙 정렬 (GLB 자체 center offset 제거)
+    clone.position.x = -(bounds.min.x + spec.width / 2);
+    clone.position.z = -(bounds.min.z + spec.depth / 2);
+    clone.position.y = -bounds.min.y;
   }, [clone, spec]);
 
   // 2) 머티리얼만 갱신 (위치/스케일 안 건드림)
