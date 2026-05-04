@@ -71,9 +71,9 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
         antialias: true,
         alpha: true,
         outputColorSpace: THREE.SRGBColorSpace,
-        // 양 모드 모두 Canvas ACES + exposure (post-processing 색감 보정 제거)
+        // 양 모드 모두 Canvas ACES + exposure
         toneMapping: THREE.ACESFilmicToneMapping,
-        toneMappingExposure: isHigh ? 1.0 : 0.92
+        toneMappingExposure: isHigh ? 0.85 : 0.92
       }}
     >
       <Suspense fallback={null}>
@@ -81,7 +81,7 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
         {/* HDRI: high 모드에서만 studio, 그 외 city */}
         <Environment
           preset={isHigh ? "studio" : "city"}
-          environmentIntensity={isHigh ? 0.6 : 0.5}
+          environmentIntensity={isHigh ? 0.4 : 0.5}
           background={false}
         />
         <Lights />
