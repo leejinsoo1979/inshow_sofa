@@ -45,7 +45,6 @@ export default function App() {
         <Scene resetCameraRef={resetCameraRef} zoomRef={zoomRef} rotateRef={rotateRef} />
         <div className="brand-bar">
           <div>
-            <p className="eyebrow">3D Configurator</p>
             <h1>INSHOW SOFA #1</h1>
           </div>
           <SunSlider />
