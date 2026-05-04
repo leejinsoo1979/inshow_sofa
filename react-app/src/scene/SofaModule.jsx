@@ -160,6 +160,11 @@ export default function SofaModule({ module: m }) {
       child.userData.isModuleMesh = true;
       if (child.geometry?.attributes?.color) child.geometry.deleteAttribute("color");
 
+      // 메쉬 이름 기반 force role (GLB 머티리얼 누락 보정)
+      const meshName = (child.name || "").toLowerCase();
+      const isLegByName = /^leg|^prop/.test(meshName) ? null : null; // prop는 base
+      void isLegByName;
+
       // 원본 머티리얼 이름 (영구 마크 우선, 없으면 현재 mat name)
       const origNames = child.userData._origMatNames !== undefined
         ? child.userData._origMatNames
@@ -173,6 +178,15 @@ export default function SofaModule({ module: m }) {
         if (role === "base") return bas.clone();
         return ups.clone();
       };
+
+      // 메쉬 이름이 Leg로 시작하면 강제 metal (GLB material 매칭 실패해도 보정)
+      if (/^leg/.test(meshName)) {
+        const m = matForRole("metal");
+        m.side = THREE.DoubleSide;
+        m.needsUpdate = true;
+        child.material = m;
+        return;
+      }
 
       let newMat;
       if (Array.isArray(origNames)) {
