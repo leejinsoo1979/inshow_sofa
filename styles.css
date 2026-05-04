@@ -1697,33 +1697,51 @@ h3 {
     background: #fff;
   }
 
-  /* 모바일: swatch 3열 grid */
+  /* 모바일: swatch 4열 grid (컴팩트) */
   .swatches {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px 12px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px 6px;
     overflow: visible;
-    padding-bottom: 4px;
+    padding-bottom: 2px;
   }
   .swatches .swatch {
-    flex-direction: row;
-    gap: 8px;
+    flex-direction: column;
+    gap: 4px;
     align-items: center;
-    text-align: left;
+    text-align: center;
+    min-width: 0;
   }
   .swatches .swatch::before {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     flex: 0 0 auto;
   }
   .swatches .swatch span {
-    font-size: 11px;
-    line-height: 1.15;
+    font-size: 10px;
+    line-height: 1.1;
     word-break: keep-all;
     color: #555;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
   }
   .swatches.accent-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  /* control-group 사이 간격 줄임 */
+  .panel-section {
+    gap: 12px !important;
+  }
+  .control-group {
+    gap: 8px;
+  }
+  .group-title h3 {
+    font-size: 13px;
+  }
+  .group-title span {
+    font-size: 11px;
   }
 
   .preset-grid,
