@@ -1675,37 +1675,33 @@ h3 {
     background: #fff;
   }
 
-  /* 모바일: swatch 가로 스크롤 */
+  /* 모바일: swatch 3열 grid */
   .swatches {
-    display: flex;
-    grid-template-columns: none;
-    flex-wrap: nowrap;
-    gap: 14px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 6px;
-    scroll-snap-type: x proximity;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px 12px;
+    overflow: visible;
+    padding-bottom: 4px;
   }
   .swatches .swatch {
-    flex: 0 0 auto;
     flex-direction: row;
     gap: 8px;
     align-items: center;
     text-align: left;
-    scroll-snap-align: start;
   }
   .swatches .swatch::before {
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 auto;
   }
   .swatches .swatch span {
-    font-size: 12px;
-    line-height: 1.2;
+    font-size: 11px;
+    line-height: 1.15;
     word-break: keep-all;
-    color: #888;
+    color: #555;
   }
   .swatches.accent-grid {
-    flex-wrap: nowrap;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .preset-grid,
