@@ -14,16 +14,23 @@ function nameMatches(name, patterns = []) {
 }
 
 export function importedMaterialRole(materialName, roles) {
+  const raw = (materialName || "").toLowerCase();
   const name = normalizeMaterialName(materialName);
+  // 1) 원본(raw, suffix 포함)으로 먼저 정확 매칭 시도
   if (roles) {
+    if (nameMatches(raw, roles.metal)) return "metal";
+    if (nameMatches(raw, roles.trayWood)) return "trayWood";
+    if (nameMatches(raw, roles.upholstery)) return "upholstery";
+    if (nameMatches(raw, roles.base)) return "base";
+    // 2) normalized로 백업 매칭
     if (nameMatches(name, roles.metal)) return "metal";
     if (nameMatches(name, roles.trayWood)) return "trayWood";
     if (nameMatches(name, roles.upholstery)) return "upholstery";
     if (nameMatches(name, roles.base)) return "base";
   }
-  if (name.includes("metal") || name.includes("__metal")) return "metal";
-  if (name.includes("wood")) return "trayWood";
-  if (name.includes("base") || name.includes("leather")) return "base";
+  if (raw.includes("metal") || raw.includes("__metal")) return "metal";
+  if (raw.includes("wood") || raw.includes("walnut")) return "trayWood";
+  if (raw.includes("base") || raw.includes("leather")) return "base";
   return "upholstery";
 }
 
