@@ -375,7 +375,7 @@ h1 {
   left: 96px;
   top: 134px;
   z-index: 60;
-  width: min(360px, calc(100vw - 540px));
+  width: min(440px, calc(100vw - 460px));
   max-height: calc(100vh - 172px);
   display: grid;
   grid-template-rows: auto 1fr;
