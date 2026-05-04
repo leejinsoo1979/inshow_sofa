@@ -9,7 +9,8 @@ import {
   createUpholsteryMaterial,
   createBaseMaterial,
   createMetalMaterial,
-  createTrayWoodMaterial
+  createTrayWoodMaterial,
+  cloneTextureWithRepeat
 } from "./materials";
 import { useConfigurator } from "../state/configurator";
 
@@ -33,6 +34,19 @@ export default function SofaModule({ module: m }) {
   // 매번 deep clone — useGLTF가 모든 인스턴스에 같은 scene 반환하므로 인스턴스마다 독립 복사 필요
   const clone = useMemo(() => cloneSkinned(scene), [scene, m.id]);
 
+  const upholsteryRepeatForMesh = (mesh) => {
+    if (material === "naturalLeather") return [1.5, 1.5];
+    const name = (mesh?.name || "").toLowerCase();
+    if (name.includes("pillow")) {
+      const bounds = new THREE.Box3().setFromObject(mesh);
+      const size = bounds.getSize(new THREE.Vector3());
+      if (size.x < 0.58 || size.y < 0.3) return [0.28, 0.28];
+      return [0.4, 0.4];
+    }
+    if (name.includes("seating cushion")) return [0.4, 0.4];
+    return [0.24, 0.24];
+  };
+
   // 1) 스케일/위치는 clone/spec 변경 시 한 번만 (vanilla 공식)
   useEffect(() => {
     const initialBounds = new THREE.Box3().setFromObject(clone);
@@ -47,10 +61,13 @@ export default function SofaModule({ module: m }) {
     clone.position.set(0, 0, 0);
     clone.updateMatrixWorld(true);
     const bounds = new THREE.Box3().setFromObject(clone);
-    const center = bounds.getCenter(new THREE.Vector3());
-    clone.position.x -= center.x;
-    clone.position.z -= center.z;
-    clone.position.y -= bounds.min.y;
+    // X: spec.width의 정확한 중앙으로 정렬 (모듈 간 이격/겹침 방지)
+    const xMid = (bounds.min.x + bounds.max.x) / 2;
+    clone.position.x = -xMid;
+    // Z: GLB 자체 center
+    const zMid = (bounds.min.z + bounds.max.z) / 2;
+    clone.position.z = -zMid;
+    clone.position.y = -bounds.min.y;
   }, [clone, spec]);
 
   // 2) 머티리얼만 갱신 (위치/스케일 안 건드림)
@@ -109,12 +126,21 @@ export default function SofaModule({ module: m }) {
         const roleCache = {};
         newMat = origNames.map((nm) => {
           const role = importedMaterialRole(nm, roles);
-          if (!roleCache[role]) roleCache[role] = matForRole(role);
+          if (!roleCache[role]) {
+            const created = matForRole(role);
+            if (role === "upholstery" && created.map) {
+              created.map = cloneTextureWithRepeat(created.map, upholsteryRepeatForMesh(child));
+            }
+            roleCache[role] = created;
+          }
           return roleCache[role];
         });
       } else {
         const role = importedMaterialRole(origNames, roles);
         newMat = matForRole(role);
+        if (role === "upholstery" && newMat.map) {
+          newMat.map = cloneTextureWithRepeat(newMat.map, upholsteryRepeatForMesh(child));
+        }
       }
 
       const stripMap = (mat) => {

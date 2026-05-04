@@ -78,7 +78,7 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
         enableDamping
         makeDefault
         maxPolarAngle={Math.PI * 0.48}
-        minDistance={2.1}
+        minDistance={0.8}
         maxDistance={15}
       />
     </Canvas>

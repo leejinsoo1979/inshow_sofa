@@ -43,9 +43,23 @@ function loadTextureCached(url, repeat = [1, 1]) {
   return t;
 }
 
+export function cloneTextureWithRepeat(texture, repeat = [1, 1]) {
+  if (!texture) return null;
+  const cloned = texture.clone();
+  cloned.wrapS = texture.wrapS;
+  cloned.wrapT = texture.wrapT;
+  cloned.colorSpace = texture.colorSpace;
+  cloned.center.copy(texture.center);
+  cloned.rotation = texture.rotation;
+  cloned.repeat.set(repeat[0], repeat[1]);
+  cloned.needsUpdate = true;
+  cloned._intentional = true;
+  return cloned;
+}
+
 export function createUpholsteryMaterial(sofaColor, isLeather) {
   const c = new THREE.Color(sofaColor.color);
-  const map = loadTextureCached(sofaColor.image, [2, 2]);
+  const map = loadTextureCached(sofaColor.image, isLeather ? [1.5, 1.5] : [0.24, 0.24]);
   const material = new THREE.MeshPhysicalMaterial({
     color: c,
     map: map || null,

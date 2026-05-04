@@ -27,7 +27,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.target.set(0, 0.35, 0);
 controls.maxPolarAngle = Math.PI * 0.48;
-controls.minDistance = 2.1;
+controls.minDistance = 0.8;
 controls.maxDistance = 15;
 
 const sofaRoot = new THREE.Group();
@@ -338,10 +338,10 @@ function createUpholsteryMaterial() {
   const sofaColor = new THREE.Color(currentSofaColor().color);
   const mat = new THREE.MeshPhysicalMaterial({
     color: sofaColor,
-    roughness: isLeather ? 0.42 : 0.98,
+    roughness: isLeather ? 0.42 : 0.88,
     metalness: 0,
-    sheen: isLeather ? 0.75 : 0.04,
-    sheenRoughness: isLeather ? 0.42 : 1.0,
+    sheen: isLeather ? 0.75 : 0.12,
+    sheenRoughness: isLeather ? 0.42 : 0.95,
     sheenColor: isLeather
       ? new THREE.Color(0xdddddd)
       : sofaColor.clone().multiplyScalar(1.02),
@@ -350,25 +350,20 @@ function createUpholsteryMaterial() {
     clearcoatRoughness: 0.42,
     emissive: new THREE.Color(0x000000),
     emissiveIntensity: 0,
-    envMapIntensity: isLeather ? 0.95 : 0.28
+    envMapIntensity: isLeather ? 0.95 : 0.85
   });
-  if (!isLeather) {
-    const fabricWeave = getFabricWeaveTexture();
-    if (fabricWeave) {
-      mat.bumpMap = fabricWeave;
-      mat.bumpScale = 0.018;
-      mat.roughnessMap = fabricWeave;
-    }
-  }
   // PBR 텍스처 폴더가 지정된 색상이면 자동 적용
   applyPBRToMaterial(mat, currentSofaColor().textureFolder);
   if (mat.map) {
     mat.map.center.set(0.5, 0.5);
-    mat.map.repeat.set(isLeather ? 1.5 : 2, isLeather ? 1.5 : 2);
+    mat.map.repeat.set(isLeather ? 1.5 : 0.24, isLeather ? 1.5 : 0.24);
   }
-  if (!isLeather && mat.roughnessMap) {
-    mat.roughnessMap.center.set(0.5, 0.5);
-    mat.roughnessMap.repeat.set(24, 24);
+  for (const key of ["normalMap","roughnessMap","metalnessMap","aoMap","displacementMap","emissiveMap"]) {
+    if (mat[key]) {
+      mat[key].wrapS = THREE.RepeatWrapping;
+      mat[key].wrapT = THREE.RepeatWrapping;
+      mat[key].repeat.set(isLeather ? 1.5 : 0.24, isLeather ? 1.5 : 0.24);
+    }
   }
   return mat;
 }
@@ -419,41 +414,6 @@ leatherTexture.wrapS = THREE.RepeatWrapping;
 leatherTexture.wrapT = THREE.RepeatWrapping;
 leatherTexture.repeat.set(1.5, 1.5);
 leatherTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-
-let _fabricWeaveTexture = null;
-function getFabricWeaveTexture() {
-  if (_fabricWeaveTexture) return _fabricWeaveTexture;
-  const canvas = document.createElement("canvas");
-  canvas.width = 256;
-  canvas.height = 256;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return null;
-
-  const img = ctx.createImageData(canvas.width, canvas.height);
-  for (let y = 0; y < canvas.height; y++) {
-    for (let x = 0; x < canvas.width; x++) {
-      const i = (y * canvas.width + x) * 4;
-      const warp = (x % 6 < 3 ? 6 : -2) + (y % 8 < 4 ? 3 : -1);
-      const weft = (y % 6 < 3 ? 6 : -2) + (x % 8 < 4 ? 3 : -1);
-      const grain = Math.sin((x + y) * 0.35) * 4 + Math.random() * 10 - 5;
-      const value = 132 + warp + weft + grain;
-      img.data[i] = value;
-      img.data[i + 1] = value;
-      img.data[i + 2] = value;
-      img.data[i + 3] = 255;
-    }
-  }
-  ctx.putImageData(img, 0, 0);
-
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.wrapS = THREE.RepeatWrapping;
-  tex.wrapT = THREE.RepeatWrapping;
-  tex.repeat.set(24, 24);
-  tex.needsUpdate = true;
-  tex._intentional = true;
-  _fabricWeaveTexture = tex;
-  return tex;
-}
 
 // PBR 재질 폴더 자동 로드 (manifest.json 기반)
 // 사용법: materials/<카테고리>/<이름>/ 안에 manifest.json + 텍스처 파일을 넣으면
@@ -515,6 +475,33 @@ function applyPBRToMaterial(material, folderPath) {
     if (set[key]) material[key] = set[key];
   }
   material.needsUpdate = true;
+}
+
+function cloneTextureWithRepeat(texture, repeat = [1, 1]) {
+  if (!texture) return null;
+  const cloned = texture.clone();
+  cloned.wrapS = texture.wrapS;
+  cloned.wrapT = texture.wrapT;
+  cloned.colorSpace = texture.colorSpace;
+  cloned.center.copy(texture.center);
+  cloned.rotation = texture.rotation;
+  cloned.repeat.set(repeat[0], repeat[1]);
+  cloned.needsUpdate = true;
+  cloned._intentional = true;
+  return cloned;
+}
+
+function upholsteryRepeatForMesh(mesh) {
+  if (state.material === "naturalLeather") return [1.5, 1.5];
+  const name = (mesh?.name || "").toLowerCase();
+  if (name.includes("pillow")) {
+    const bounds = new THREE.Box3().setFromObject(mesh);
+    const size = bounds.getSize(new THREE.Vector3());
+    if (size.x < 0.58 || size.y < 0.3) return [0.28, 0.28];
+    return [0.4, 0.4];
+  }
+  if (name.includes("seating cushion")) return [0.4, 0.4];
+  return [0.24, 0.24];
 }
 
 // 모든 sofaColors / baseFrameColors / trayWoodColors의 textureFolder를 미리 캐시
@@ -735,14 +722,22 @@ function createImportedModule(module, upholsteryMaterial, baseMaterial, metalMat
     if (child.geometry && child.geometry.attributes) {
       if (child.geometry.attributes.color) child.geometry.deleteAttribute("color");
     }
-    child.material = remapImportedMaterial(
-      child.material,
-      spec.model,
-      upholsteryMaterial,
-      baseMaterial,
-      metalMaterial,
-      trayWoodMaterial
-    );
+    const sourceMaterial = child.material;
+    const remapOne = (material) => {
+      const role = importedMaterialRole(material?.name, spec.model);
+      let next = materialForImportedRoleWithSofaFollow(
+        role,
+        upholsteryMaterial,
+        baseMaterial,
+        metalMaterial,
+        trayWoodMaterial
+      );
+      if (role === "upholstery" && next.map) {
+        next.map = cloneTextureWithRepeat(next.map, upholsteryRepeatForMesh(child));
+      }
+      return next;
+    };
+    child.material = Array.isArray(sourceMaterial) ? sourceMaterial.map(remapOne) : remapOne(sourceMaterial);
     // 머티리얼 통일성 보장: vertex color 변조와 GLB 잔여 텍스처 제거
     const enforceUniform = (mat) => {
       if (!mat) return;
@@ -1780,9 +1775,6 @@ function renderBaseSwatches() {
   els.baseSwatches.innerHTML = "";
   const group = state.sofaColor.group || "light";
   const options = baseFrameOptionsByGroup[group] || baseFrameOptionsByGroup.light;
-  if (group === "fabricDark" || group === "leatherBlack") {
-    state.baseColor = state.sofaColor;
-  }
   if (!options.some((opt) => opt.color === state.baseColor.color)) {
     state.baseColor = options[0];
   }

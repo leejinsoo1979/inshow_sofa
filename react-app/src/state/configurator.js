@@ -25,10 +25,7 @@ export const useConfigurator = create((set, get) => ({
     const group = item.group || "light";
     const opts = baseFrameOptionsByGroup[group] || baseFrameOptionsByGroup.light;
     const cur = get().baseColor;
-    if (group === "fabricDark" || group === "leatherBlack") {
-      set({ baseColor: item });
-      return;
-    }
+    if ((group === "fabricDark" || group === "leatherBlack")) return;
     if (!opts.some((o) => o.color === cur.color)) {
       set({ baseColor: opts[0] });
     }
@@ -66,8 +63,7 @@ export const useConfigurator = create((set, get) => ({
       x = side === "left"
         ? minX - spec.width / 2 + SEAM
         : maxX + spec.width / 2 - SEAM;
-      // z는 첫 모듈과 정확히 동일 (footprint center 사용 시 micro-offset)
-      z = modules[0].z;
+      z = (minZ + maxZ) / 2;
     }
     const m = { id: newId, type, x, z, rotation: 0 };
     set({ modules: [...modules, m], selectedId: newId });
