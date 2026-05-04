@@ -1450,14 +1450,14 @@ h3 {
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 72px; /* fixed checkout-mobile 위 */
     height: auto;
-    max-height: 85dvh;
+    max-height: calc(85dvh - 72px);
     border: 0;
     border-top-left-radius: 18px;
     border-top-right-radius: 18px;
     box-shadow: 0 -16px 38px rgba(40, 34, 25, 0.16);
-    transform: translateY(calc(100% - var(--sheet-peek, 280px)));
+    transform: translateY(calc(100% - var(--sheet-peek, 240px)));
     transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
     display: flex;
     flex-direction: column;
@@ -1490,10 +1490,16 @@ h3 {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 8px 14px;
+    padding: 10px 14px;
     border-radius: 12px;
     background: #1a1a1a;
     color: #fff;
+    position: fixed;
+    left: 14px;
+    right: 14px;
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    z-index: 30;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.18);
   }
   .checkout-mobile-label {
     font-size: 11px;
