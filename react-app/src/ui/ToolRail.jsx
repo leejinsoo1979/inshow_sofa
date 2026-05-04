@@ -1,4 +1,5 @@
 import { useConfigurator } from "../state/configurator";
+import ARButton from "./ARButton";
 
 export default function ToolRail({ onResetCamera, onZoom, onRotate }) {
   const showDimensions = useConfigurator((s) => s.showDimensions);
@@ -40,6 +41,7 @@ export default function ToolRail({ onResetCamera, onZoom, onRotate }) {
           <path d="M12.5 4.5L12.5 8" />
         </svg>
       </button>
+      <ARButton />
     </div>
   );
 }

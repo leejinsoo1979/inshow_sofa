@@ -1,5 +1,6 @@
 import { useState } from "react";
 import QRCode from "qrcode";
+import { TbAugmentedReality } from "react-icons/tb";
 import { exportSceneToGlb } from "../scene/exportGlb";
 import { getAllModuleClones } from "../scene/sceneRefs";
 
@@ -21,7 +22,6 @@ export default function ARButton() {
       if (!clones.length) throw new Error("배치된 가구가 없습니다");
       const glbBuffer = await exportSceneToGlb(clones);
 
-      // 업로드
       const res = await fetch("/api/ar/upload", {
         method: "POST",
         headers: { "Content-Type": "model/gltf-binary" },
@@ -32,7 +32,6 @@ export default function ARButton() {
         throw new Error(`업로드 실패 (${res.status}) ${errText}`);
       }
       const { id } = await res.json();
-      // AR 뷰어 페이지 (model-viewer) URL — GLB blob URL을 ?src 쿼리로 전달
       const url = `${window.location.origin}/ar.html?id=${id}`;
       setArUrl(url);
       const dataUrl = await QRCode.toDataURL(url, { width: 280, margin: 1 });
@@ -46,16 +45,14 @@ export default function ARButton() {
 
   return (
     <>
-      <button className="ar-button" type="button" onClick={onClick} aria-label="AR로 보기">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M3 7.5v-2A2.5 2.5 0 0 1 5.5 3h2" />
-          <path d="M16.5 3h2A2.5 2.5 0 0 1 21 5.5v2" />
-          <path d="M21 16.5v2A2.5 2.5 0 0 1 18.5 21h-2" />
-          <path d="M7.5 21h-2A2.5 2.5 0 0 1 3 18.5v-2" />
-          <path d="M12 8 7 11v6l5 3 5-3v-6l-5-3z" />
-          <path d="M12 14v6M7 11l5 3 5-3" />
-        </svg>
-        <span>AR로 보기</span>
+      <button
+        className="icon-btn icon-btn--ar"
+        type="button"
+        onClick={onClick}
+        title="AR로 보기"
+        aria-label="AR로 보기"
+      >
+        <TbAugmentedReality size={24} />
       </button>
 
       {open && (
