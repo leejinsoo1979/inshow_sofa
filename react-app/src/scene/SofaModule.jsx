@@ -124,34 +124,6 @@ export default function SofaModule({ module: m }) {
     }
     clone.position.y = -bounds.min.y;
 
-    // 팔걸이를 안쪽으로 평행이동: 외측 면이 base 끝과 정확히 일치하게
-    if (!baseBounds.isEmpty()) {
-      clone.updateMatrixWorld(true);
-      const baseMinX = baseBounds.min.x;
-      const baseMaxX = baseBounds.max.x;
-      clone.traverse((c) => {
-        if (!c.isMesh) return;
-        if (!/armrest/i.test(c.name || "")) return;
-        if (c.userData._armShifted) return;
-
-        const ab = new THREE.Box3().setFromObject(c);
-        const armCx_w = (ab.min.x + ab.max.x) / 2;
-        const isRightArm = armCx_w > 0;
-        const armOuterX_w = isRightArm ? ab.max.x : ab.min.x;
-        const baseEdgeX_w = isRightArm ? baseMaxX : baseMinX;
-        const extraInset = 0.10; // base 끝선에서 추가로 안쪽으로 들어갈 양 (m)
-        const targetX_w = baseEdgeX_w + (isRightArm ? -extraInset : extraInset);
-        const deltaWorld = targetX_w - armOuterX_w;
-
-        // 부모 누적 X scale (절댓값)
-        let absScaleX = 1;
-        let n = c.parent;
-        while (n) { absScaleX *= Math.abs(n.scale.x || 1); n = n.parent; }
-        // local position에 적용할 delta (부모 scale 기준)
-        c.position.x += deltaWorld / (absScaleX || 1);
-        c.userData._armShifted = true;
-      });
-    }
   }, [clone, spec]);
 
   // 2) 머티리얼만 갱신 (위치/스케일 안 건드림)
