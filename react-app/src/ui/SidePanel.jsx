@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useConfigurator, baseOptionsForCurrent } from "../state/configurator";
 import { sofaColors, trayWoodColors, accentCushionColors } from "../data/colors";
 import ModuleCatalog from "./ModuleCatalog";
@@ -19,6 +19,14 @@ export default function SidePanel() {
   const baseOptions = baseOptionsForCurrent(sofaColor);
   const [tab, setTab] = useState("modules");
   const [collapsed, setCollapsed] = useState(false);
+
+  // app-shell에 panel-collapsed 클래스 토글 (:has 셀렉터 미지원 브라우저 호환)
+  useEffect(() => {
+    const shell = document.querySelector(".app-shell");
+    if (!shell) return;
+    if (collapsed) shell.classList.add("panel-collapsed");
+    else shell.classList.remove("panel-collapsed");
+  }, [collapsed]);
 
   const ModulesSection = () => <ModuleCatalog />;
   const MaterialsSection = () => (

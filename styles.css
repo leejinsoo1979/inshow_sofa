@@ -1906,7 +1906,7 @@ h3 {
     height: 100dvh;
     transition: grid-template-columns 0.3s ease;
   }
-  .app-shell:has(.panel.is-collapsed) {
+  .app-shell.panel-collapsed {
     grid-template-columns: 1fr 0;
   }
   .viewer { height: 100dvh; }
