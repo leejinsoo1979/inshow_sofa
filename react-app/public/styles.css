@@ -1415,13 +1415,12 @@ h3 {
     flex-wrap: wrap;
   }
 
-  /* 세로모드: home/zoom/rotate 숨기고 조명/줄자만 우측 상단 */
+  /* 세로모드: zoom/rotate 숨기고 reset/조명/줄자 우측 상단 */
   .tool-rail {
     top: auto;
     bottom: auto;
     left: auto;
   }
-  .tool-rail .icon-btn--reset,
   .tool-rail .icon-btn--zoom,
   .tool-rail .icon-btn--rotate {
     display: none !important;
@@ -1435,9 +1434,18 @@ h3 {
     z-index: 15;
     display: inline-flex;
   }
-  .tool-rail .icon-btn--light {
+  .tool-rail .icon-btn--reset {
     position: fixed;
     top: calc(72px + env(safe-area-inset-top));
+    right: 16px;
+    bottom: auto;
+    left: auto;
+    z-index: 15;
+    display: inline-flex;
+  }
+  .tool-rail .icon-btn--light {
+    position: fixed;
+    top: calc(128px + env(safe-area-inset-top));
     right: 16px;
     bottom: auto;
     left: auto;
@@ -1918,18 +1926,18 @@ h3 {
     height: 22px !important;
   }
 
-  /* 좌측 툴바: 조명 + 줄자만 노출, 나머지 숨김 */
+  /* 좌측 툴바: reset(home) + 조명 + 줄자만 노출 */
   .tool-rail {
     top: 50%;
     transform: translateY(-50%);
     bottom: auto;
     left: 12px;
   }
-  .tool-rail .icon-btn--reset,
   .tool-rail .icon-btn--zoom,
   .tool-rail .icon-btn--rotate {
     display: none !important;
   }
+  .tool-rail .icon-btn--reset,
   .tool-rail .icon-btn--dim,
   .tool-rail .icon-btn--light {
     position: static;
