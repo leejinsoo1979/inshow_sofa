@@ -1,20 +1,23 @@
 import { useConfigurator } from "../state/configurator";
 
 export default function SunSlider() {
-  const sunAngle = useConfigurator((s) => s.sunAngle);
-  const setSunAngle = useConfigurator((s) => s.setSunAngle);
+  const time = useConfigurator((s) => s.sun.time);
+  const setSunTime = useConfigurator((s) => s.setSunTime);
+  const hh = Math.floor(time);
+  const mm = Math.round((time - hh) * 60);
+  const label = `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
   return (
-    <div className="sun-control" aria-label="햇빛 각도">
+    <div className="sun-control" aria-label="태양 시간">
       <span className="sun-icon" aria-hidden="true">☀</span>
       <input
         type="range"
         min={0}
-        max={360}
-        step={1}
-        value={sunAngle}
-        onChange={(e) => setSunAngle(Number(e.target.value))}
+        max={24}
+        step={0.25}
+        value={time}
+        onChange={(e) => setSunTime(Number(e.target.value))}
       />
-      <span>{sunAngle}°</span>
+      <span>{label}</span>
     </div>
   );
 }
