@@ -1939,7 +1939,7 @@ h3 {
   .control-group {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 24px;
   }
   /* swatch — 모든 종류(소파/프레임/쿠션) 동일 사이즈 */
   .swatches,
@@ -1947,7 +1947,7 @@ h3 {
     display: grid !important;
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 10px 6px !important;
-    margin-top: 4px;
+    margin-top: 14px;
   }
   .swatches .swatch,
   .swatches.accent-grid .swatch {
