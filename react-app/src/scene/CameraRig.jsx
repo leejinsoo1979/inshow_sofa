@@ -56,12 +56,17 @@ export default function CameraRig({ controlsRef, resetCameraRef }) {
     const fovV = (camera.fov * Math.PI) / 180;
     const aspect = camera.aspect || 1.6;
     const fovH = 2 * Math.atan(Math.tan(fovV / 2) * aspect);
-    const horizontalPad = 2.0;
-    const verticalPad = 2.4;
+    const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 900px)").matches;
+    const isLandscape = typeof window !== "undefined" && window.matchMedia("(orientation: landscape)").matches;
+    // 모바일은 더 타이트하게, 가로모드는 가로 여백 더
+    const horizontalPad = isMobile ? (isLandscape ? 1.8 : 1.5) : 2.0;
+    const verticalPad = isMobile ? (isLandscape ? 1.9 : 1.6) : 2.4;
     const distH = (sx * horizontalPad) / (2 * Math.tan(fovH / 2));
     const distV = (sy * verticalPad) / (2 * Math.tan(fovV / 2));
     const distZ = (sz * horizontalPad) / (2 * Math.tan(fovH / 2));
-    const distance = Math.max(4, Math.min(20, Math.max(distH, distV, distZ) + 1.0));
+    const baseExtra = isMobile ? 0.4 : 1.0;
+    const minDist = isMobile ? 2.5 : 4;
+    const distance = Math.max(minDist, Math.min(20, Math.max(distH, distV, distZ) + baseExtra));
 
     const newPos = target.clone().addScaledVector(DEFAULT_DIRECTION, distance);
 
