@@ -110,14 +110,7 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
               />
             )}
             {/* Bloom: high만 */}
-            {isHigh && (
-              <Bloom
-                intensity={0.08}
-                luminanceThreshold={0.95}
-                luminanceSmoothing={0.2}
-                mipmapBlur
-              />
-            )}
+            {/* Bloom 비활성 — 광 과해서 제거 */}
             {/* 색감 보정: high만 */}
             {isHigh && <BrightnessContrast brightness={0.0} contrast={0.06} />}
             {isHigh && <HueSaturation saturation={0.06} />}
