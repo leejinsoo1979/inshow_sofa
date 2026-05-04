@@ -37,6 +37,7 @@ function Floor() {
         far={2.5}
         resolution={2048}
         color="#1a160f"
+        frames={Infinity}
       />
     </>
   );
