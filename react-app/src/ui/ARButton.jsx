@@ -27,11 +27,14 @@ export default function ARButton() {
         headers: { "Content-Type": "model/gltf-binary" },
         body: glbBuffer
       });
+      const text = await res.text();
       if (!res.ok) {
-        const errText = await res.text().catch(() => "");
-        throw new Error(`업로드 실패 (${res.status}) ${errText}`);
+        throw new Error(`업로드 실패 (${res.status}): ${text.slice(0, 200)}`);
       }
-      const { id } = await res.json();
+      let json;
+      try { json = JSON.parse(text); } catch { throw new Error(`응답 파싱 실패: ${text.slice(0, 200)}`); }
+      const { id } = json;
+      if (!id) throw new Error(`id 누락: ${text.slice(0, 200)}`);
       const url = `${window.location.origin}/ar.html?id=${id}`;
       setArUrl(url);
       const dataUrl = await QRCode.toDataURL(url, { width: 280, margin: 1 });
