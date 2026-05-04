@@ -151,7 +151,6 @@ export default function SofaModule({ module: m }) {
         const mirrorSign = (clone.scale.x || 1) < 0 ? -1 : 1;
         // 월드 기준 isRightArm을 로컬 외측으로 변환
         const outerIsLocalMax = (isRightArm ? 1 : -1) * mirrorSign > 0;
-        const innerEdge = outerIsLocalMax ? localMinX : localMaxX;
         const outerEdge = outerIsLocalMax ? localMaxX : localMinX;
 
         const insetAmount = 0.15; // 바깥 면을 안쪽으로 당기는 비율 (0=그대로, 1=완전평면)
