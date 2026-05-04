@@ -79,7 +79,7 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
         outputColorSpace: THREE.SRGBColorSpace,
         // medium: 기존 ACES + exposure 0.92, high: NoToneMapping (postprocessing이 처리)
         toneMapping: isHigh ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping,
-        toneMappingExposure: isHigh ? 1.0 : 0.92
+        toneMappingExposure: isHigh ? 1.4 : 0.92
       }}
     >
       <Suspense fallback={null}>
@@ -113,18 +113,8 @@ export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
             {/* 색감 보정: high만 */}
             {isHigh && <BrightnessContrast brightness={0.0} contrast={0.06} />}
             {isHigh && <HueSaturation saturation={0.06} />}
-            {/* 톤매핑: high만 post에서 — adaptive 끔 (장면 변경 시 노출 흔들림 방지) */}
-            {isHigh && (
-              <ToneMapping
-                mode={ToneMappingMode.ACES_FILMIC}
-                adaptive={false}
-                resolution={256}
-                whitePoint={4.0}
-                middleGrey={0.6}
-                minLuminance={0.01}
-                averageLuminance={1.0}
-              />
-            )}
+            {/* 톤매핑: high만 post에서 (medium은 Canvas 자체 톤매핑) */}
+            {isHigh && <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />}
             <Outline
               blur
               kernelSize={3}
