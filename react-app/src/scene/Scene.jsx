@@ -4,12 +4,11 @@ import {
   EffectComposer,
   Outline,
   Selection,
-  SSAO,
   ToneMapping,
   BrightnessContrast,
   HueSaturation,
 } from "@react-three/postprocessing";
-import { BlendFunction, ToneMappingMode } from "postprocessing";
+import { ToneMappingMode } from "postprocessing";
 import { Suspense, useRef, useMemo } from "react";
 import * as THREE from "three";
 import Lights from "./Lights";
