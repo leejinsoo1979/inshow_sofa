@@ -1,46 +1,38 @@
-// Vercel Serverless Function: GLB 업로드 → Blob 저장 → URL 반환
-import { put } from "@vercel/blob";
+// Vercel Serverless Function: 클라이언트 직접 업로드용 토큰 발급
+// 브라우저 → Vercel Blob 직접 업로드 (서버 본문 4.5MB 제한 우회)
+import { handleUpload } from "@vercel/blob/client";
 import { randomBytes } from "crypto";
-
-export const config = {
-  api: { bodyParser: false }
-};
-
-async function readBody(req) {
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    req.on("data", (c) => chunks.push(c));
-    req.on("end", () => resolve(Buffer.concat(chunks)));
-    req.on("error", reject);
-  });
-}
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.status(405).json({ error: "Method not allowed" });
     return;
   }
+
+  let body = req.body;
+  if (typeof body === "string") {
+    try { body = JSON.parse(body); } catch { body = {}; }
+  }
+
   try {
-    const buf = await readBody(req);
-    if (!buf || !buf.length) {
-      res.status(400).json({ error: "Empty body" });
-      return;
-    }
-    if (buf.length > 50 * 1024 * 1024) {
-      res.status(413).json({ error: "Too large (>50MB)" });
-      return;
-    }
-    const id = randomBytes(8).toString("hex");
-    const filename = `ar/${id}.glb`;
-    const blob = await put(filename, buf, {
-      access: "public",
-      contentType: "model/gltf-binary",
-      addRandomSuffix: false,
-      cacheControlMaxAge: 60 * 60 * 24 * 7
+    const jsonResponse = await handleUpload({
+      body,
+      request: req,
+      onBeforeGenerateToken: async () => {
+        const id = randomBytes(8).toString("hex");
+        return {
+          allowedContentTypes: ["model/gltf-binary", "application/octet-stream"],
+          maximumSizeInBytes: 50 * 1024 * 1024,
+          addRandomSuffix: false,
+          cacheControlMaxAge: 60 * 60 * 24 * 7,
+          tokenPayload: JSON.stringify({ id })
+        };
+      },
+      onUploadCompleted: async () => {}
     });
-    res.status(200).json({ id, url: blob.url });
+    res.status(200).json(jsonResponse);
   } catch (e) {
-    console.error("upload error", e);
-    res.status(500).json({ error: e.message || "upload failed" });
+    console.error("upload token error", e);
+    res.status(400).json({ error: e.message || "upload failed" });
   }
 }
