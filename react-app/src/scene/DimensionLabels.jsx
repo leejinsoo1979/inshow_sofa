@@ -116,10 +116,10 @@ export default function DimensionLabels() {
       <Dot position={[maxX + padX, yLine, minZ]} />
       <Dot position={[maxX + padX, yLine, maxZ]} />
 
-      <Html position={[cx, yLine, maxZ + padZ]} center zIndexRange={[5, 0]}>
+      <Html position={[cx, yLine, maxZ + padZ]} center distanceFactor={2.5} zIndexRange={[5, 0]}>
         <div className={labelClass} style={{ position: "static", transform: "none" }}>{w} cm</div>
       </Html>
-      <Html position={[maxX + padX, yLine, cz]} center zIndexRange={[5, 0]}>
+      <Html position={[maxX + padX, yLine, cz]} center distanceFactor={2.5} zIndexRange={[5, 0]}>
         <div className={labelClass} style={{ position: "static", transform: "none" }}>{d} cm</div>
       </Html>
 
@@ -135,7 +135,7 @@ export default function DimensionLabels() {
             <Line points={[[hx, maxH, minZ], [hx, maxH, minZ - padZ]]} color={lineColor} dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
             <Dot position={[hx, 0, minZ - padZ]} />
             <Dot position={[hx, maxH, minZ - padZ]} />
-            <Html position={[hx, maxH / 2, minZ - padZ]} center zIndexRange={[5, 0]}>
+            <Html position={[hx, maxH / 2, minZ - padZ]} center distanceFactor={2.5} zIndexRange={[5, 0]}>
               <div className={labelClass} style={{ position: "static", transform: "none" }}>{h} cm</div>
             </Html>
           </>
