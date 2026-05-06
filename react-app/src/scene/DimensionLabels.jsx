@@ -5,9 +5,12 @@ import { useConfigurator } from "../state/configurator";
 import { moduleCatalog } from "../data/catalog";
 
 // 모바일/좁은 뷰포트일수록 라벨이 상대적으로 크게 보이므로 distanceFactor를 더 작게
-function pickDistanceFactor(w) {
+function pickDistanceFactor(w, h) {
+  // 모바일 가로 (낮은 세로 픽셀): 카메라가 가까워서 라벨이 더 크게 보임 → 더 작게
+  const isLandscapeMobile = w > h && h <= 500;
+  if (isLandscapeMobile) return 1.0;
   if (w <= 480) return 1.4;   // 모바일 세로
-  if (w <= 900) return 1.8;   // 모바일 가로 / 작은 태블릿
+  if (w <= 900) return 1.5;   // 작은 태블릿
   if (w <= 1280) return 2.1;  // 태블릿
   return 2.5;                 // 데스크톱
 }
@@ -21,10 +24,12 @@ export default function DimensionLabels() {
   const lastBehindRef = useRef(false);
   const lastSideRef = useRef(true);
   const [distanceFactor, setDistanceFactor] = useState(() =>
-    pickDistanceFactor(typeof window !== "undefined" ? window.innerWidth : 1920)
+    typeof window !== "undefined"
+      ? pickDistanceFactor(window.innerWidth, window.innerHeight)
+      : pickDistanceFactor(1920, 1080)
   );
   useEffect(() => {
-    const onResize = () => setDistanceFactor(pickDistanceFactor(window.innerWidth));
+    const onResize = () => setDistanceFactor(pickDistanceFactor(window.innerWidth, window.innerHeight));
     window.addEventListener("resize", onResize);
     window.addEventListener("orientationchange", onResize);
     return () => {
