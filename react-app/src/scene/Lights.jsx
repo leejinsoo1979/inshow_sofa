@@ -4,10 +4,51 @@ import * as THREE from "three";
 import { RectAreaLightUniformsLib } from "three/addons/lights/RectAreaLightUniformsLib.js";
 import { useConfigurator } from "../state/configurator";
 import { getSolarState } from "./lighting";
+import { isLowEndDevice } from "./deviceTier";
 
 RectAreaLightUniformsLib.init();
 
+function LowEndLights() {
+  // 저사양 전용: 단일 평행광(그림자 1개) + 반구광. 그림자맵 512.
+  const sun = useConfigurator((s) => s.sun);
+  const solar = useMemo(
+    () => getSolarState({ hour: sun.time, month: sun.month, latitude: sun.latitude }),
+    [sun.time, sun.month, sun.latitude]
+  );
+  const keyRef = useRef();
+  useEffect(() => {
+    const key = keyRef.current;
+    if (!key) return;
+    const radius = 11;
+    const sunPos = solar.sunVector.clone().multiplyScalar(-radius);
+    key.position.copy(sunPos);
+    key.color.copy(solar.color);
+    key.intensity = 1.4 + solar.daylight * 0.6;
+  }, [solar]);
+  return (
+    <>
+      <hemisphereLight args={[0xffffff, 0xe8ded4, 0.6]} />
+      <directionalLight
+        ref={keyRef}
+        castShadow
+        intensity={1.6}
+        color={0xffffff}
+        shadow-mapSize={[512, 512]}
+        shadow-bias={-0.0003}
+        shadow-normalBias={0.04}
+      >
+        <orthographicCamera attach="shadow-camera" args={[-8, 8, 8, -8, 1, 22]} />
+      </directionalLight>
+    </>
+  );
+}
+
 export default function Lights() {
+  if (isLowEndDevice()) return <LowEndLights />;
+  return <FullLights />;
+}
+
+function FullLights() {
   const { gl } = useThree();
   const lighting = useConfigurator((s) => s.studioLighting);
   const sun = useConfigurator((s) => s.sun);

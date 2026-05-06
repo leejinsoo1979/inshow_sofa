@@ -15,6 +15,7 @@ import CameraRig from "./CameraRig";
 import CameraControls from "./CameraControls";
 import DimensionLabels from "./DimensionLabels";
 import { useConfigurator } from "../state/configurator";
+import { isLowEndDevice } from "./deviceTier";
 
 function CanvasBackground() {
   const bg = useConfigurator((s) => s.backgroundColor);
@@ -41,29 +42,13 @@ function Modules() {
   );
 }
 
-function detectLowEnd() {
-  if (typeof window === "undefined" || typeof navigator === "undefined") return false;
-  const ua = navigator.userAgent || "";
-  const isIOS = /iPhone|iPad|iPod/i.test(ua);
-  if (isIOS) return false; // iOS는 구형도 충분히 빠름
-  const isAndroid = /Android/i.test(ua);
-  const cores = navigator.hardwareConcurrency || 4;
-  const mem = navigator.deviceMemory || 4;
-  const coarse = window.matchMedia("(pointer: coarse)").matches;
-  // 안드로이드 + 저사양 지표 중 하나라도 → 저사양 판정
-  if (isAndroid && (cores <= 6 || mem <= 4)) return true;
-  // 비-iOS 터치 기기 + 저메모리
-  if (coarse && !isIOS && mem <= 4) return true;
-  return false;
-}
-
 export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
   const controlsRef = useRef();
   const isMobile = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(max-width: 900px)").matches,
     []
   );
-  const isLowEnd = useMemo(() => detectLowEnd(), []);
+  const isLowEnd = useMemo(() => isLowEndDevice(), []);
   const quality = useConfigurator((s) => s.renderQuality);
   const isHigh = quality === "high" && !isMobile && !isLowEnd;
   return (
