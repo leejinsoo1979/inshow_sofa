@@ -343,6 +343,10 @@ h1 {
   letter-spacing: -0.01em;
   white-space: nowrap;
   pointer-events: none;
+}
+.dim-label.is-dark-bg {
+  background: #fff;
+  color: #1a1a1a;
   transform: translate(-50%, -50%);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
 }

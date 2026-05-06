@@ -7,10 +7,24 @@ import { moduleCatalog } from "../data/catalog";
 export default function DimensionLabels() {
   const modules = useConfigurator((s) => s.modules);
   const showDimensions = useConfigurator((s) => s.showDimensions);
+  const backgroundColor = useConfigurator((s) => s.backgroundColor);
   const [behind, setBehind] = useState(false);
   const [rightSide, setRightSide] = useState(true);
   const lastBehindRef = useRef(false);
   const lastSideRef = useRef(true);
+
+  // 배경 luminance에 따라 라인/도트/라벨 색 결정 (어두운 배경 → 흰색)
+  const isDarkBg = (() => {
+    const hex = (backgroundColor || "#ffffff").replace("#", "");
+    if (hex.length < 6) return false;
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+    const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return lum < 0.4;
+  })();
+  const lineColor = isDarkBg ? "#ffffff" : "#3d3d3a";
+  const labelClass = isDarkBg ? "dim-label is-dark-bg" : "dim-label";
 
   const bounds = useMemo(() => {
     if (!modules.length) return null;
@@ -82,48 +96,47 @@ export default function DimensionLabels() {
   const Dot = ({ position }) => (
     <mesh position={position}>
       <sphereGeometry args={[dotR, 16, 16]} />
-      <meshBasicMaterial color="#3d3d3a" />
+      <meshBasicMaterial color={lineColor} />
     </mesh>
   );
 
   return (
     <group>
       {/* W */}
-      <Line points={[[minX, yLine, maxZ + padZ], [maxX, yLine, maxZ + padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
-      <Line points={[[minX, yLine, maxZ], [minX, yLine, maxZ + padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
-      <Line points={[[maxX, yLine, maxZ], [maxX, yLine, maxZ + padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+      <Line points={[[minX, yLine, maxZ + padZ], [maxX, yLine, maxZ + padZ]]} color={lineColor} dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+      <Line points={[[minX, yLine, maxZ], [minX, yLine, maxZ + padZ]]} color={lineColor} dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+      <Line points={[[maxX, yLine, maxZ], [maxX, yLine, maxZ + padZ]]} color={lineColor} dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
       <Dot position={[minX, yLine, maxZ + padZ]} />
       <Dot position={[maxX, yLine, maxZ + padZ]} />
 
       {/* D */}
-      <Line points={[[maxX + padX, yLine, minZ], [maxX + padX, yLine, maxZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
-      <Line points={[[maxX, yLine, minZ], [maxX + padX, yLine, minZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
-      <Line points={[[maxX, yLine, maxZ], [maxX + padX, yLine, maxZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+      <Line points={[[maxX + padX, yLine, minZ], [maxX + padX, yLine, maxZ]]} color={lineColor} dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+      <Line points={[[maxX, yLine, minZ], [maxX + padX, yLine, minZ]]} color={lineColor} dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+      <Line points={[[maxX, yLine, maxZ], [maxX + padX, yLine, maxZ]]} color={lineColor} dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
       <Dot position={[maxX + padX, yLine, minZ]} />
       <Dot position={[maxX + padX, yLine, maxZ]} />
 
       <Html position={[cx, yLine, maxZ + padZ]} center zIndexRange={[5, 0]}>
-        <div className="dim-label" style={{ position: "static", transform: "none" }}>{w} cm</div>
+        <div className={labelClass} style={{ position: "static", transform: "none" }}>{w} cm</div>
       </Html>
       <Html position={[maxX + padX, yLine, cz]} center zIndexRange={[5, 0]}>
-        <div className="dim-label" style={{ position: "static", transform: "none" }}>{d} cm</div>
+        <div className={labelClass} style={{ position: "static", transform: "none" }}>{d} cm</div>
       </Html>
 
       {behind && (() => {
-        // H는 핫스팟 반대쪽
         let hx;
-        if (leftHasHotspot && !rightHasHotspot) hx = maxX; // 핫스팟 좌측만 → H 우측
-        else if (rightHasHotspot && !leftHasHotspot) hx = minX; // 핫스팟 우측만 → H 좌측
-        else hx = rightSide ? maxX : minX; // 양쪽 또는 없음 → 카메라 가까운 쪽
+        if (leftHasHotspot && !rightHasHotspot) hx = maxX;
+        else if (rightHasHotspot && !leftHasHotspot) hx = minX;
+        else hx = rightSide ? maxX : minX;
         return (
           <>
-            <Line points={[[hx, 0, minZ - padZ], [hx, maxH, minZ - padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
-            <Line points={[[hx, 0, minZ], [hx, 0, minZ - padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
-            <Line points={[[hx, maxH, minZ], [hx, maxH, minZ - padZ]]} color="#3d3d3a" dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+            <Line points={[[hx, 0, minZ - padZ], [hx, maxH, minZ - padZ]]} color={lineColor} dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+            <Line points={[[hx, 0, minZ], [hx, 0, minZ - padZ]]} color={lineColor} dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
+            <Line points={[[hx, maxH, minZ], [hx, maxH, minZ - padZ]]} color={lineColor} dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
             <Dot position={[hx, 0, minZ - padZ]} />
             <Dot position={[hx, maxH, minZ - padZ]} />
             <Html position={[hx, maxH / 2, minZ - padZ]} center zIndexRange={[5, 0]}>
-              <div className="dim-label" style={{ position: "static", transform: "none" }}>{h} cm</div>
+              <div className={labelClass} style={{ position: "static", transform: "none" }}>{h} cm</div>
             </Html>
           </>
         );
