@@ -1,8 +1,16 @@
 import { Html, Line } from "@react-three/drei";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useConfigurator } from "../state/configurator";
 import { moduleCatalog } from "../data/catalog";
+
+// 모바일/좁은 뷰포트일수록 라벨이 상대적으로 크게 보이므로 distanceFactor를 더 작게
+function pickDistanceFactor(w) {
+  if (w <= 480) return 1.4;   // 모바일 세로
+  if (w <= 900) return 1.8;   // 모바일 가로 / 작은 태블릿
+  if (w <= 1280) return 2.1;  // 태블릿
+  return 2.5;                 // 데스크톱
+}
 
 export default function DimensionLabels() {
   const modules = useConfigurator((s) => s.modules);
@@ -12,6 +20,18 @@ export default function DimensionLabels() {
   const [rightSide, setRightSide] = useState(true);
   const lastBehindRef = useRef(false);
   const lastSideRef = useRef(true);
+  const [distanceFactor, setDistanceFactor] = useState(() =>
+    pickDistanceFactor(typeof window !== "undefined" ? window.innerWidth : 1920)
+  );
+  useEffect(() => {
+    const onResize = () => setDistanceFactor(pickDistanceFactor(window.innerWidth));
+    window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("orientationchange", onResize);
+    };
+  }, []);
 
   // 배경 luminance에 따라 라인/도트/라벨 색 결정 (어두운 배경 → 흰색)
   const isDarkBg = (() => {
@@ -116,10 +136,10 @@ export default function DimensionLabels() {
       <Dot position={[maxX + padX, yLine, minZ]} />
       <Dot position={[maxX + padX, yLine, maxZ]} />
 
-      <Html position={[cx, yLine, maxZ + padZ]} center distanceFactor={2.5} zIndexRange={[5, 0]}>
+      <Html position={[cx, yLine, maxZ + padZ]} center distanceFactor={distanceFactor} zIndexRange={[5, 0]}>
         <div className={labelClass} style={{ position: "static", transform: "none" }}>{w} cm</div>
       </Html>
-      <Html position={[maxX + padX, yLine, cz]} center distanceFactor={2.5} zIndexRange={[5, 0]}>
+      <Html position={[maxX + padX, yLine, cz]} center distanceFactor={distanceFactor} zIndexRange={[5, 0]}>
         <div className={labelClass} style={{ position: "static", transform: "none" }}>{d} cm</div>
       </Html>
 
@@ -135,7 +155,7 @@ export default function DimensionLabels() {
             <Line points={[[hx, maxH, minZ], [hx, maxH, minZ - padZ]]} color={lineColor} dashed dashSize={dashSize} gapSize={gapSize} lineWidth={1} />
             <Dot position={[hx, 0, minZ - padZ]} />
             <Dot position={[hx, maxH, minZ - padZ]} />
-            <Html position={[hx, maxH / 2, minZ - padZ]} center distanceFactor={2.5} zIndexRange={[5, 0]}>
+            <Html position={[hx, maxH / 2, minZ - padZ]} center distanceFactor={distanceFactor} zIndexRange={[5, 0]}>
               <div className={labelClass} style={{ position: "static", transform: "none" }}>{h} cm</div>
             </Html>
           </>

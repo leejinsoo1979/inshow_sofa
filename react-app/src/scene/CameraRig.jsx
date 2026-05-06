@@ -58,14 +58,15 @@ export default function CameraRig({ controlsRef, resetCameraRef }) {
     const fovH = 2 * Math.atan(Math.tan(fovV / 2) * aspect);
     const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 900px)").matches;
     const isLandscape = typeof window !== "undefined" && window.matchMedia("(orientation: landscape)").matches;
-    // 모바일은 더 타이트하게, 가로모드는 가로 여백 더
-    const horizontalPad = isMobile ? (isLandscape ? 1.3 : 2.0) : 2.2;
-    const verticalPad = isMobile ? (isLandscape ? 1.7 : 2.4) : 3.0;
+    const isMobileLandscape = isMobile && isLandscape;
+    // 모바일 가로는 화면 세로가 작아 카메라가 더 가까워도 됨
+    const horizontalPad = isMobileLandscape ? 1.05 : (isMobile ? 2.0 : 2.2);
+    const verticalPad = isMobileLandscape ? 1.2 : (isMobile ? 2.4 : 3.0);
     const distH = (sx * horizontalPad) / (2 * Math.tan(fovH / 2));
     const distV = (sy * verticalPad) / (2 * Math.tan(fovV / 2));
     const distZ = (sz * horizontalPad) / (2 * Math.tan(fovH / 2));
-    const baseExtra = isMobile ? 0.4 : 1.4;
-    const minDist = isMobile ? 2.5 : 4;
+    const baseExtra = isMobileLandscape ? 0.1 : (isMobile ? 0.4 : 1.4);
+    const minDist = isMobileLandscape ? 1.8 : (isMobile ? 2.5 : 4);
     const distance = Math.max(minDist, Math.min(20, Math.max(distH, distV, distZ) + baseExtra));
 
     const newPos = target.clone().addScaledVector(DEFAULT_DIRECTION, distance);
