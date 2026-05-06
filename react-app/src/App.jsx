@@ -86,9 +86,9 @@ export default function App() {
           Powered by <strong>U:ABLE</strong>
         </a>
         <HotspotPopover />
-        <StudioLightingPopover />
       </section>
       <SidePanel />
+      <StudioLightingPopover />
     </main>
     {showSofaModal && (
       <div

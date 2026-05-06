@@ -36,6 +36,7 @@ button {
 }
 
 .app-shell {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 420px;
   height: 100vh;
@@ -376,20 +377,21 @@ h1 {
 
 .lighting-popover {
   position: absolute;
-  left: 96px;
-  top: 134px;
+  right: 0;
+  top: 0;
+  bottom: 0;
   z-index: 60;
-  width: min(440px, calc(100vw - 460px));
-  max-height: calc(100vh - 172px);
+  width: 420px;
+  max-height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr;
   gap: 12px;
   padding: 16px;
-  border: 1px solid rgba(24, 24, 24, 0.12);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.97);
+  border-left: 1px solid rgba(24, 24, 24, 0.12);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(8px);
-  box-shadow: 0 18px 38px rgba(35, 31, 24, 0.18);
+  box-shadow: -18px 0 38px rgba(35, 31, 24, 0.12);
 }
 
 .lighting-popover .popover-head {
@@ -1635,6 +1637,10 @@ h3 {
 
   .thumbnail-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .lighting-popover {
+    width: 360px;
   }
 }
 
