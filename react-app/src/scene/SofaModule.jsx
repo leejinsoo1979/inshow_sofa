@@ -124,6 +124,16 @@ export default function SofaModule({ module: m }) {
       clone.position.z = -(bounds.min.z + spec.depth / 2);
     }
     clone.position.y = -bounds.min.y;
+
+    // 바닥 쿠션(Seating cushion)만 전면(+Z)으로 9.5mm 이동
+    const seatOffsetWorld = 0.0095;
+    const localOffset = seatOffsetWorld / Math.abs(scaleZ || 1);
+    clone.traverse((c) => {
+      if (!c.isMesh) return;
+      const lower = (c.name || "").toLowerCase().trim();
+      const isSeating = lower.includes("seating") && lower.includes("cushion");
+      if (isSeating) c.position.z += localOffset;
+    });
   }, [clone, spec]);
 
   // 2) 머티리얼만 갱신 (위치/스케일 안 건드림)
