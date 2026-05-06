@@ -1,6 +1,7 @@
 import { useState } from "react";
 import QRCode from "qrcode";
 import { TbAugmentedReality } from "react-icons/tb";
+import { upload } from "@vercel/blob/client";
 import { exportSceneToGlb } from "../scene/exportGlb";
 import { getAllModuleClones } from "../scene/sceneRefs";
 
@@ -22,19 +23,14 @@ export default function ARButton() {
       if (!clones.length) throw new Error("배치된 가구가 없습니다");
       const glbBuffer = await exportSceneToGlb(clones);
 
-      const res = await fetch("/api/ar/upload", {
-        method: "POST",
-        headers: { "Content-Type": "model/gltf-binary" },
-        body: glbBuffer
+      const id = (crypto.randomUUID?.() || Math.random().toString(16).slice(2)).replace(/-/g, "").slice(0, 16);
+      const blob = new Blob([glbBuffer], { type: "model/gltf-binary" });
+      const result = await upload(`ar/${id}.glb`, blob, {
+        access: "public",
+        handleUploadUrl: "/api/ar/upload",
+        contentType: "model/gltf-binary"
       });
-      const text = await res.text();
-      if (!res.ok) {
-        throw new Error(`업로드 실패 (${res.status}): ${text.slice(0, 200)}`);
-      }
-      let json;
-      try { json = JSON.parse(text); } catch { throw new Error(`응답 파싱 실패: ${text.slice(0, 200)}`); }
-      const { id } = json;
-      if (!id) throw new Error(`id 누락: ${text.slice(0, 200)}`);
+      if (!result?.url) throw new Error("업로드 응답에 URL 없음");
       const url = `${window.location.origin}/ar.html?id=${id}`;
       setArUrl(url);
       const dataUrl = await QRCode.toDataURL(url, { width: 280, margin: 1 });
