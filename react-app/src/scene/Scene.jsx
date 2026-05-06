@@ -41,54 +41,77 @@ function Modules() {
   );
 }
 
+function detectLowEnd() {
+  if (typeof window === "undefined" || typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent || "";
+  const isIOS = /iPhone|iPad|iPod/i.test(ua);
+  if (isIOS) return false; // iOS는 구형도 충분히 빠름
+  const isAndroid = /Android/i.test(ua);
+  const cores = navigator.hardwareConcurrency || 4;
+  const mem = navigator.deviceMemory || 4;
+  const coarse = window.matchMedia("(pointer: coarse)").matches;
+  // 안드로이드 + 저사양 지표 중 하나라도 → 저사양 판정
+  if (isAndroid && (cores <= 6 || mem <= 4)) return true;
+  // 비-iOS 터치 기기 + 저메모리
+  if (coarse && !isIOS && mem <= 4) return true;
+  return false;
+}
+
 export default function Scene({ resetCameraRef, zoomRef, rotateRef }) {
   const controlsRef = useRef();
   const isMobile = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(max-width: 900px)").matches,
     []
   );
+  const isLowEnd = useMemo(() => detectLowEnd(), []);
   const quality = useConfigurator((s) => s.renderQuality);
-  const isHigh = quality === "high" && !isMobile;
+  const isHigh = quality === "high" && !isMobile && !isLowEnd;
   return (
     <Canvas
-      shadows={{ type: THREE.PCFSoftShadowMap }}
-      dpr={[1, 2]}
+      shadows={isLowEnd ? { type: THREE.BasicShadowMap } : { type: THREE.PCFSoftShadowMap }}
+      dpr={isLowEnd ? [1, 1] : [1, 2]}
       camera={{ position: [4.5, 1.4, 5.2], fov: 32, near: 0.1, far: 100 }}
       onPointerMissed={() => useConfigurator.getState().setSelectedId(null)}
       gl={{
-        antialias: true,
+        antialias: !isLowEnd,
         alpha: true,
+        powerPreference: "high-performance",
         outputColorSpace: THREE.SRGBColorSpace,
-        // 양 모드 모두 Canvas ACES + exposure
         toneMapping: THREE.ACESFilmicToneMapping,
         toneMappingExposure: isHigh ? 0.7 : 0.92
       }}
     >
       <Suspense fallback={null}>
         <CanvasBackground />
-        {/* HDRI: high 모드에서만 studio, 그 외 city */}
-        <Environment
-          preset={isHigh ? "studio" : "city"}
-          environmentIntensity={isHigh ? 0.25 : 0.5}
-          background={false}
-        />
+        {/* HDRI: 저사양에선 비활성, 그 외 city/studio */}
+        {!isLowEnd && (
+          <Environment
+            preset={isHigh ? "studio" : "city"}
+            environmentIntensity={isHigh ? 0.25 : 0.5}
+            background={false}
+          />
+        )}
         <Lights />
         <Floor />
-        <Selection>
-          <EffectComposer multisampling={8} autoClear={false}>
-            <Outline
-              blur
-              kernelSize={3}
-              visibleEdgeColor={0x3b82f6}
-              hiddenEdgeColor={0x3b82f6}
-              edgeStrength={6}
-              pulseSpeed={0}
-              xRay={true}
-              width={1000}
-            />
-          </EffectComposer>
+        {isLowEnd ? (
           <Modules />
-        </Selection>
+        ) : (
+          <Selection>
+            <EffectComposer multisampling={isMobile ? 0 : 8} autoClear={false}>
+              <Outline
+                blur
+                kernelSize={3}
+                visibleEdgeColor={0x3b82f6}
+                hiddenEdgeColor={0x3b82f6}
+                edgeStrength={6}
+                pulseSpeed={0}
+                xRay={true}
+                width={1000}
+              />
+            </EffectComposer>
+            <Modules />
+          </Selection>
+        )}
         <Hotspots />
         <ModuleToolbar />
         <DimensionLabels />
